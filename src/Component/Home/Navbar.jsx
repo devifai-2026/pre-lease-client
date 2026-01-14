@@ -277,6 +277,32 @@ const Navbar = () => {
 
     if (!user) return null;
 
+    // Get user initials safely
+    const getUserInitial = () => {
+      if (!user.name) {
+        // Fallback to first character of mobile number or 'U' for User
+        return user.mobile ? user.mobile.charAt(0) : 'U';
+      }
+      return user.name.charAt(0);
+    };
+
+    // Get user display name safely
+    const getDisplayName = () => {
+      if (!user.name) {
+        // Fallback to mobile number or generic name
+        return user.mobile ? `User ${user.mobile.slice(-4)}` : 'User';
+      }
+      return user.name;
+    };
+
+    // Get user's first name safely
+    const getUserFirstName = () => {
+      if (!user.name) {
+        return 'User';
+      }
+      return user.name.split(' ')[0];
+    };
+
     const roleColors = {
       investor: 'bg-blue-100 text-blue-800',
       broker: 'bg-red-100 text-red-800',
@@ -297,7 +323,6 @@ const Navbar = () => {
           className="flex items-center gap-2 px-2 py-2 rounded-full border border-gray-300 hover:border-[#EE2529] transition-colors duration-200 bg-white"
         >
           <FaRegUserCircle className="text-[#EE2529] w-5 h-5" />
-        
           <RiArrowDropDownLine className="text-[#EE2529] w-5 h-5" />
         </button>
 
@@ -308,12 +333,12 @@ const Navbar = () => {
             <div className="px-4 py-3 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#EE2529] to-[#C73834] flex items-center justify-center text-white font-bold">
-                  {user.name.charAt(0)}
+                  {getUserInitial()}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">{user.name}</p>
-                  <p className="text-sm text-gray-600">{user.mobile}</p>
-                  <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+                  <p className="font-semibold text-gray-800">{getDisplayName()}</p>
+                  <p className="text-sm text-gray-600">{user.mobile || 'No phone'}</p>
+                  <p className="text-xs text-gray-500 capitalize">{user.role || 'user'}</p>
                 </div>
               </div>
             </div>
@@ -335,6 +360,14 @@ const Navbar = () => {
         )}
       </div>
     );
+  };
+
+  // Get user's first name safely for display
+  const getUserFirstName = () => {
+    if (!user || !user.name) {
+      return 'User';
+    }
+    return user.name.split(' ')[0];
   };
 
   // Menu items
@@ -385,7 +418,7 @@ const Navbar = () => {
           {user && (
             <Link to={`/${user.role}-dashboard`}>
               <p className={`${currentPath.includes('dashboard') ? 'text-[#EE2529]' : 'text-[#262626]'} hover:text-[#EE2529] transition-colors duration-200`}>
-                {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard
+                {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Dashboard'}
               </p>
             </Link>
           )}
@@ -393,7 +426,6 @@ const Navbar = () => {
 
         {/* Sign In/User Profile, List Property, and Hamburger */}
         <div className="flex items-center gap-2 whitespace-nowrap">
-        
           
           {/* Hide List Property button when on list-property page */}
           {!isListPropertyPage && (
@@ -633,7 +665,7 @@ const Navbar = () => {
                     ? 'text-[#EE2529] bg-red-50 border-l-[#EE2529]' 
                     : 'text-[#262626] border-l-transparent hover:bg-gray-50 hover:border-l-2 hover:border-l-[#EE2529]'
                 }`}>
-                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard
+                  {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Dashboard'}
                 </div>
               </Link>
             )}
@@ -725,7 +757,7 @@ const Navbar = () => {
                 }}
               >
                 <FaRegUserCircle className="w-5 h-5 text-[#EE2529]" />
-                Hi, {user.name.split(' ')[0]} ({user.role})
+                Hi, {getUserFirstName()} ({user.role || 'user'})
               </div>
             )}
 
