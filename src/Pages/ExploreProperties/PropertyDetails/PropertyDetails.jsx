@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CiCircleQuestion, CiHeart, CiLocationOn } from "react-icons/ci";
 import { FaBuilding, FaPlus } from "react-icons/fa";
@@ -14,12 +14,17 @@ import FAQ from "../PropertyDetails/Components/FAQ";
 import LocationDetails from "../PropertyDetails/Components/LocationDetails";
 import PropertyDetailsCards from "../PropertyDetails/Components/PropertyDetailsCards";
 import squaresbg from "../../../assets/propertyDetails/squaresbg.png";
+import share from "../../../assets/propertyDetails/share.svg"
+import download from "../../../assets/propertyDetails/download.svg"
+import { PiBuildingApartmentFill } from "react-icons/pi";
 
 const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("property");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef(null);
 
   // Property images array
   const propertyImages = [cardImg, cardImg, cardImg, cardImg];
@@ -34,41 +39,69 @@ const PropertyDetails = () => {
 
   const handleDotClick = (index) => {
     setCurrentImageIndex(index);
+    startAutoSlide();
   };
 
-  // NEW: Handle Enquire button click - Navigate to enquiry page
   const handleEnquireClick = () => {
-    // Navigate to the enquiry page with the property ID
     navigate(`/enquiry/${id}`);
   };
+
+  const startAutoSlide = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      if (!isHovered) {
+        setCurrentImageIndex((prevIndex) => {
+          const nextIndex = (prevIndex + 1) % propertyImages.length;
+          return nextIndex;
+        });
+      }
+    }, 3000);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    startAutoSlide();
+  };
+
+  useEffect(() => {
+    startAutoSlide();
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div 
       className="min-h-screen font-montserrat p-3 sm:p-4 md:p-6"
       style={{
         backgroundImage: `url(${squaresbg})`,
-        backgroundSize: 'cover',
+        backgroundSize: 'cover 500px',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed'
       }}
     >
-      {/* Back Button */}
-      <button
-        onClick={handleGoBack}
-        className="mb-4 sm:mb-6 flex items-center gap-2 text-[#767676] hover:text-[#EE2529] transition-colors text-sm sm:text-base"
-      >
-        <IoIosArrowBack className="text-lg sm:text-xl" />
-        <span>Back to Properties</span>
-      </button>
-
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-4 sm:gap-6 md:gap-8">
+      <div className="max-w-[96%] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-3 md:gap-5">
           {/* Left Column - Image and Assistance Card (30%) */}
           <div className="lg:col-span-3 space-y-4 sm:space-y-6">
-            {/* Image Card */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg">
-              <div className="pt-3 sm:pt-4 md:pt-5">
+            {/* Image Card - MOBILE OPTIMIZED */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
+              {/* DESKTOP: Header Section */}
+              <div className="hidden sm:block pt-3 sm:pt-4 md:pt-5">
                 <p className="text-base sm:text-lg font-medium pl-3 sm:pl-4">
                   Residential Space
                 </p>
@@ -79,7 +112,7 @@ const PropertyDetails = () => {
                       Pune, Mundhva
                     </span>
                   </p>
-                  <div className="relative">
+                  <div className="relative ">
                     <img
                       className="w-12 sm:w-16 md:w-20"
                       src={tag}
@@ -92,27 +125,92 @@ const PropertyDetails = () => {
                 </div>
               </div>
 
-              <div className="relative">
-                <div className="relative">
+              {/* MOBILE: Horizontal Layout with Image on Left */}
+              <div className="block sm:hidden p-3 ">
+                <div className="flex gap-3 items-start">
+                  {/* Image - Left Side */}
+                  <div className="flex-shrink-0 w-24 h-24 relative overflow-hidden">
+                    <img
+                      src={propertyImages[currentImageIndex]}
+                      alt="Property"
+                      className="w-full h-16 object-cover"
+                    />
+                    {/* Verified Badge */}
+                   
+                  </div>
+
+                  {/* Text Content - Right Side */}
+                  <div className="flex-1 flex flex-col justify-between py-1">
+                    {/* Title & Location */}
+                    <div>
+                      <p className="text-xl  text-gray-900 leading-tight">
+                        Residential Space
+                      </p>
+                      <p className="flex items-center gap-1 text-base text-gray-600 mt-2">
+                        <CiLocationOn className="text-[#EE2529] flex-shrink-0 text-xs" />
+                        Pune, Mundhva
+                      </p>
+                    </div>
+
+                    {/* Cost Info */}
+                    {/* <div className="space-y-0.5">
+                      <p className="text-xs text-gray-600">
+                        Cost: <span className="font-semibold text-gray-900">₹36.8 Cr</span>
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        Annual Rent: <span className="font-semibold text-gray-900">₹22.87L</span>
+                      </p>
+                    </div> */}
+                  </div>
+
+                  {/* ROI Box - Right */}
+                  {/* <div className="flex-shrink-0 bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-14 h-14 flex flex-col items-center justify-center rounded-lg shadow-md border border-gray-100">
+                    <p className="text-[10px] font-semibold text-gray-700">ROI</p>
+                    <p className="text-[#EE2529] font-bold text-xs">90%</p>
+                  </div> */}
+                </div>
+              </div>
+
+              {/* MOBILE: Buttons */}
+              <div className="block sm:hidden px-3 pb-2 flex gap-2 justify-center">
+                <button 
+                  onClick={handleEnquireClick}
+                  className=" rounded-md text-white px-3 py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs font-semibold hover:opacity-90 transition-opacity"
+                >
+                  Enquire
+                </button>
+                <button className=" border border-[#EE2529] text-[#EE2529] rounded-md px-3 py-2 flex items-center justify-center gap-1 text-xs font-semibold hover:bg-red-50 transition-colors">
+                  <FaPlus className="text-xs" /> Compare
+                </button>
+              </div>
+
+              {/* DESKTOP: Full Image Section */}
+              <div className="hidden sm:block relative">
+                <div 
+                  className="relative"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <img
                     src={propertyImages[currentImageIndex]}
                     alt="Property"
-                    className="w-full h-[160px] sm:h-[180px] md:h-[200px] lg:h-[250px] object-cover"
+                    className="w-full h-[160px] sm:h-[180px] md:h-[200px] lg:h-[250px] object-cover transition-opacity duration-500 ease-in-out"
                   />
                   
                   {/* Gradient overlay for bottom blur */}
                   <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
                   
-                  {/* Slider Dots */}
-                  <div className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5 sm:gap-2">
+                  {/* Slider Dots with responsive sizes */}
+                  <div className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5">
                     {propertyImages.map((_, dotIndex) => (
                       <button
                         key={dotIndex}
                         onClick={() => handleDotClick(dotIndex)}
-                        className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        onMouseEnter={handleMouseEnter}
+                        className={`rounded-full transition-all duration-300 cursor-pointer ${
                           currentImageIndex === dotIndex
-                            ? "bg-red-500 w-2.5"
-                            : "bg-white/60 w-2.5 hover:bg-white/80"
+                            ? "bg-red-500 w-2.5 h-2.5 sm:w-3 sm:h-3"
+                            : "bg-white w-2 h-2 sm:w-2.5 sm:h-2.5 hover:bg-white/30"
                         }`}
                         aria-label={`Go to image ${dotIndex + 1}`}
                       />
@@ -124,7 +222,7 @@ const PropertyDetails = () => {
                     <div className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs sm:text-sm text-[#767676]">
                       MNC Client
                     </div>
-                    <button className="bg-white text-[#EE2529] px-2 py-1 sm:px-3 sm:py-1.5 flex items-center gap-1 sm:gap-2 border border-[#EE2529] rounded-md text-xs sm:text-sm hover:bg-gray-50 transition-colors">
+                    <button className="bg-white text-[#EE2529] px-2 py-1 sm:px-3 sm:py-1.5 flex items-center gap-1 sm:gap-2 rounded-md text-xs sm:text-sm hover:bg-gray-50 transition-colors">
                       <FaPlus className="text-xs sm:text-sm" /> Compare
                     </button>
                   </div>
@@ -135,7 +233,8 @@ const PropertyDetails = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-around mt-1 p-1">
+              {/* DESKTOP: Details Section */}
+              <div className="hidden sm:flex items-center justify-around mt-1 p-1">
                 <div className="space-y-1 sm:space-y-2">
                   <p className="text-xs sm:text-sm text-[#767676]">
                     Cost:{" "}
@@ -157,15 +256,15 @@ const PropertyDetails = () => {
                   </p>
                 </div>
                 <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-1 sm:ml-2">
-                  <p className="text-xs sm:text-sm font-medium">ROI</p>
+                  <p className="text-sm md:text-base lg:text-xl font-semibold">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">
                     90.21%
                   </p>
                 </div>
               </div>
 
-              {/* UPDATED: Enquire button with onClick handler */}
-              <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3 sm:mt-4 mb-3 sm:mb-5">
+              {/* DESKTOP: Enquire button */}
+              <div className="hidden sm:flex items-center justify-center gap-2 sm:gap-3 mt-3 sm:mt-4 mb-3 sm:mb-5">
                 <button 
                   onClick={handleEnquireClick}
                   className="border rounded-md text-white px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105"
@@ -176,7 +275,7 @@ const PropertyDetails = () => {
             </div>
 
             {/* Assistance Card */}
-            <div className="bg-white rounded-lg overflow-hidden p-3 sm:p-4 md:p-5">
+            <div className="bg-white rounded-lg overflow-hidden p-3 sm:p-4 md:p-5 hidden lg:block ">
               <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
                 <div className="w-full">
                   <h3 className="text-base sm:text-lg font-semibold text-[#262626] mb-1 sm:mb-2">
@@ -199,26 +298,26 @@ const PropertyDetails = () => {
           {/* Right Column - Content changes based on active tab (70%) */}
           <div className="lg:col-span-7">
             {/* Tab Navigation Card */}
-            <div className="bg-white p-4 sm:p-5 md:p-6 mb-4 sm:mb-6">
-              <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-8 border-b border-gray-200 pb-2 overflow-x-auto">
-                <div className="flex space-x-3 sm:space-x-4 md:space-x-8 min-w-max mb-0.5">
+            <div className="mb-4 sm:mb-6">
+              <div className="flex items-center justify-between shadow-lg rounded-lg mb-4 sm:mb-6 md:mb-8 border-b border-gray-200 pb-2 overflow-x-auto">
+                <div className="flex w-full justify-between space-x-0 sm:space-x-2 md:space-x-4 mb-0.5">
                   {/* Property Details Tab */}
                   <div
-                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 ${
+                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 flex-1 ${
                       activeTab === "property"
                         ? "text-[#EE2529]"
                         : "text-[#767676]"
                     }`}
                     onClick={() => handleTabClick("property")}
                   >
-                    <FaBuilding
+                    <PiBuildingApartmentFill
                       className={`w-5 h-5 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${
                         activeTab === "property"
                           ? "text-[#EE2529]"
                           : "text-[#767676] group-hover:text-[#EE2529]"
                       }`}
                     />
-                    <p className="text-xs sm:text-sm font-medium">
+                    <p className="text-xs sm:text-sm font-bold">
                       Property Details
                     </p>
                     {activeTab === "property" && (
@@ -228,7 +327,7 @@ const PropertyDetails = () => {
 
                   {/* Lease Details Tab */}
                   <div
-                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 ${
+                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 flex-1 ${
                       activeTab === "lease"
                         ? "text-[#EE2529]"
                         : "text-[#767676]"
@@ -242,7 +341,7 @@ const PropertyDetails = () => {
                           : "text-[#767676] group-hover:text-[#EE2529]"
                       }`}
                     />
-                    <p className="text-xs sm:text-sm">Lease Details</p>
+                    <p className="text-xs sm:text-sm font-bold">Lease Details</p>
                     {activeTab === "lease" && (
                       <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#EE2529]"></div>
                     )}
@@ -250,7 +349,7 @@ const PropertyDetails = () => {
 
                   {/* Analytics Tab */}
                   <div
-                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 ${
+                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 flex-1 ${
                       activeTab === "analytics"
                         ? "text-[#EE2529]"
                         : "text-[#767676]"
@@ -264,7 +363,7 @@ const PropertyDetails = () => {
                           : "text-[#767676] group-hover:text-[#EE2529]"
                       }`}
                     />
-                    <p className="text-xs sm:text-sm">Analytics</p>
+                    <p className="text-xs sm:text-sm font-bold">Analytics</p>
                     {activeTab === "analytics" && (
                       <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#EE2529]"></div>
                     )}
@@ -272,7 +371,7 @@ const PropertyDetails = () => {
 
                   {/* Location Details Tab */}
                   <div
-                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 ${
+                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 flex-1 ${
                       activeTab === "location"
                         ? "text-[#EE2529]"
                         : "text-[#767676]"
@@ -286,7 +385,7 @@ const PropertyDetails = () => {
                           : "text-[#767676] group-hover:text-[#EE2529]"
                       }`}
                     />
-                    <p className="text-xs sm:text-sm">Location Details</p>
+                    <p className="text-xs sm:text-sm font-bold">Location Details</p>
                     {activeTab === "location" && (
                       <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#EE2529]"></div>
                     )}
@@ -294,7 +393,7 @@ const PropertyDetails = () => {
 
                   {/* FAQs Tab */}
                   <div
-                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 ${
+                    className={`text-center flex flex-col items-center cursor-pointer group relative pb-1 flex-1 ${
                       activeTab === "faqs" ? "text-[#EE2529]" : "text-[#767676]"
                     }`}
                     onClick={() => handleTabClick("faqs")}
@@ -306,7 +405,7 @@ const PropertyDetails = () => {
                           : "text-[#767676] group-hover:text-[#EE2529]"
                       }`}
                     />
-                    <p className="text-xs sm:text-sm">FAQs</p>
+                    <p className="text-xs sm:text-sm font-bold">FAQs</p>
                     {activeTab === "faqs" && (
                       <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#EE2529]"></div>
                     )}
@@ -317,42 +416,18 @@ const PropertyDetails = () => {
               {/* Download and Share buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-between mb-3 gap-3">
                 <div className="flex items-center gap-2 sm:gap-3 order-2 sm:order-1">
-                  <div className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs sm:text-sm text-[#767676]">
+                  <div className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs sm:text-sm text-[#767676] ">
                     Premium Location
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3 order-1 sm:order-2 w-full sm:w-auto justify-center sm:justify-end">
+                <div className="flex items-center gap-2 sm:gap-3 order-1 sm:order-2 w-full sm:w-auto justify-center sm:justify-end hidden lg:flex">
                   <button className="flex items-center gap-1 sm:gap-2 border border-[#767676] text-[#767676] rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors">
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      ></path>
-                    </svg>
+                    <img src={download} alt="" />
                     <span className="hidden xs:inline">Download Report</span>
                     <span className="xs:hidden">Download</span>
                   </button>
                   <button className="flex items-center gap-1 sm:gap-2 border border-[#767676] text-[#767676] rounded-md px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors">
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                      ></path>
-                    </svg>
+                  <img src={share} alt="" />
                     <span className="hidden xs:inline">Share Report</span>
                     <span className="xs:hidden">Share</span>
                   </button>
@@ -367,7 +442,7 @@ const PropertyDetails = () => {
                       Residential Space
                     </h3>
                   </div>
-                  <p className="text-[#767676] text-xs sm:text-sm">
+                  <p className="text-[#767676] text-xs md:text-sm lg:text-base">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Suspendisse varius enim in eros elementum tristique. Duis
                     cursus, mi quis viverra ornare, eros dolor interdum nulla,
@@ -376,7 +451,6 @@ const PropertyDetails = () => {
                 </>
               )}
 
-              {/* Add Analytics Title HERE - inside the same card */}
               {activeTab === "analytics" && (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#EE2529]">
@@ -385,7 +459,6 @@ const PropertyDetails = () => {
                 </div>
               )}
 
-              {/* Add Lease Details Title HERE - inside the same card */}
               {activeTab === "lease" && (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#EE2529]">
@@ -393,7 +466,7 @@ const PropertyDetails = () => {
                   </h3>
                 </div>
               )}
-              {/* Add Location Title HERE - inside the same card */}
+
               {activeTab === "location" && (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#EE2529]">
@@ -402,7 +475,6 @@ const PropertyDetails = () => {
                 </div>
               )}
 
-              {/* Add FAQ Title HERE - inside the same card */}
               {activeTab === "faqs" && (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="space-y-2">
@@ -420,28 +492,24 @@ const PropertyDetails = () => {
             {/* Content Area - Changes based on tab */}
             {activeTab === "property" && <PropertyDetailsCards />}
 
-            {/* Render LeaseDetails component when lease tab is active */}
             {activeTab === "lease" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <LeaseDetails />
               </div>
             )}
 
-            {/* Render Analytics component when analytics tab is active */}
             {activeTab === "analytics" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <Analytics />
               </div>
             )}
 
-            {/* For Location Details - use same structure */}
             {activeTab === "location" && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <LocationDetails />
               </div>
             )}
 
-            {/* For FAQs */}
             {activeTab === "faqs" && (
               <div className="col-span-1 lg:col-span-2">
                 <FAQ />

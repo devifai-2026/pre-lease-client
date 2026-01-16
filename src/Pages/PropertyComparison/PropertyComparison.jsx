@@ -123,7 +123,7 @@ const PropertyComparison = () => {
         <div className='max-w-[95%] mx-auto mt-6'>
             {/* Header section with squarebg background */}
             <div 
-                className='flex items-center justify-between rounded-t-lg p-4'
+                className='flex flex-col md:flex-row items-center justify-between rounded-t-lg p-4 space-y-2'
                 style={{
                     backgroundImage: `url(${squarebg})`,
                     backgroundSize: 'cover',
@@ -138,7 +138,7 @@ const PropertyComparison = () => {
                 </h2>
                 
                 {/* Buttons */}
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-4 ">
                     <button 
                         onClick={handleDownload}
                         className="flex items-center gap-2 border border-[#767676] text-[#767676] rounded-md px-4 py-2 text-sm hover:bg-gray-50 transition-colors bg-white"
@@ -157,7 +157,7 @@ const PropertyComparison = () => {
             </div>
             
             {/* Report content for PDF - This is what appears in UI */}
-            <div ref={reportRef} className='shadow-md rounded-b-md p-4 bg-white'>
+            <div ref={reportRef} className=' p-4 bg-white'>
                 <PropertyCards />
                 <OverView />
                 <Productivity />

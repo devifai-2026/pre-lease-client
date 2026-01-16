@@ -23,7 +23,7 @@ const ExploreProperties = () => {
     roi: 100, // Default to 100%
     tenure: 20, // Default to 20 years
   });
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [activeTab, setActiveTab] = useState("location");
 
    useEffect(() => {
@@ -90,7 +90,11 @@ const ExploreProperties = () => {
 
   const handleApplyFilters = () => {
     console.log("Applied filters:", filters);
-    setShowMobileFilters(false);
+    setShowFilters(false);
+  };
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
   };
 
   const renderActiveTabContent = () => {
@@ -100,22 +104,22 @@ const ExploreProperties = () => {
           <>
             {/* Proximity Options - Responsive */}
             <div>
-              <h3 className="text-base sm:text-lg font-semibold text-[#262626] mb-2">
+              <h3 className="text-sm font-bold text-[#262626] mb-2">
                 Proximity to
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-6">
                 {proximityOptions.map((option) => (
                   <label
                     key={option.id}
-                    className="flex items-center gap-2 sm:gap-3 cursor-pointer"
+                    className="flex items-center gap-2 sm:gap-3 cursor-pointer "
                   >
                     <input
                       type="checkbox"
                       checked={filters.proximity.includes(option.id)}
                       onChange={() => handleProximityChange(option.id)}
-                      className="w-4 h-4 sm:w-5 sm:h-5 border border-gray-300 rounded cursor-pointer accent-red-600"
+                      className="w-3 h-3 sm:w-4 sm:h-4 border border-gray-300 bg-[#6E6E6E] rounded cursor-pointer accent-red-600"
                     />
-                    <span className="text-sm sm:text-base">{option.label}</span>
+                    <span className="text-sm ">{option.label}</span>
                   </label>
                 ))}
               </div>
@@ -158,8 +162,10 @@ const ExploreProperties = () => {
   };
 
   return (
-    <div className="w-full max-w-[95%] mx-auto font-montserrat mt-6">
-      {/* Top Controls Section with Background */}
+   <div>
+     <div className="">
+        <div className="w-full max-w-[95%] mx-auto font-montserrat mt-4 mb-8">
+      {/* Top Controls Section with Background - Updated with toggle */}
       <div 
         className="relative rounded-lg mb-4"
         style={{
@@ -171,134 +177,158 @@ const ExploreProperties = () => {
         }}
       >
         {/* Overlay for better readability */}
-        <div className="absolute inset-0 bg-white/60 rounded-lg"></div>
+        <div className="absolute inset-0 bg-white/30 rounded-lg"></div>
         
         {/* Top Controls - Responsive */}
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2 justify-between sm:justify-end p-4">
-          {/* Mobile Filter Toggle Button */}
-          <button 
-            onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className="sm:hidden flex items-center justify-center gap-2 border-2 border-[#767676] py-2 px-3 rounded-md w-full bg-white"
-          >
-            {showMobileFilters ? (
-              <>
-                <IoMdClose size={20} />
-                Close Filters
-              </>
-            ) : (
-              <>
-                <IoMdMenu size={20} />
-                Advanced Filters
-                <img src={filter} alt="" className="w-5 h-5" />
-              </>
-            )}
-          </button>
-
-          {/* Desktop Advance Filters Button */}
-          <button className="hidden sm:flex items-center gap-2 border-2 border-[#767676] py-2 px-3 rounded-md bg-white">
-            Advance Filters
-            <img src={filter} alt="" />
-          </button>
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 p-4 sm:p-6">
+          {/* Results count - Hidden on mobile when filters are shown */}
+          <div className={`${showFilters ? 'hidden sm:block' : 'block'} w-full sm:w-auto`}>
+            <p className=" font-bold text-sm sm:text-base text-[#767676]">
+             <span className="text-[#EE2529]"> Properties</span> found based on your above search criteria.
+            </p>
+          </div>
           
-          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-            <span className="text-gray-700 text-sm sm:text-base">Sort by:</span>
-            <button className="flex items-center gap-1 text-[#EE2529] font-semibold hover:bg-gray-100 text-sm sm:text-base bg-white px-2 py-1 rounded">
-              A-Z <IoMdArrowDropdown size={16} />
+          {/* Controls on right side */}
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end">
+            {/* Advance Filters Button */}
+            <button 
+              onClick={toggleFilters}
+              className="flex items-center gap-2 border-2 border-[#767676] py-1 px-2 md:py-2 md:px-3 rounded-md bg-white hover:bg-gray-50 transition-colors"
+            >
+              {showFilters ? (
+                <>
+                  <IoMdClose size={18} className="sm:hidden" />
+                  <span className="hidden sm:inline">Close Filters</span>
+                  <span className="sm:hidden">Close</span>
+                </>
+              ) : (
+                <>
+                  <span className="">Advance Filters</span>
+                
+                  <img src={filter} alt="filter" className="w-3 h-3 sm:w-4 sm:h-4" />
+                </>
+              )}
+            </button>
+            
+            {/* Sort by dropdown */}
+            <div className="flex items-center gap-2">
+              <span className="text-gray-700 text-sm sm:text-base">Sort by:</span>
+              <button className="flex items-center gap-1 text-[#EE2529] font-semibold hover:bg-gray-100 text-sm sm:text-base bg-white px-3 py-2 rounded border border-gray-300">
+                A-Z <IoMdArrowDropdown size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Filter Container - Responsive with toggle */}
+      {showFilters && (
+        <div className="shadow-lg rounded-lg px-4 sm:px-6 py-6 sm:py-8 mb-6">
+          {/* Header */}
+          <div className="mb-4 sm:mb-4">
+            <div className="flex items-center gap-2">
+              <CiFilter className="text-[#EE2529] text-sm md:text-base lg:text-xl" />
+              <h1 className="text-sm md:text-base lg:text-xl  font-bold text-[#EE2529]">
+                Advanced Filters
+              </h1>
+            </div>
+          </div>
+
+         <div className="flex flex-wrap justify-between gap-2 sm:gap-4 md:gap-8 mb-4 sm:mb-4 overflow-x-auto pb-2">
+  <button 
+    onClick={() => setActiveTab("location")}
+    className={`pb-2 sm:pb-4 font-bold whitespace-nowrap text-xs sm:text-base ${activeTab === "location" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-[#262626] hover:text-gray-900"}`}
+  >
+    <span className="block sm:hidden">Location</span>
+    <span className="hidden sm:block">
+      Location <br /> Proximity
+    </span>
+  </button>
+  
+  <button 
+    onClick={() => setActiveTab("pricing")}
+    className={`pb-2 sm:pb-4 font-bold whitespace-nowrap text-xs sm:text-base ${activeTab === "pricing" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-[#262626] hover:text-gray-900"}`}
+  >
+    <span className="block sm:hidden">Pricing</span>
+    <span className="hidden sm:block">Pricing</span>
+  </button>
+  
+  <button 
+    onClick={() => setActiveTab("unit")}
+    className={`pb-2 sm:pb-4 font-bold whitespace-nowrap text-xs sm:text-base ${activeTab === "unit" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-[#262626] hover:text-gray-900"}`}
+  >
+    <span className="block sm:hidden">Unit</span>
+    <span className="hidden sm:block">Type of Unit</span>
+  </button>
+  
+  <button 
+    onClick={() => setActiveTab("rent")}
+    className={`pb-2 sm:pb-4 font-bold whitespace-nowrap text-xs sm:text-base ${activeTab === "rent" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-[#262626] hover:text-gray-900"}`}
+  >
+    <span className="block sm:hidden">Rent</span>
+    <span className="hidden sm:block">
+      Annual Rent <br /> Achieved
+    </span>
+  </button>
+  
+  <button 
+    onClick={() => setActiveTab("roi")}
+    className={`pb-2 sm:pb-4 font-bold whitespace-nowrap text-xs sm:text-base ${activeTab === "roi" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-[#262626] hover:text-gray-900"}`}
+  >
+    <span className="block sm:hidden">ROI</span>
+    <span className="hidden sm:block">ROI</span>
+  </button>
+  
+  <button 
+    onClick={() => setActiveTab("tenure")}
+    className={`pb-2 sm:pb-4 font-bold whitespace-nowrap text-xs sm:text-base ${activeTab === "tenure" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-[#262626] hover:text-gray-900"}`}
+  >
+    <span className="block sm:hidden">Tenure</span>
+    <span className="hidden sm:block">Tenure Left</span>
+  </button>
+</div>
+
+          {/* Info Box */}
+          <div className="bg-[#FDEDEE] p-2 mb-4 flex items-start gap-3 rounded-2xl">
+            <div className="text-lg sm:text-xl">
+              <IoIosInformationCircleOutline />
+            </div>
+            <p className="text-gray-700 text-xs sm:text-sm">
+              This information is certified from the person listing the property
+            </p>
+          </div>
+
+          {/* Dynamic Tab Content */}
+          {renderActiveTabContent()}
+
+          {/* Divider */}
+          <div className="border-t border-gray-200 mb-6 sm:mb-8 mt-6 sm:mt-8"></div>
+
+          {/* Action Buttons - Responsive */}
+          <div className="flex flex-row justify-end gap-3 sm:gap-4">
+            <button
+              onClick={handleResetFilters}
+              className="px-4 sm:px-6 py-2 border-2 border-gray-400 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition text-sm sm:text-base w-full sm:w-auto"
+            >
+              Reset Filters
+            </button>
+            <button
+              onClick={handleApplyFilters}
+              className="px-4 sm:px-6 py-2 text-white font-semibold rounded-lg transition 
+                bg-gradient-to-r from-[#EE2529] to-[#C73834]
+                hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm sm:text-base w-full sm:w-auto"
+            >
+              Apply Filters
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Main Filter Container - Responsive */}
-      <div className={`shadow-lg rounded-lg px-4 sm:px-6 py-6 sm:py-8 ${showMobileFilters ? 'block' : 'hidden sm:block'}`}>
-        {/* Header */}
-        <div className="mb-4 sm:mb-4">
-          <div className="flex items-center gap-2">
-            <CiFilter className="text-[#EE2529] text-2xl sm:text-3xl" />
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#EE2529]">
-              Advanced Filters
-            </h1>
-          </div>
-        </div>
-
-        {/* Filter Tabs - Responsive */}
-        <div className="flex flex-wrap gap-2 sm:gap-4 md:gap-8 mb-4 sm:mb-4 overflow-x-auto pb-2">
-          <button 
-            onClick={() => setActiveTab("location")}
-            className={`pb-2 sm:pb-4 font-semibold whitespace-nowrap text-sm sm:text-base ${activeTab === "location" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            Location Proximity
-          </button>
-          <button 
-            onClick={() => setActiveTab("pricing")}
-            className={`pb-2 sm:pb-4 font-semibold whitespace-nowrap text-sm sm:text-base ${activeTab === "pricing" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            Pricing
-          </button>
-          <button 
-            onClick={() => setActiveTab("unit")}
-            className={`pb-2 sm:pb-4 font-semibold whitespace-nowrap text-sm sm:text-base ${activeTab === "unit" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            Type of Unit
-          </button>
-          <button 
-            onClick={() => setActiveTab("rent")}
-            className={`pb-2 sm:pb-4 font-semibold whitespace-nowrap text-sm sm:text-base ${activeTab === "rent" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            Annual Rent Achieved
-          </button>
-          <button 
-            onClick={() => setActiveTab("roi")}
-            className={`pb-2 sm:pb-4 font-semibold whitespace-nowrap text-sm sm:text-base ${activeTab === "roi" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            ROI
-          </button>
-          <button 
-            onClick={() => setActiveTab("tenure")}
-            className={`pb-2 sm:pb-4 font-semibold whitespace-nowrap text-sm sm:text-base ${activeTab === "tenure" ? "text-[#EE2529] border-b-2 border-[#EE2529]" : "text-gray-600 hover:text-gray-900"}`}
-          >
-            Tenure Left
-          </button>
-        </div>
-
-        {/* Info Box */}
-        <div className="bg-[#FDEDEE] p-3 sm:p-4 mb-4 flex items-start gap-3 rounded-lg">
-          <div className="text-lg sm:text-xl">
-            <IoIosInformationCircleOutline />
-          </div>
-          <p className="text-gray-700 text-xs sm:text-sm">
-            This information is certified from the person listing the property
-          </p>
-        </div>
-
-        {/* Dynamic Tab Content */}
-        {renderActiveTabContent()}
-
-        {/* Divider */}
-        <div className="border-t border-gray-200 mb-6 sm:mb-8 mt-6 sm:mt-8"></div>
-
-        {/* Action Buttons - Responsive */}
-        <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
-          <button
-            onClick={handleResetFilters}
-            className="px-4 sm:px-6 py-2 border-2 border-gray-400 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition text-sm sm:text-base w-full sm:w-auto"
-          >
-            Reset Filters
-          </button>
-          <button
-            onClick={handleApplyFilters}
-            className="px-4 sm:px-6 py-2 text-white font-semibold rounded-lg transition 
-              bg-gradient-to-r from-[#EE2529] to-[#C73834]
-              hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm sm:text-base w-full sm:w-auto"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Properties Cards Section */}
-      <PropertiesCard />
     </div>
+     </div>
+      <PropertiesCard />
+   </div>
   );
 };
 

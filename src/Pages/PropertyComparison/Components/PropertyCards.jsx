@@ -106,14 +106,14 @@ const PropertyCards = () => {
       </div>
       
       <div className="flex items-center flex-col lg:flex-row justify-between">
-        <h2 className="text-[#EE2529] mr-16 font-bold text-base sm:text-xl mt-6 lg:mt-0">Property</h2>
+        <h2 className="text-[#767676] mr-16 font-semibold text-base md:text-lg mt-6 lg:mt-0">Property</h2>
         
         {/* Property Cards Grid - Exactly like PropertiesCard */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
           {comparisonProperties.map((property) => (
             <div 
               key={property.id} 
-              className="bg-white rounded-lg overflow-hidden relative shadow-sm"
+              className="bg-white rounded-xl overflow-hidden relative shadow-xl"
             >
               {/* Property Title and Location */}
               <div className="">
@@ -142,11 +142,11 @@ const PropertyCards = () => {
                     alt={property.title}
                   />
                   {/* Gradient overlay for bottom blur */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white "></div>
                   
                   {/* Slider Dots */}
                   <div 
-                    className="absolute bottom-10 sm:bottom-12 md:bottom-14 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
+                    className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
                   >
                     {property.images.map((_, dotIndex) => (
                       <button
@@ -191,7 +191,7 @@ const PropertyCards = () => {
                   </p>
                 </div>
                 <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-1 sm:ml-2">
-                  <p className="text-xs sm:text-sm font-medium">ROI</p>
+                  <p className="text-base lg:text-lg font-semibold">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                 </div>
               </div>
@@ -200,13 +200,13 @@ const PropertyCards = () => {
               <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3 sm:mt-4 mb-3 sm:mb-4 px-3 sm:px-4">
                 <button 
                   onClick={() => handleViewClick(property.id)}
-                  className="flex-1 border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors text-center"
+                  className=" border border-[#767676] text-[#767676] rounded-md px-2 py-1.5  text-xs sm:text-sm hover:bg-gray-50 transition-colors text-center font-semibold"
                 >
                   View
                 </button>
                 <button 
                   onClick={() => handleEnquireClick(property.id)}
-                  className="flex-1 border rounded-md text-white px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity text-center"
+                  className=" border rounded-md text-white px-2 py-1.5 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity text-center font-bold"
                 >
                   Enquire
                 </button>

@@ -35,8 +35,8 @@ const ContactForm = () => {
   ];
 
   return (
-    <div className="w-full lg:w-1/2 bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-lg lg:h-full mt-3">
-      <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">
+    <div className="w-full lg:w-1/2 bg-white p-4 md:p-5 lg:p-6 rounded-lg shadow-lg lg:h-full ">
+      <h3 className="text-xl md:text-2xl font-semibold text-[#EE2529] mb-4 md:mb-6">
         Send us a Message
       </h3>
       
@@ -45,14 +45,14 @@ const ContactForm = () => {
         <div className="flex flex-col sm:flex-row items-start justify-between gap-3 md:gap-4">
           {/* Name Field */}
           <div className="flex-1 w-full sm:w-auto">
-            <label className="block text-gray-700 font-medium mb-1 md:mb-2 text-sm md:text-base">
-              Name <span className="text-red-500">*</span>
+            <label className="block text-gray-700 font-medium mb-1  text-sm md:text-base">
+              Name *
             </label>
             <input
               type="text"
               name="name"
               placeholder="Your full name"
-              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-1.5  border border-[#000000] rounded-md focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition text-sm md:text-base"
               value={formData.name}
               onChange={handleChange}
               required
@@ -61,14 +61,14 @@ const ContactForm = () => {
 
           {/* Email Field */}
           <div className="flex-1 w-full sm:w-auto mt-3 sm:mt-0">
-            <label className="block text-gray-700 font-medium mb-1 md:mb-2 text-sm md:text-base">
-              Email <span className="text-red-500">*</span>
+            <label className="block text-gray-700 font-medium mb-1 text-sm md:text-base">
+              Email *
             </label>
             <input
               type="email"
               name="email"
               placeholder="Your email"
-              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-1.5  border border-[#000000] rounded-md focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition text-sm md:text-base"
               value={formData.email}
               onChange={handleChange}
               required
@@ -80,14 +80,14 @@ const ContactForm = () => {
         <div className="flex flex-col sm:flex-row items-start justify-between gap-3 md:gap-4">
           {/* Phone Field */}
           <div className="flex-1 w-full sm:w-auto">
-            <label className="block text-gray-700 font-medium mb-1 md:mb-2 text-sm md:text-base">
+            <label className="block text-gray-700 font-medium mb-1  text-sm md:text-base">
               Phone Number
             </label>
             <input
               type="tel"
               name="phone"
               placeholder="Mobile no"
-              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-1.5  border border-[#000000] rounded-md focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition text-sm md:text-base"
               value={formData.phone}
               onChange={handleChange}
             />
@@ -95,12 +95,12 @@ const ContactForm = () => {
 
           {/* Role Selection */}
           <div className="flex-1 w-full sm:w-auto mt-3 sm:mt-0 relative">
-            <label className="block text-gray-700 font-medium mb-1 md:mb-2 text-sm md:text-base">
+            <label className="block text-gray-700 font-medium mb-1  text-sm md:text-base">
               Choose Role
             </label>
             <select
               name="role"
-              className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition appearance-none bg-white pr-8 md:pr-10 text-sm md:text-base"
+              className="w-full px-3 md:px-4 py-1.5  border border-[#000000] rounded-md focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition appearance-none bg-white pr-8 md:pr-10 text-sm md:text-base"
               value={formData.role}
               onChange={handleChange}
             >
@@ -125,14 +125,14 @@ const ContactForm = () => {
 
         {/* Message Field */}
         <div className="flex-grow">
-          <label className="block text-gray-700 font-medium mb-1 md:mb-2 text-sm md:text-base">
-            Message <span className="text-red-500">*</span>
+          <label className="block text-gray-700 font-medium mb-1 md:mb-1 text-sm md:text-base">
+            Message *
           </label>
           <textarea
             name="message"
             placeholder="Please describe your inquiry in detail..."
             rows="3"
-            className="w-full h-full min-h-[120px] px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition resize-none text-sm md:text-base"
+            className="w-full h-full min-h-[105px] px-3 md:px-4 py-1.5  border border-[#000000] rounded-md focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent transition resize-none text-sm md:text-base"
             value={formData.message}
             onChange={handleChange}
             required

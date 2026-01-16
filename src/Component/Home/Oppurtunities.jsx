@@ -83,11 +83,11 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
 
   return (
     <div
-      className="max-w-[90%] md:max-w-[80%] lg:max-w-[65%] mx-auto px-4 lg:px-0"
+      className="max-w-[95%] md:max-w-[80%] lg:max-w-[65%] mx-auto px-4 lg:px-0"
       data-aos="fade-up"
     >
       <h2
-        className="text-center mt-4 md:mt-8 lg:mt-12 text-2xl md:text-3xl lg:text-4xl"
+        className="text-center mt-4 md:mt-8 lg:mt-12 text-3xl md:text-4xl lg:text-4xl"
         data-aos="fade-up"
         data-aos-delay="100"
       >
@@ -96,7 +96,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
 
       {/* Cards Grid - Responsive */}
       <div
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 md:mt-8"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 md:mt-8 hidden lg:grid"
         data-aos="fade-up"
         data-aos-delay="200"
       >
@@ -137,7 +137,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
                   ${isSelected ? "font-semibold" : "font-medium"}
                   ${textColor}
                   transition-colors duration-300
-                  group-hover:text-[#EE2529] text-xs sm:text-xs md:text-sm lg:text-sm font-montserrat
+                  group-hover:text-[#EE2529] text-sm md:text-base lg:text-lg  font-semibold font-montserrat
                 `}
                 >
                   {card.label}
@@ -160,7 +160,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
       {/* City Preference Section */}
       <div className="mt-6 md:mt-8" data-aos="fade-up" data-aos-delay="400">
         <div
-          className="max-w-full md:max-w-[90%] lg:max-w-[80%] mx-auto shadow-xl rounded-xl p-4 sm:p-5 md:p-6 lg:p-8"
+          className="max-w-full md:max-w-[90%] lg:max-w-[90%] mx-auto shadow-xl rounded-xl p-4 sm:p-5 md:p-6 lg:p-8"
           data-aos="zoom-in"
           data-aos-delay="500"
         >
@@ -190,7 +190,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-3 md:gap-4 lg:gap-4 mt-4 sm:mt-4 md:mt-6 lg:mt-6 max-w-full sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] mx-auto font-montserrat">
+          <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-3 md:gap-4 lg:gap-4 mt-4 sm:mt-4 md:mt-6 lg:mt-6 max-w-full sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] mx-auto font-montserrat">
             {cities.map((city, index) => {
               const isCitySelected = selectedCity === index;
 
@@ -200,7 +200,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
                   onClick={() => setSelectedCity(index)}
                   className={`
                     p-2 sm:p-2.5 md:p-3 lg:p-4 rounded-lg cursor-pointer transition-all duration-300
-                    flex items-center justify-center  h-20 md:h-24 lg:h-32 w-full
+                    flex items-center justify-center  h-24 md:h-24 lg:h-32 w-full
                     ${
                       isCitySelected
                         ? `
@@ -219,9 +219,9 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
                   `}
                 >
                   <span
-                    className={`font-medium ${
-                      isCitySelected ? "text-[#EE2529]" : "text-gray-800"
-                    } text-center text-sm md:text-base lg:text-lg  whitespace-nowrap`}
+                    className={`font-bold ${
+                      isCitySelected ? "text-[#EE2529] " : "text-gray-800 "
+                    } text-center text-base text-wrap md:text-base lg:text-lg  whitespace-nowrap `}
                   >
                     {city}
                   </span>
@@ -233,7 +233,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
 
         {/* Buttons - Updated with onClick handlers */}
         <div
-          className="flex justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-2 mt-4 sm:mt-4 md:mt-5 lg:mt-5 font-montserrat mb-8"
+          className="flex justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-2 mt-4 sm:mt-4 md:mt-5 lg:mt-5 font-montserrat mb-8 md:mb-12 lg:mb-16"
           data-aos="fade-up"
           data-aos-delay="800"
         >

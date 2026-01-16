@@ -20,11 +20,11 @@ const WhyChoose = () => {
                     data-aos="fade-up"
                     data-aos-delay="100"
                 >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat .
+                    The most trusted platform for premium real estate Property
                 </p>
             </div>
             
-            <div className='max-w-[90%] mx-auto flex flex-col lg:flex-row items-center justify-between mt-14 gap-10'>
+            <div className='max-w-[90%] mx-auto flex flex-col md:flex-row items-stretch justify-between mt-5 md:mt-7 lg:mt-14 gap-10'>
                {/* Image Section */}
                <div 
                     className='flex-1'
@@ -32,7 +32,7 @@ const WhyChoose = () => {
                     data-aos-delay="200"
                >
                  <img 
-                    className='h-[440px] w-full rounded-lg' 
+                    className='w-full h-full  ' 
                     src={img} 
                     alt="Why Choose PreLeaseGrid" 
                  />
@@ -42,61 +42,61 @@ const WhyChoose = () => {
               <div className='flex-1 space-y-4'>
                  {/* 1 */}
                  <div 
-                    className='flex items-center gap-5 border-b-2 pb-3'
+                    className='flex items-start gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="300"
                  >
-                    <div>
-                        <img className='w-52 md:w-40 h-16' src={one} alt="" />
+                    <div className='flex-shrink-0'>
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={one} alt="" />
                     </div>
                     <div>
-                        <h2 className='font-semibold text-lg'>Platform Verified Every property authenticated</h2>
-                        <p className='text-sm'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
+                        <h2 className='font-normal lg:font-semibold text-lg'>Platform Verified Every property authenticated</h2>
+                        <p className='text-sm hidden lg:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
                     </div>
                  </div>
                  
                  {/* 2 */}
                  <div 
-                    className='flex items-center gap-5 border-b-2 pb-3'
+                    className='flex items-start gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="400"
                  >
-                    <div>
-                        <img className='w-52 md:w-40 h-16' src={two} alt="" />
+                    <div className='flex-shrink-0'>
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={two} alt="" />
                     </div>
                     <div>
-                        <h2 className='font-semibold text-lg'>12-18% Returns Guaranteed rental income</h2>
-                        <p className='text-sm'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
+                        <h2 className='font-normal lg:font-semibold text-lg'>12-18% Returns Guaranteed rental income</h2>
+                        <p className='text-sm hidden lg:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
                     </div>
                  </div>
                  
                  {/* 3 */}
                  <div 
-                    className='flex items-center gap-5 border-b-2 pb-3'
+                    className='flex items-start gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="500"
                  >
-                    <div>
-                        <img className='w-52 md:w-40 h-16' src={three} alt="" />
+                    <div className='flex-shrink-0'>
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={three} alt="" />
                     </div>
                     <div>
-                        <h2 className='font-semibold text-lg'>Pre-Leased Only Immediate cash flow</h2>
-                        <p className='text-sm'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
+                        <h2 className='font-normal lg:font-semibold text-lg'>Pre-Leased Only Immediate cash flow</h2>
+                        <p className='text-sm hidden lg:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
                     </div>
                  </div>
                  
                  {/* 4 */}
                  <div 
-                    className='flex items-center gap-5'
+                    className='flex items-start gap-5 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="600"
                  >
-                    <div>
-                        <img className='w-52 md:w-40 h-16' src={four} alt="" />
+                    <div className='flex-shrink-0'>
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={four} alt="" />
                     </div>
                     <div>
-                        <h2 className='font-semibold text-lg'>Premium Tenants Corporate & MNC leases</h2>
-                        <p className='text-sm'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
+                        <h2 className='font-normal lg:font-semibold text-lg'>Premium Tenants Corporate & MNC leases</h2>
+                        <p className='text-sm hidden lg:block'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae ert .</p>
                     </div>
                  </div>
                  
@@ -105,7 +105,7 @@ const WhyChoose = () => {
                     data-aos="fade-up"
                     data-aos-delay="700"
                  >
-                    <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity">
+                    <button className="border rounded-md text-white px-5 py-2 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity font-semibold">
                         Explore More
                     </button>
                  </div>
