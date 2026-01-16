@@ -2,7 +2,7 @@ import { GoArrowUpRight } from "react-icons/go";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import squarebg from "../../assets/propertyDetails/squaresbg.png";
+import squarebg from "../../assets/Banner/bannerBg.png";
 
 const Banner = () => {
   useEffect(() => {
@@ -19,7 +19,7 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="relative -mt-8 mt:mt-8 lg:mt-16 flex justify-center">
+    <div className="relative -mt-5 mt:mt-4 lg:mt-0 flex justify-center">
       {/* Background image container - 85% width */}
       <div 
         className="absolute inset-x-0 -z-10 rounded-lg overflow-hidden w-[100%] mx-auto"
@@ -32,7 +32,7 @@ const Banner = () => {
         }}
       >
         {/* Optional overlay for better text readability */}
-        <div className="absolute inset-0 bg-white/60"></div>
+        <div className="absolute inset-0 bg-white/10"></div>
       </div>
       
       {/* Content container - centered within the 85% width background */}

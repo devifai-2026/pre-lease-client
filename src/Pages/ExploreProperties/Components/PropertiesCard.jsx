@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CiHeart, CiLocationOn } from "react-icons/ci";
 import tag from "../../../assets/FeaturedProperties/tag.png";
 import cardImg from "../../../assets/FeaturedProperties/cardImg.png";
@@ -11,6 +11,8 @@ const PropertiesCard = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [selectedProperties, setSelectedProperties] = useState([]);
+  const [isHovered, setIsHovered] = useState({});
+  const intervalRefs = useRef({});
   
   // Generate 12 property cards data
   const propertyCards = Array.from({ length: 12 }, (_, index) => ({
@@ -37,11 +39,75 @@ const PropertiesCard = () => {
     setCurrentImageIndex(initialState);
   }, []);
 
+  // Start auto-sliding for all cards when currentImageIndex is initialized
+  useEffect(() => {
+    // Only start intervals if currentImageIndex has been initialized
+    if (Object.keys(currentImageIndex).length > 0) {
+      propertyCards.forEach(property => {
+        startAutoSlide(property.id);
+      });
+    }
+
+    // Cleanup intervals on component unmount
+    return () => {
+      Object.values(intervalRefs.current).forEach(clearInterval);
+    };
+  }, [currentImageIndex]); // Run this effect when currentImageIndex changes
+
+  const startAutoSlide = (propertyId) => {
+    // Clear any existing interval for this property
+    if (intervalRefs.current[propertyId]) {
+      clearInterval(intervalRefs.current[propertyId]);
+    }
+
+    // Start new interval
+    intervalRefs.current[propertyId] = setInterval(() => {
+      if (!isHovered[propertyId]) {
+        setCurrentImageIndex(prev => {
+          const currentIndex = prev[propertyId] || 0;
+          const property = propertyCards.find(p => p.id === propertyId);
+          if (!property) return prev;
+          
+          const nextIndex = (currentIndex + 1) % property.images.length;
+          return {
+            ...prev,
+            [propertyId]: nextIndex
+          };
+        });
+      }
+    }, 3000); // Change image every 3 seconds
+  };
+
   const handleDotClick = (propertyId, index) => {
     setCurrentImageIndex(prev => ({
       ...prev,
       [propertyId]: index
     }));
+    
+    // Restart auto-slide after manual dot click
+    startAutoSlide(propertyId);
+  };
+
+  const handleMouseEnter = (propertyId) => {
+    setIsHovered(prev => ({
+      ...prev,
+      [propertyId]: true
+    }));
+    
+    // Pause auto-slide on hover
+    if (intervalRefs.current[propertyId]) {
+      clearInterval(intervalRefs.current[propertyId]);
+    }
+  };
+
+  const handleMouseLeave = (propertyId) => {
+    setIsHovered(prev => ({
+      ...prev,
+      [propertyId]: false
+    }));
+    
+    // Resume auto-slide when mouse leaves
+    startAutoSlide(propertyId);
   };
 
   // Handle view button click
@@ -98,7 +164,8 @@ const PropertiesCard = () => {
   };
 
   return (
-    <div className="bg-[#F2F2F2] mx-auto font-montserrat p-6">
+  <div className="min-h-screen bg-[#F9F9F9] pt-6 pb-10">
+      <div className=" mx-auto font-montserrat max-w-[95%] ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-base md:text-lg text-[#262626]">
           <span className="text-[#EE2529]">Properties</span> found based on your above search criteria.
@@ -108,7 +175,7 @@ const PropertiesCard = () => {
         {selectedProperties.length > 0 && (
           <button 
             onClick={navigateToComparison}
-            className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-4 py-2 rounded-md text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
+            className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-4 py-2 text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
           >
             <FaPlus /> Compare Selected ({selectedProperties.length})
           </button>
@@ -116,7 +183,7 @@ const PropertiesCard = () => {
       </div>
       
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-8">
         {propertyCards.map((property, index) => {
           // Check if this property is selected for comparison
           const isSelected = selectedProperties.some(p => p.id === property.id);
@@ -124,15 +191,15 @@ const PropertiesCard = () => {
           // Show special card at 8th position (index 7 in 0-based array)
           if (index === 7) {
             return (
-              <div key="special-card" className="bg-[#FFFFFF] rounded-lg overflow-hidden p-6 flex flex-col items-start h-full min-h-[400px]">
+              <div key="special-card" className="bg-[#FFFFFF] rounded-2xl shadow-lg overflow-hidden p-6 flex flex-col items-start h-full min-h-[400px]">
                 <img src={circle} alt="Assistance" className="w-24 h-24 mb-4" />
-                <p className="text-sm text-gray-600 mb-2">Need assistance with your Investment ?</p>
-                <p className="text-lg md:text-xl lg:text-2xl font-medium text-[#262626] mb-6">
+                <p className="text-sm md:text-base lg:text-xl text-gray-700 mb-2">Need assistance with your Investment ?</p>
+                <p className="text-xl md:text-2xl lg:text-3xl  text-[#262626] mb-6">
                   Get in touch with our expert to find a customized solution for preleased property for you
                 </p>
                 <button 
                   onClick={handleContactExpert}
-                  className="border rounded-md text-white px-6 py-2.5 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-sm hover:opacity-90 transition-opacity hover:scale-105"
+                  className="border rounded-md text-white px-6 py-2.5 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-sm hover:opacity-90 transition-opacity hover:scale-105 font-bold"
                 >
                   Contact our Expert
                 </button>
@@ -143,7 +210,7 @@ const PropertiesCard = () => {
           return (
             <div 
               key={property.id} 
-              className={`bg-white rounded-lg overflow-hidden relative ${isSelected ? 'ring-2 ring-[#EE2529] ring-offset-2' : ''}`}
+              className={`bg-white rounded-2xl shadow-lg overflow-hidden relative ${isSelected ? 'ring-2 ring-[#EE2529] ring-offset-2' : ''}`}
             >
 
               
@@ -166,32 +233,37 @@ const PropertiesCard = () => {
 
               {/* Property Image Section */}
               <div className="relative">
-                <div className="relative">
+                <div 
+                  className="relative"
+                  onMouseEnter={() => handleMouseEnter(property.id)}
+                  onMouseLeave={() => handleMouseLeave(property.id)}
+                >
                   <img 
-                    className="w-full h-48 sm:h-52 md:h-56 lg:h-60 object-cover" 
+                    className="w-full h-72 md:h-60 lg:h-72 object-cover transition-opacity duration-500 ease-in-out" 
                     src={property.images[currentImageIndex[property.id] || 0]} 
                     alt={property.title}
                   />
                   {/* Gradient overlay for bottom blur */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white "></div>
                   
-                  {/* Slider Dots - Positioned above the blur */}
-                  <div 
-                    className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
-                  >
-                    {property.images.map((_, dotIndex) => (
-                      <button
-                        key={dotIndex}
-                        onClick={() => handleDotClick(property.id, dotIndex)}
-                        className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                          currentImageIndex[property.id] === dotIndex
-                            ? "bg-red-500 w-2.5"
-                            : "bg-white/60 w-2.5 hover:bg-white/80"
-                        }`}
-                        aria-label={`Go to image ${dotIndex + 1}`}
-                      />
-                    ))}
-                  </div>
+                {/* Slider Dots - Positioned above the blur */}
+<div 
+  className="absolute bottom-[72px] md:bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5 "
+>
+  {property.images.map((_, dotIndex) => (
+    <button
+      key={dotIndex}
+      onClick={() => handleDotClick(property.id, dotIndex)}
+      onMouseEnter={() => handleMouseEnter(property.id)}
+      className={`rounded-full transition-all duration-300 cursor-pointer ${
+        currentImageIndex[property.id] === dotIndex
+          ? "bg-red-500 w-3 h-3"
+          : "bg-white w-2 h-2 hover:bg-white/80"
+      }`}
+      aria-label={`Go to image ${dotIndex + 1}`}
+    />
+  ))}
+</div>
                   
                   {/* Action Buttons on Image */}
                   <div className="absolute bottom-3 left-0 right-0 flex items-center justify-between px-3 sm:px-4">
@@ -203,7 +275,7 @@ const PropertiesCard = () => {
                       className={`flex items-center gap-1 sm:gap-2 border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm transition-colors ${
                         isSelected 
                           ? 'bg-[#EE2529] text-white border-[#EE2529]' 
-                          : 'bg-white text-[#EE2529] border-[#EE2529] hover:bg-gray-50'
+                          : 'bg-white text-[#EE2529]  hover:bg-gray-50'
                       }`}
                     >
                       <FaPlus className="text-xs sm:text-sm" /> 
@@ -233,7 +305,7 @@ const PropertiesCard = () => {
                   </p>
                 </div>
                 <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-2">
-                  <p className="text-xs sm:text-sm font-medium">ROI</p>
+                  <p className="text-sm md:text-base lg:text-xl font-semibold">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                 </div>
               </div>
@@ -242,13 +314,13 @@ const PropertiesCard = () => {
               <div className="flex items-center justify-center gap-2 sm:gap-3 mt-4 mb-3">
                 <button 
                   onClick={() => handleViewClick(property.id)}
-                  className="border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105"
+                  className="border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105 font-semibold"
                 >
                   View
                 </button>
                 <button 
                   onClick={() => handleEnquireClick(property.id)}
-                  className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105"
+                  className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105 font-semibold"
                 >
                   Enquire
                 </button>
@@ -270,16 +342,8 @@ const PropertiesCard = () => {
         </div>
       )}
 
-      {/* Add Back Button */}
-      <div className="flex justify-end mt-6">
-        <button 
-          onClick={handleBack}
-          className="border border-[#767676] text-[#767676] rounded-md px-4 sm:px-6 py-2 sm:py-2.5 text-sm hover:bg-gray-50 transition-colors hover:scale-105"
-        >
-          Back
-        </button>
-      </div>
     </div>
+  </div>
   );
 };
 

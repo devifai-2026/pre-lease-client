@@ -13,13 +13,13 @@ const Facilities = () => {
                             <th className="p-4 text-left text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
                                 Parking Spaces
                             </th>
-                            <th className="p-4 text-left text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
+                            <th className="p-4 text-[#262626] font-semibold text-lg text-center w-1/4">
                                 10 slots
                             </th>
-                            <th className="p-4 text-left text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
+                            <th className="p-4 text-[#262626] font-semibold text-lg text-center w-1/4">
                                 12 slots
                             </th>
-                            <th className="p-4 text-left text-[#262626] font-semibold w-1/4">
+                            <th className="p-4 text-[#262626] font-semibold text-lg text-center w-1/4">
                                 15 slots
                             </th>
                         </tr>
@@ -30,53 +30,53 @@ const Facilities = () => {
                             <td className="p-4 text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
                                 Parking per sq ft Carpet Area
                             </td>
-                            <td className="p-4 text-[#EE2529] border-r border-[#EDECEC] bg-[#FFFCF4] border-l-4 border-l-[#EE2529] w-1/4">
+                            <td className="p-4 text-[#EE2529] text-lg text-center bg-[#FFFCF4] border-l-4 border-l-[#EE2529] w-1/4">
                                 42 sq.ft/Parking
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-lg text-center w-1/4">
                                 38 sq.ft/Parking
                             </td>
-                            <td className="p-4 w-1/4">
+                            <td className="p-4 text-lg text-center w-1/4">
                                 35 sq.ft/Parking
                             </td>
                         </tr>
                         {/* Row 2 - #F2F2F2 bg with Additional Income highlighted in FOURTH column */}
                         <tr className="bg-[#F2F2F2]">
-                            <td className="p-4 text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-[#262626] font-semibold  w-1/4">
                                 Additional Income
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-lg text-center w-1/4">
                                 Nil
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-lg text-center w-1/4">
                                 Nil
                             </td>
-                            <td className="p-4 text-[#EE2529] bg-[#FFFCF4] border-l-4 border-l-[#EE2529] w-1/4">
+                            <td className="p-4 text-[#EE2529] text-lg text-center bg-[#FFFCF4] border-l-4 border-l-[#EE2529] w-1/4">
                                 715,000/month
                             </td>
                         </tr>
                         {/* Row 3 - Normal bg with Furniture Status highlighted in FOURTH column */}
                         <tr>
-                            <td className="p-4 text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-[#262626] font-semibold  w-1/4">
                                 Furniture Status
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-lg text-center w-1/4">
                                 Unfurnished
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4">
+                            <td className="p-4 text-lg text-center w-1/4">
                                 Semi-furnished
                             </td>
-                            <td className="p-4 text-[#EE2529] bg-[#FFFCF4] border-l-4 border-l-[#EE2529] w-1/4">
+                            <td className="p-4 text-[#EE2529] text-lg text-center bg-[#FFFCF4] border-l-4 border-l-[#EE2529] w-1/4">
                                 Furnished
                             </td>
                         </tr>
                         {/* Row 4 - #F2F2F2 bg */}
                         <tr className="bg-[#F2F2F2]">
-                              <td className="p-4 text-[#262626] font-semibold border-r border-[#EDECEC] w-1/4">
+                              <td className="p-4 text-[#262626] font-semibold  w-1/4">
                               Key Amenities
                             </td>
-                            <td className="p-4 text-[#262626]  border-r border-[#EDECEC] w-1/4 align-top">
-                                <div className="space-y-1">
+                            <td className="p-4 border-r border-[#EDECEC] w-1/4 align-top">
+                                <div className="space-y-1 text-lg text-center">
                                     <div>High-speed Wi-Fi Enabled</div>
                                     <div>24/7 Power Backup</div>
                                     <div>Modern Conference Rooms</div>
@@ -84,8 +84,8 @@ const Facilities = () => {
                                     <div>Gym & Recreation Area</div>
                                 </div>
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4 align-top">
-                                <div className="space-y-1">
+                            <td className="p-4  w-1/4 align-top">
+                                <div className="space-y-1 text-lg text-center">
                                     <div>Biometric Access Control</div>
                                     <div>Central Air Conditioning</div>
                                     <div>Dedicated Server Room</div>
@@ -93,8 +93,8 @@ const Facilities = () => {
                                     <div>Shopping Complex</div>
                                 </div>
                             </td>
-                            <td className="p-4 border-r border-[#EDECEC] w-1/4 align-top">
-                                <div className="space-y-1">
+                            <td className="p-4  w-1/4 align-top">
+                                <div className="space-y-1 text-lg text-center">
                                     <div>Prime Street Frontage</div>
                                     <div>Escalators & Elevators</div>
                                     <div>Fire Safety Systems</div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import boxes from "../../../../../../assets/Dashboard/boxes.png"
+import dateArrow from "../../../../../../assets/Dashboard/dateArrow.svg"
+import show from "../../../../../../assets/Dashboard/show.svg"
 
 const Enquiries = () => {
   const [data] = useState([
@@ -39,23 +41,23 @@ const Enquiries = () => {
   ]);
 
   return (
-    <div className="bg-white p-0">
+    <div className="bg-white ">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
-        <h1 className="text-xl sm:text-2xl font-bold text-[#EE2529] text-center sm:text-left w-full sm:w-auto">
+        <h1 className="text-base md:text-lg lg:text-xl font-bold text-[#EE2529] text-center sm:text-left w-full sm:w-auto">
           Properties Under Enquiry
         </h1>
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-1 w-full sm:w-auto">
-          <button className="flex items-center justify-between gap-2 px-3 py-2 w-full sm:w-[180px] lg:w-[200px] text-xs sm:text-sm border border-gray-300 rounded bg-[#F2F2F2] text-[#767676] hover:bg-gray-100 transition-colors">
+          <button className="flex items-center justify-between gap-2 px-3 py-1 w-full sm:w-[180px] lg:w-[200px] text-xs sm:text-sm border border-gray-300 rounded bg-[#F2F2F2] text-[#767676] hover:bg-gray-100 transition-colors">
             Last 30 Days
             <FaChevronDown size={10} />
           </button>
           <button className="flex items-center gap-2 border-r-2 pr-2 text-xs sm:text-sm hover:bg-gray-50 whitespace-nowrap">
             Sort by: <span className='text-[#EE2529]'> Date</span>
-            <FaChevronDown className='text-[#EE2529]' size={10} />
+            <img className='text-[#EE2529]' src={dateArrow} alt="" />
           </button>
           <button className="text-xs sm:text-sm hover:bg-gray-50 flex items-center gap-2 whitespace-nowrap">
-            Show as: <img className='h-3 w-3' src={boxes} alt="" />
-            <FaChevronDown className='text-[#EE2529]' size={10} />
+            Show as: <img className='h-3 w-3' src={show} alt="" />
+            <img className='text-[#EE2529]' src={dateArrow} alt="" />
           </button>
         </div>
       </div>

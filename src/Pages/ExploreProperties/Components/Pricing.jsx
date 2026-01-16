@@ -24,9 +24,9 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
     return ((value - 0) / (50 - 0)) * 100;
   };
 
-  // Handle slider click or drag - ONLY FOR MAX THUMB
+  // Handle slider click or drag for both thumbs
   const handleSliderClick = (e) => {
-    if (!sliderRef.current || activeThumb !== 'max') return;
+    if (!sliderRef.current || !activeThumb) return;
     
     const rect = sliderRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -37,7 +37,7 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
   };
 
   const handleSliderTouch = (e) => {
-    if (!sliderRef.current || activeThumb !== 'max') return;
+    if (!sliderRef.current || !activeThumb) return;
     
     const rect = sliderRef.current.getBoundingClientRect();
     const x = e.touches[0].clientX - rect.left;
@@ -48,8 +48,14 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
   };
 
   const updateSliderValue = (value) => {
-    // Only update max value, min stays fixed
-    if (activeThumb === 'max') {
+    if (activeThumb === 'min') {
+      if (value <= priceRange[1] - 1) { // Keep at least 1 gap between min and max
+        const newMinPrice = value * 1000000;
+        setPriceRange([value, priceRange[1]]);
+        setMinPrice(newMinPrice);
+        onPricingChange?.({ min: newMinPrice, max: maxPrice });
+      }
+    } else if (activeThumb === 'max') {
       if (value >= priceRange[0] + 1) { // Keep at least 1 gap between min and max
         const newMaxPrice = value * 1000000;
         setPriceRange([priceRange[0], value]);
@@ -63,12 +69,12 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
   const handleInputChange = (e, type) => {
     const value = parseInt(e.target.value) || 0;
     if (type === 'min') {
-      const lakhValue = Math.min(Math.max(Math.floor(value / 1000000), 0), 49); // Max 49 to leave room for max
+      const lakhValue = Math.min(Math.max(Math.floor(value / 1000000), 0), priceRange[1] - 1);
       setMinPrice(value);
       setPriceRange([lakhValue, priceRange[1]]);
       onPricingChange?.({ min: value, max: maxPrice });
     } else {
-      const lakhValue = Math.min(Math.max(Math.floor(value / 1000000), 1), 50); // Min 1 to leave room for min
+      const lakhValue = Math.min(Math.max(Math.floor(value / 1000000), priceRange[0] + 1), 50);
       setMaxPrice(value);
       setPriceRange([priceRange[0], lakhValue]);
       onPricingChange?.({ min: minPrice, max: value });
@@ -113,31 +119,38 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
         
         <div 
           ref={sliderRef}
-          className="relative h-2 bg-gray-200 rounded-lg"
+          className="relative h-2 bg-gray-200 rounded-lg cursor-pointer"
+          onClick={(e) => {
+            if (activeThumb) return;
+            handleSliderClick(e);
+          }}
         >
           {/* Background track */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-gray-200 rounded-lg"></div>
           
-          {/* Selected range - always starts from left (min is fixed) */}
+          {/* Selected range */}
           <div 
             className="absolute top-0 h-2 bg-red-600 rounded-lg"
             style={{
-              left: `0%`,
-              width: `${maxPercent}%`,
+              left: `${minPercent}%`,
+              width: `${maxPercent - minPercent}%`,
             }}
           ></div>
           
-          {/* Min thumb - FIXED, non-draggable */}
-          <div
-            className="absolute top-1/2 w-6 h-6 bg-white border-2 border-red-600 rounded-full transform -translate-y-1/2 cursor-default shadow-md"
-            style={{ left: `0%` }}
+          {/* Min thumb - DRAGGABLE */}
+          <button
+            type="button"
+            className={`absolute top-1/2 w-6 h-6 bg-white border-2 border-red-600 rounded-full transform -translate-y-1/2 cursor-grab active:cursor-grabbing shadow-md hover:scale-110 transition-transform ${activeThumb === 'min' ? 'z-10' : ''}`}
+            style={{ left: `${minPercent}%` }}
+            onMouseDown={() => setActiveThumb('min')}
+            onTouchStart={() => setActiveThumb('min')}
           >
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-2 h-2 bg-red-600 rounded-full"></div>
             </div>
-          </div>
+          </button>
           
-          {/* Max thumb - ONLY DRAGGABLE */}
+          {/* Max thumb - DRAGGABLE */}
           <button
             type="button"
             className={`absolute top-1/2 w-6 h-6 bg-white border-2 border-red-600 rounded-full transform -translate-y-1/2 cursor-grab active:cursor-grabbing shadow-md hover:scale-110 transition-transform ${activeThumb === 'max' ? 'z-10' : ''}`}

@@ -19,16 +19,16 @@ import DetailsCashflow from "./DetailsCashflow"; // Import the component
 const Analytics = () => {
   // Data for pie chart
   const expenseData = [
-    { name: "Maintenance", value: 46 },
-    { name: "Property Tax", value: 18 },
-    { name: "Insurance", value: 12 },
-    { name: "Other Expenses", value: 23 },
+    { name: "Maintenance", value: 46 ,color: "#F7C952"},
+    { name: "Property Tax", value: 18, color: "#26BFCC" },
+    { name: "Insurance", value: 12, color: "#C73834" },
+    { name: "Other Expenses", value: 23, color: "#429482" },
   ];
 
   // Data for bar chart
   const yieldData = [
-    { name: "Gross Yield", value: 13.33 },
-    { name: "Net Yield", value: 12.11 },
+    { name: "Gross Yield", value: 13.33,color:"#C73834" },
+    { name: "Net Yield", value: 12.11, color:"#26BFCC" },
   ];
 
   // Data for cash flow projection
@@ -95,7 +95,8 @@ const Analytics = () => {
     },
   ];
 
-  const COLORS = ["#F7C952", "#26BFCC", "#C73834", "#429482"];
+  // Updated COLORS for Annual Expense Breakdown pie chart with your specified colors
+  const EXPENSE_COLORS = ["#F7C952", "#26BFCC", "#C73834", "#429482"];
   const COLORS_BAR = ["#C73834", "#26BFCC"];
 
   // Custom Y-axis tick values for cash flow projection
@@ -402,239 +403,303 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* performance analytics */}
-      <div className="col-span-1 lg:col-span-2 mt-6">
-        <h2 className="text-[#EE2529] text-lg md:text-xl mb-3 font-semibold">
-          Performance Analytics
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* left charts - Pie Chart with better label positioning */}
-          <div className="bg-white shadow-lg rounded-lg p-3">
-            <h3 className="text-center text-lg font-semibold mb-4 text-[#333]">
-              Annual Expense Breakdown
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={expenseData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={true}
-                  label={({
-                    cx,
-                    cy,
-                    midAngle,
-                    innerRadius,
-                    outerRadius,
-                    value,
-                    name,
-                  }) => {
-                    const RADIAN = Math.PI / 180;
-                    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                    
-                    let textAnchor = x > cx ? 'start' : 'end';
-                    let dx = x > cx ? 10 : -10;
-                    
-                    if (x <= cx) {
-                      dx = -15;
-                    }
-                    
-                    return (
-                      <text
-                        x={x}
-                        y={y}
-                        fill="#333"
-                        textAnchor={textAnchor}
-                        dominantBaseline="central"
-                        fontSize={12}
-                        fontWeight="bold"
-                        dx={dx}
-                      >
-                        {`${name}: ${value}%`}
-                      </text>
-                    );
-                  }}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                  nameKey="name"
+    {/* performance analytics */}
+<div className="col-span-1 lg:col-span-2 mt-6">
+  <h2 className="text-[#EE2529] text-lg md:text-xl mb-3 font-semibold">
+    Performance Analytics
+  </h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* left charts - Pie Chart with better label positioning */}
+    <div className="bg-white shadow-lg rounded-lg p-3">
+      <h3 className="text-center text-lg font-semibold mb-4 text-[#333]">
+        Annual Expense Breakdown
+      </h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={expenseData}
+            cx="50%"
+            cy="50%"
+            labelLine={true}
+            label={({
+              cx,
+              cy,
+              midAngle,
+              innerRadius,
+              outerRadius,
+              value,
+              name,
+            }) => {
+              const RADIAN = Math.PI / 180;
+              const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+              const x = cx + radius * Math.cos(-midAngle * RADIAN);
+              const y = cy + radius * Math.sin(-midAngle * RADIAN);
+              
+              let textAnchor = x > cx ? 'start' : 'end';
+              let dx = x > cx ? 10 : -10;
+              
+              if (x <= cx) {
+                dx = -15;
+              }
+              
+              // Use the colors from expenseData for the labels
+              const expenseItem = expenseData.find(item => item.name === name);
+              const labelColor = expenseItem ? expenseItem.color : '#333';
+              
+              return (
+                <text
+                  x={x}
+                  y={y}
+                  fill={labelColor}
+                  textAnchor={textAnchor}
+                  dominantBaseline="central"
+                  fontSize={12}
+                  fontWeight="bold"
+                  dx={dx}
                 >
-                  {expenseData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value, name) => [`${value}%`, name]}
-                  contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
-                    padding: '10px'
-                  }}
-                />
-                <Legend 
-                  layout="horizontal"
-                  verticalAlign="bottom"
-                  align="center"
-                  wrapperStyle={{ paddingTop: '20px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+                  {`${name}: ${value}%`}
+                </text>
+              );
+            }}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+          >
+            {expenseData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={EXPENSE_COLORS[index % EXPENSE_COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip 
+            formatter={(value, name) => [`${value}%`, name]}
+            contentStyle={{
+              backgroundColor: 'white',
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '10px'
+            }}
+          />
+          <Legend 
+            layout="horizontal"
+            verticalAlign="bottom"
+            align="center"
+            wrapperStyle={{ paddingTop: '20px' }}
+            formatter={(value, entry) => {
+              // Find the color for this legend item
+              const expenseItem = expenseData.find(item => item.name === value);
+              const color = expenseItem ? expenseItem.color : '#333';
+              return <span style={{ color: color, fontWeight: 'bold' }}>{value}</span>;
+            }}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
 
-          {/* right charts - Bar Chart */}
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-center text-lg font-semibold mb-4 text-[#333]">
-              Rental Yield Comparison
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={yieldData}
-                margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 16]} />
-                <Tooltip 
-                  formatter={(value) => [`${value}%`, 'Yield']}
-                  contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
-                    padding: '10px'
-                  }}
-                />
-                <Bar dataKey="value" fill="#8884d8" radius={[8, 8, 0, 0]}>
-                  {yieldData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS_BAR[index % COLORS_BAR.length]}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-            <div className="flex justify-center gap-6 mt-4">
-              {yieldData.map((entry, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div 
-                    className="w-4 h-4 rounded-sm" 
-                    style={{ backgroundColor: COLORS_BAR[index] }}
-                  ></div>
-                  <span className="text-sm text-gray-600">{entry.name}</span>
-                </div>
-              ))}
-            </div>
+    {/* right charts - Bar Chart */}
+    <div className="bg-white shadow-lg rounded-lg p-6">
+      <h3 className="text-center text-lg font-semibold mb-4 text-[#333]">
+        Rental Yield Comparison
+      </h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={yieldData}
+          margin={{ top: 20, right: 30, left: 0, bottom: 20 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+          <XAxis 
+            dataKey="name" 
+            tick={(props) => {
+              const { x, y, payload } = props;
+              // Find the color for this X-axis label
+              const yieldItem = yieldData.find(item => item.name === payload.value);
+              const color = yieldItem ? yieldItem.color : '#333';
+              
+              return (
+                <text
+                  x={x}
+                  y={y}
+                  dy={16}
+                  textAnchor="middle"
+                  fill={color}
+                  fontSize={12}
+                  fontWeight="bold"
+                >
+                  {payload.value}
+                </text>
+              );
+            }}
+          />
+          <YAxis domain={[0, 16]} />
+          <Tooltip 
+            formatter={(value) => [`${value}%`, 'Yield']}
+            contentStyle={{
+              backgroundColor: 'white',
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '10px'
+            }}
+            labelFormatter={(label) => {
+              const yieldItem = yieldData.find(item => item.name === label);
+              const color = yieldItem ? yieldItem.color : '#333';
+              return <span style={{ color: color, fontWeight: 'bold' }}>{label}</span>;
+            }}
+          />
+          <Bar dataKey="value" fill="#8884d8" radius={[8, 8, 0, 0]}>
+            {yieldData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS_BAR[index % COLORS_BAR.length]}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+      <div className="flex justify-center gap-6 mt-4">
+        {yieldData.map((entry, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <div 
+              className="w-4 h-4 rounded-sm" 
+              style={{ backgroundColor: COLORS_BAR[index] }}
+            ></div>
+            <span 
+              className="text-sm font-medium"
+              style={{ color: COLORS_BAR[index] }}
+            >
+              {entry.name}
+            </span>
           </div>
-        </div>
+        ))}
       </div>
+    </div>
+  </div>
+</div>
 
       {/* cashflow projection */}
-      <div className="col-span-1 lg:col-span-2 mt-6">
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-center text-lg md:text-xl mb-6 font-semibold">
-            Cash Flow Projections
-          </h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart
-              data={cashFlowData}
-              margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#ddd"
-                vertical={true}
-                horizontal={true}
-              />
-              <XAxis
-                dataKey="year"
-                tick={{ fontSize: 12 }}
-                axisLine={{ stroke: "#ddd" }}
-              />
-              <YAxis
-                tick={{ fontSize: 12 }}
-                axisLine={{ stroke: "#ddd" }}
-                ticks={yAxisTicks}
-                domain={[-50, 50]}
-                tickFormatter={(value) => {
-                  if (value === 0) return "₹0L";
-                  return value > 0 ? `₹+${value}L` : `₹${value}L`;
-                }}
-              />
-              <Tooltip
-                formatter={(value, name) => {
-                  const formattedValue = Math.abs(value) >= 1 ? 
-                    `₹${value >= 0 ? '+' : ''}${value.toFixed(2)}L` : 
-                    `₹${value >= 0 ? '+' : ''}${(value * 100000).toLocaleString()}`;
-                  
-                  let labelName = "";
-                  switch(name) {
-                    case "annualCashFlow":
-                      labelName = "Annual Cash Flow";
-                      break;
-                    case "annualRent":
-                      labelName = "Annual Rent";
-                      break;
-                    case "cumulativeCashFlow":
-                      labelName = "Cumulative Cash Flow";
-                      break;
-                    default:
-                      labelName = name;
-                  }
-                  
-                  return [formattedValue, labelName];
-                }}
-                labelFormatter={(label) => label}
-                contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  padding: "10px",
-                }}
-              />
-              <Legend
-                wrapperStyle={{ paddingTop: "20px" }}
-                iconType="line"
-              />
-              <Line
-                type="monotone"
-                dataKey="annualCashFlow"
-                stroke="#26BFCC"
-                strokeWidth={2}
-                dot={{ fill: "#26BFCC", r: 4 }}
-                activeDot={{ r: 6 }}
-                name="Annual Cash Flow"
-                isAnimationActive={true}
-              />
-              <Line
-                type="monotone"
-                dataKey="annualRent"
-                stroke="#C73834"
-                strokeWidth={2}
-                dot={{ fill: "#C73834", r: 4 }}
-                activeDot={{ r: 6 }}
-                name="Annual Rent"
-                isAnimationActive={true}
-              />
-              <Line
-                type="monotone"
-                dataKey="cumulativeCashFlow"
-                stroke="#F7C952"
-                strokeWidth={2}
-                dot={{ fill: "#F7C952", r: 4 }}
-                activeDot={{ r: 6 }}
-                name="Cumulative Cash Flow"
-                isAnimationActive={true}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+<div className="col-span-1 lg:col-span-2 mt-6">
+  <div className="bg-white shadow-lg rounded-lg p-6">
+    <h2 className="text-center text-lg md:text-xl mb-6 font-semibold">
+      Cash Flow Projections
+    </h2>
+    <ResponsiveContainer width="100%" height={400}>
+      <LineChart
+        data={cashFlowData}
+        margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
+      >
+        <CartesianGrid
+          strokeDasharray="3 3"
+          stroke="#ddd"
+          vertical={true}
+          horizontal={true}
+        />
+        <XAxis
+          dataKey="year"
+          tick={{ fontSize: 12, fill: "#333" }}
+          axisLine={{ stroke: "#ddd" }}
+        />
+        <YAxis
+          tick={{ fontSize: 12, fill: "#333" }}
+          axisLine={{ stroke: "#ddd" }}
+          ticks={yAxisTicks}
+          domain={[-50, 50]}
+          tickFormatter={(value) => {
+            if (value === 0) return "₹0L";
+            return value > 0 ? `₹+${value}L` : `₹${value}L`;
+          }}
+        />
+        <Tooltip
+          formatter={(value, name) => {
+            const formattedValue = Math.abs(value) >= 1 ? 
+              `₹${value >= 0 ? '+' : ''}${value.toFixed(2)}L` : 
+              `₹${value >= 0 ? '+' : ''}${(value * 100000).toLocaleString()}`;
+            
+            let labelName = "";
+            let labelColor = "#333";
+            switch(name) {
+              case "annualCashFlow":
+                labelName = "Annual Cash Flow";
+                labelColor = "#26BFCC";
+                break;
+              case "annualRent":
+                labelName = "Annual Rent";
+                labelColor = "#C73834";
+                break;
+              case "cumulativeCashFlow":
+                labelName = "Cumulative Cash Flow";
+                labelColor = "#F7C952";
+                break;
+              default:
+                labelName = name;
+            }
+            
+            return [
+              <span style={{ color: labelColor, fontWeight: "bold" }}>{formattedValue}</span>,
+              <span style={{ color: labelColor, fontWeight: "bold" }}>{labelName}</span>
+            ];
+          }}
+          labelFormatter={(label) => <span style={{ color: "#333", fontWeight: "bold" }}>{label}</span>}
+          contentStyle={{
+            backgroundColor: "white",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            padding: "10px",
+          }}
+        />
+        <Legend
+          wrapperStyle={{ paddingTop: "20px" }}
+          iconType="line"
+          formatter={(value, entry) => {
+            let color = "#333";
+            switch(value) {
+              case "Annual Cash Flow":
+                color = "#26BFCC";
+                break;
+              case "Annual Rent":
+                color = "#C73834";
+                break;
+              case "Cumulative Cash Flow":
+                color = "#F7C952";
+                break;
+            }
+            return <span style={{ color: color, fontWeight: "bold" }}>{value}</span>;
+          }}
+        />
+        <Line
+          type="monotone"
+          dataKey="annualCashFlow"
+          stroke="#26BFCC"
+          strokeWidth={2}
+          dot={{ fill: "#26BFCC", r: 4 }}
+          activeDot={{ r: 6 }}
+          name="Annual Cash Flow"
+          isAnimationActive={true}
+        />
+        <Line
+          type="monotone"
+          dataKey="annualRent"
+          stroke="#C73834"
+          strokeWidth={2}
+          dot={{ fill: "#C73834", r: 4 }}
+          activeDot={{ r: 6 }}
+          name="Annual Rent"
+          isAnimationActive={true}
+        />
+        <Line
+          type="monotone"
+          dataKey="cumulativeCashFlow"
+          stroke="#F7C952"
+          strokeWidth={2}
+          dot={{ fill: "#F7C952", r: 4 }}
+          activeDot={{ r: 6 }}
+          name="Cumulative Cash Flow"
+          isAnimationActive={true}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+</div>
 
       {/* Import and render the detailed cashflow table */}
       <DetailsCashflow />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { CiHeart, CiLocationOn } from "react-icons/ci";
 import tag from "../../assets/FeaturedProperties/tag.png";
 import cardImg from "../../assets/FeaturedProperties/cardImg.png";
@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 const FeaturedProperties = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [isHovered, setIsHovered] = useState({});
+  const intervalRefs = useRef({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,6 +93,7 @@ const FeaturedProperties = () => {
     },
   ];
 
+  // Initialize currentImageIndex for all cards
   useEffect(() => {
     const initialState = {};
     propertyCards.forEach(property => {
@@ -99,11 +102,75 @@ const FeaturedProperties = () => {
     setCurrentImageIndex(initialState);
   }, []);
 
+  // Start auto-sliding for all cards when currentImageIndex is initialized
+  useEffect(() => {
+    // Only start intervals if currentImageIndex has been initialized
+    if (Object.keys(currentImageIndex).length > 0) {
+      propertyCards.forEach(property => {
+        startAutoSlide(property.id);
+      });
+    }
+
+    // Cleanup intervals on component unmount
+    return () => {
+      Object.values(intervalRefs.current).forEach(clearInterval);
+    };
+  }, [currentImageIndex]); // Run this effect when currentImageIndex changes
+
+  const startAutoSlide = (propertyId) => {
+    // Clear any existing interval for this property
+    if (intervalRefs.current[propertyId]) {
+      clearInterval(intervalRefs.current[propertyId]);
+    }
+
+    // Start new interval
+    intervalRefs.current[propertyId] = setInterval(() => {
+      if (!isHovered[propertyId]) {
+        setCurrentImageIndex(prev => {
+          const currentIndex = prev[propertyId] || 0;
+          const property = propertyCards.find(p => p.id === propertyId);
+          if (!property) return prev;
+          
+          const nextIndex = (currentIndex + 1) % property.images.length;
+          return {
+            ...prev,
+            [propertyId]: nextIndex
+          };
+        });
+      }
+    }, 3000); // Change image every 3 seconds
+  };
+
   const handleDotClick = (propertyId, index) => {
     setCurrentImageIndex(prev => ({
       ...prev,
       [propertyId]: index
     }));
+    
+    // Restart auto-slide after manual dot click
+    startAutoSlide(propertyId);
+  };
+
+  const handleMouseEnter = (propertyId) => {
+    setIsHovered(prev => ({
+      ...prev,
+      [propertyId]: true
+    }));
+    
+    // Pause auto-slide on hover
+    if (intervalRefs.current[propertyId]) {
+      clearInterval(intervalRefs.current[propertyId]);
+    }
+  };
+
+  const handleMouseLeave = (propertyId) => {
+    setIsHovered(prev => ({
+      ...prev,
+      [propertyId]: false
+    }));
+    
+    // Resume auto-slide when mouse leaves
+    startAutoSlide(propertyId);
   };
 
   const handleViewClick = (propertyId) => {
@@ -133,11 +200,11 @@ const FeaturedProperties = () => {
         </h2>
         
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mt-6 sm:mt-8 md:mt-10 mb-6 sm:mb-8 md:mb-10 font-montserrat">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mt-6 sm:mt-8 md:mt-10 mb-6 sm:mb-8 md:mb-10 font-montserrat">
           {propertyCards.map((property, index) => (
             <div 
               key={property.id} 
-              className="bg-white rounded-lg overflow-hidden"
+              className="bg-white rounded-2xl overflow-hidden shadow-2xl"
               data-aos="fade-up"
               data-aos-delay={150 + (index * 50)}
             >
@@ -164,9 +231,13 @@ const FeaturedProperties = () => {
 
               {/* Property Image Section */}
               <div className="relative">
-                <div className="relative">
+                <div 
+                  className="relative"
+                  onMouseEnter={() => handleMouseEnter(property.id)}
+                  onMouseLeave={() => handleMouseLeave(property.id)}
+                >
                   <img 
-                    className="w-full h-48 sm:h-52 md:h-56 lg:h-60 object-cover" 
+                    className="w-full h-72 md:h-64 lg:h-72 object-cover transition-opacity duration-500 ease-in-out" 
                     src={property.images[currentImageIndex[property.id] || 0]} 
                     alt={property.title}
                     data-aos="zoom-in"
@@ -174,25 +245,26 @@ const FeaturedProperties = () => {
                   />
                   
                   {/* Gradient overlay for bottom blur */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
+                  <div className="absolute -bottom-4 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
                   
-                  {/* Slider Dots - Positioned above the blur */}
-                  <div 
-                    className="absolute bottom-14 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5 sm:gap-2"
-                  >
-                    {property.images.map((_, dotIndex) => (
-                      <button
-                        key={dotIndex}
-                        onClick={() => handleDotClick(property.id, dotIndex)}
-                        className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                          currentImageIndex[property.id] === dotIndex
-                            ? "bg-red-500 w-2.5 "
-                            : "bg-white/60 w-2.5 hover:bg-white/80"
-                        }`}
-                        aria-label={`Go to image ${dotIndex + 1}`}
-                      />
-                    ))}
-                  </div>
+               {/* Slider Dots - Positioned above the blur */}
+<div 
+  className="absolute bottom-[72px] md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
+>
+  {property.images.map((_, dotIndex) => (
+    <button
+      key={dotIndex}
+      onClick={() => handleDotClick(property.id, dotIndex)}
+      onMouseEnter={() => handleMouseEnter(property.id)}
+      className={`rounded-full transition-all duration-300 cursor-pointer ${
+        currentImageIndex[property.id] === dotIndex
+          ? "bg-red-500 w-3 h-3"
+          : "bg-white w-2 h-2 hover:bg-white/80"
+      }`}
+      aria-label={`Go to image ${dotIndex + 1}`}
+    />
+  ))}
+</div>
                   
                   {/* Action Buttons on Image */}
                   <div 
@@ -203,7 +275,7 @@ const FeaturedProperties = () => {
                     <p className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs sm:text-sm text-[#767676]">
                       {property.clientType}
                     </p>
-                    <button className="bg-white text-[#EE2529] px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 flex items-center gap-1 sm:gap-2 border border-[#EE2529] rounded-md text-xs sm:text-sm hover:bg-gray-50 transition-colors">
+                    <button className="bg-white text-[#EE2529] px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 flex items-center gap-1 sm:gap-2 rounded-md text-xs sm:text-sm hover:bg-gray-50 transition-colors font-semibold">
                       <FaPlus className="text-xs sm:text-sm" /> Compare
                     </button>
                   </div>
@@ -222,7 +294,7 @@ const FeaturedProperties = () => {
 
               {/* Property Details */}
               <div 
-                className="flex items-center justify-around mt-4 p-3 sm:p-4"
+                className="flex items-center justify-around mt-4"
                 data-aos="fade-up"
                 data-aos-delay={400 + (index * 50)}
               >
@@ -242,14 +314,14 @@ const FeaturedProperties = () => {
                   data-aos="zoom-in"
                   data-aos-delay={450 + (index * 50)}
                 >
-                  <p className="text-xs sm:text-sm font-medium">ROI</p>
+                  <p className="text-base md:text-lg lg:text-xl font-semibold">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div 
-                className="flex items-center justify-center gap-2 sm:gap-3 mt-4 mb-4 sm:mt-5 sm:mb-5 px-3 sm:px-4"
+                className="flex items-center justify-center gap-2 sm:gap-3 mt-4 mb-4 sm:mt-5 sm:mb-5 sm:px-4"
                 data-aos="fade-up"
                 data-aos-delay={500 + (index * 50)}
               >

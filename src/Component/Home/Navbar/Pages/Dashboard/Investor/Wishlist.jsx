@@ -5,6 +5,8 @@ import { RiShareForwardLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import cardImg from "../../../../../../assets/FeaturedProperties/cardImg.png";
 import boxes from "../../../../../../assets/Dashboard/boxes.png"
+import dateArrow from "../../../../../../assets/Dashboard/dateArrow.svg"
+import show from "../../../../../../assets/Dashboard/show.svg"
 
 const Wishlist = () => {
   const navigate = useNavigate();
@@ -107,19 +109,19 @@ const Wishlist = () => {
     <div className="font-montserrat">
       {/* Title */}
        <div className="flex flex-col md:flex-row space-y-2 items-center justify-between mb-6">
-             <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-[#EE2529]">Properties liked</h1>
-             <div className="flex flex-col md:flex-row space-y-2 items-center  gap-1">
-               <button className="flex items-center justify-between gap-2 px-3 py-2  w-[200px] text-sm border border-gray-300 rounded bg-[#F2F2F2] text-[#767676]">
+             <h1 className="text-base md:text-lg lg:text-xl font-bold text-[#EE2529]">Properties liked</h1>
+             <div className="flex flex-row space-y-2 items-center  gap-1">
+               <button className="flex items-center justify-between gap-2 px-3 py-1 w-150px lg:w-[200px] text-sm border border-gray-300 rounded bg-[#F2F2F2] text-[#767676]">
                  Last 30 Days
                  <FaChevronDown size={10} />
                </button>
                <button className="flex items-center gap-2 border-r-2 pr-2 text-sm   hover:bg-gray-50">
                  Sort by: <span className='text-[#EE2529]'> Date</span>
-                 <FaChevronDown className='text-[#EE2529]' size={10} />
+                 <img className='text-[#EE2529]' src={dateArrow} alt="" />
                </button>
                <button className="  text-sm  hover:bg-gray-50 flex items-center gap-2">
-                 Show as: <img className='h-3 w-3' src={boxes} alt="" />
-                 <FaChevronDown className='text-[#EE2529]' size={10} />
+                 Show as: <img className='h-3 w-3' src={show} alt="" />
+                 <img className='text-[#EE2529]' src={dateArrow} alt="" />
                </button>
              </div>
            </div>
@@ -144,7 +146,7 @@ const Wishlist = () => {
           return (
             <div 
               key={property.id} 
-              className={`bg-white rounded-lg overflow-hidden relative ${isSelected ? 'ring-2 ring-[#EE2529] ring-offset-2' : ''}`}
+              className={`bg-white rounded-lg shadow-lg overflow-hidden relative ${isSelected ? 'ring-2 ring-[#EE2529] ring-offset-2' : ''}`}
             >
               {/* Property Title and Location */}
               <div className="">
@@ -162,16 +164,16 @@ const Wishlist = () => {
               <div className="relative">
                 <div className="relative">
                   <img 
-                    className="w-full h-48 sm:h-52 md:h-56 lg:h-60 object-cover" 
+                    className="w-full h-72 md:h-60 lg:h-72 object-cover" 
                     src={property.images[currentImageIndex[property.id] || 0]} 
                     alt={property.title}
                   />
                   {/* Gradient overlay for bottom blur */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white "></div>
                   
                   {/* Slider Dots - Positioned above the blur */}
                   <div 
-                    className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
+                    className="absolute bottom-[72px] md:bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
                   >
                     {property.images.map((_, dotIndex) => (
                       <button
@@ -180,7 +182,7 @@ const Wishlist = () => {
                         className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                           currentImageIndex[property.id] === dotIndex
                             ? "bg-red-500 w-2.5"
-                            : "bg-white/60 w-2.5 hover:bg-white/80"
+                            : "bg-white w-2.5 hover:bg-white/80"
                         }`}
                         aria-label={`Go to image ${dotIndex + 1}`}
                       />
@@ -197,7 +199,7 @@ const Wishlist = () => {
                       className={`flex items-center gap-1 sm:gap-2 border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm transition-colors ${
                         isSelected 
                           ? 'bg-[#EE2529] text-white border-[#EE2529]' 
-                          : 'bg-white text-[#EE2529] border-[#EE2529] hover:bg-gray-50'
+                          : 'bg-white text-[#EE2529]  hover:bg-gray-50'
                       }`}
                     >
                       <FaPlus className="text-xs sm:text-sm" /> 
@@ -227,7 +229,7 @@ const Wishlist = () => {
                   </p>
                 </div>
                 <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-2">
-                  <p className="text-xs sm:text-sm font-medium">ROI</p>
+                  <p className="text-base md:text-lg lg:text-xl font-semibold">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                 </div>
               </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaDownload, FaShareAlt } from 'react-icons/fa';
+import share from "../../../../../assets/propertyDetails/share.svg"
+import download from "../../../../../assets/propertyDetails/download.svg"
 
 const CoverageAnalysis = () => {
   const data = [
@@ -116,40 +118,40 @@ const CoverageAnalysis = () => {
   ];
 
   return (
-    <div className="bg-white p-3 md:p-4 lg:p-6">
-      <div className="mb-4 md:mb-5 lg:mb-6">
-        <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-[#EE2529] text-center">
+    <div className="bg-white ">
+      <div className="mb-4 md:mb-5 lg:mb-6 mt-6">
+        <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-[#262626] text-center">
           Year-by-Year Loan Coverage Analysis
         </h1>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto shadow-lg rounded-lg p-5">
         <table className="w-full text-xs md:text-sm">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Year</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Annual Rent</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">EMI Paid</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Coverage %</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Principal Paid</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Interest Paid</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Outstanding Balance</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Net Cash Flow</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300">Cumulative Cash Flow</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Year</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Annual <br /> Rent</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">EMI <br /> Paid</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Coverage <br /> %</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Principal <br /> Paid</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Interest <br /> Paid</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Outstanding <br /> Balance</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Net Cash <br /> Flow</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Cumulative Cash <br /> Flow</th>
             </tr>
           </thead>
           <tbody className="bg-white">
             {data.map((row, index) => (
               <tr key={row.year} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm font-semibold text-gray-900 border-b border-gray-300">{row.year}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.annualRent}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.emiPaid}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.coverage}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.principalPaid}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.interestPaid}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.outstandingBalance}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b border-gray-300">{row.netCashFlow}</td>
-                <td className={`px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm font-semibold border-b border-gray-300 ${
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm font-semibold text-gray-900 border-b-2 border-gray-300 text-center">{row.year}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.annualRent}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.emiPaid}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm  border-b-2 border-gray-300 text-center text-[#429482]">{row.coverage}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.principalPaid}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.interestPaid}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.outstandingBalance}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.netCashFlow}</td>
+                <td className={`px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm font-semibold border-b-2 border-gray-300 ${
                   index < 7 ? 'text-[#EE2529]' : 'text-[#429482]'
                 }`}>
                   {row.cumulativeCashFlow}
@@ -159,18 +161,18 @@ const CoverageAnalysis = () => {
           </tbody>
         </table>
         
+      </div>
         {/* Buttons - Centered with Icons */}
         <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mt-4 md:mt-5 lg:mt-6">
           <button className="flex items-center justify-center gap-1 md:gap-2 border border-[#767676] text-[#767676] px-3 md:px-4 lg:px-6 py-1 md:py-2 rounded font-bold text-xs md:text-sm hover:opacity-90 transition-opacity">
-            <FaDownload className="text-xs md:text-sm" />
+            <img src={download} alt="" />
             Download Report
           </button>
           <button className="flex items-center justify-center gap-1 md:gap-2 border border-[#767676] text-[#767676] px-3 md:px-4 lg:px-6 py-1 md:py-2 rounded font-bold text-xs md:text-sm hover:bg-gray-50 transition-colors">
-            <FaShareAlt className="text-xs md:text-sm" />
+            <img src={share} alt="" />
             Share Report
           </button>
         </div>
-      </div>
     </div>
   );
 };

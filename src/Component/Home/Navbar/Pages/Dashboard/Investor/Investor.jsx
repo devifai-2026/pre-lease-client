@@ -20,7 +20,7 @@ const Investor = () => {
 
   return (
     <div 
-      className="w-full px-3 sm:px-4 md:px-6 mx-auto mt-4 sm:mt-5 md:mt-6"
+      className="max-w-[93%] mx-auto mt-4 sm:mt-5 md:mt-6"
       style={{
         backgroundImage: `url(${squarebg})`,
         backgroundSize: '80% auto',
@@ -52,14 +52,14 @@ const Investor = () => {
             {/* 2 */}
             <div className="border-t border-b border-[#7676761A] flex items-center justify-between py-3 mt-3 sm:mt-4">
               <div className="border-r border-[#7676761A] text-center flex-1">
-                <h2 className="text-[#767676] text-sm sm:text-base md:text-xl leading-5">
-                  Properties Invested
+                <h2 className="text-[#767676] text-sm sm:text-base md:text-xl leading-5 uppercase">
+                  Properties <br /> Invested
                 </h2>
                 <p className="text-[#EE2529] font-bold mt-1 sm:mt-2 text-base sm:text-lg">4</p>
               </div>
               <div className="text-center flex-1">
-                <h2 className="text-[#767676] text-sm sm:text-base md:text-xl leading-5">
-                  PROPERTIES ENQUIRED
+                <h2 className="text-[#767676] text-sm sm:text-base md:text-xl leading-5 uppercase">
+                  PROPERTIES <br /> ENQUIRED
                 </h2>
                 <p className="text-[#EE2529] font-bold mt-1 sm:mt-2 text-base sm:text-lg">2</p>
               </div>
@@ -85,8 +85,11 @@ const Investor = () => {
                   Edit
                 </button>
               </div>
-              <p className="text-[#76767680] text-center mt-3 text-xs sm:text-sm">
+              <p className="text-[#76767680] text-center mt-3 text-xs sm:text-sm hidden lg:block">
                 Joined on: 26 Aug 2025<br className="sm:hidden" /> Last log in: 13 Aug 2025
+              </p>
+              <p className="text-[#76767680] text-center mt-3 text-xs sm:text-sm block lg:hidden">
+                Joined on: 26 Aug 2025 Last log in: 13 Aug 2025
               </p>
             </div>
           </div>
@@ -136,7 +139,7 @@ const Investor = () => {
           </div>
 
           {/* third */}
-          <div className="mt-6 sm:mt-8 space-y-3 sm:space-y-4 text-center">
+          <div className="mt-6 sm:mt-8 space-y-3 sm:space-y-4 text-center hidden lg:block">
             <h2 className="text-[#EE2529] text-lg sm:text-xl font-semibold">
               Need Assistance?
             </h2>
@@ -171,7 +174,7 @@ const Investor = () => {
               </p>
               {/* Bottom border for active tab */}
               {activeTab === "portfolio" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-4/5 sm:w-full h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-1 bg-[#EE2529]"></div>
               )}
             </div>
 
@@ -191,7 +194,7 @@ const Investor = () => {
               </p>
               {/* Bottom border for active tab */}
               {activeTab === "enquiries" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-4/5 sm:w-full h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-1 bg-[#EE2529]"></div>
               )}
             </div>
 
@@ -211,32 +214,31 @@ const Investor = () => {
               </p>
               {/* Bottom border for active tab */}
               {activeTab === "wishlist" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-4/5 sm:w-full h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 bg-[#EE2529]"></div>
               )}
             </div>
           </div>
           
           {/* Content based on active tab */}
           <div className="mt-4 sm:mt-6">
-            {/* Summary Cards - Responsive */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-              {summaryData.map((item, index) => (
-                <div 
-                  key={index} 
-                  className="bg-white shadow-lg rounded-lg p-3 sm:p-4 flex-1 min-w-[calc(50%-6px)] sm:min-w-0"
-                >
-                  <p className="text-xs sm:text-sm md:text-base lg:text-xl text-[#767676] mb-1 sm:mb-2">
-                    {item.label}
-                  </p>
-                  <p style={{ color: item.color }} className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold">
-                    {item.value}
-                  </p>
-                </div>
-              ))}
-            </div>
+           <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap justify-center md:justify-start gap-3 mb-4 sm:mb-6">
+  {summaryData.map((item, index) => (
+    <div 
+      key={index} 
+      className="bg-white shadow-lg rounded-lg p-3 sm:p-4 h-[100px] sm:h-[90px] flex flex-col justify-center"
+    >
+      <p className="text-sm md:text-base text-[#767676] mb-1 sm:mb-2 text-center md:text-left">
+        {item.label}
+      </p>
+      <p style={{ color: item.color }} className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-center md:text-left">
+        {item.value}
+      </p>
+    </div>
+  ))}
+</div>
 
             {/* Tab Content */}
-            <div className="p-3 sm:p-4 md:p-5">
+            <div className="">
               {activeTab === "portfolio" && (
                 <MyPortfolio />
               )}

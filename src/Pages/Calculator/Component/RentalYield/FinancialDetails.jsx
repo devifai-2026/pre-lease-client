@@ -42,11 +42,11 @@ const FinancialDetails = () => {
       </h2>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
         {financialData.map((item, index) => (
           <div 
             key={index}
-            className="bg-white border border-[#E0E0E0] rounded-lg p-3 md:p-4 text-center shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white  rounded-lg p-3 md:p-4 text-left shadow-lg hover:shadow-md transition-shadow"
           >
             {/* Label */}
             <p className="text-[#767676] text-xs font-semibold mb-1 md:mb-2">
@@ -54,7 +54,7 @@ const FinancialDetails = () => {
             </p>
             
             {/* Value with dynamic color */}
-            <p className="font-bold text-base md:text-lg mb-1" style={{ color: item.color }}>
+            <p className="font-bold text-base md:text-lg lg:text-xl mb-1" style={{ color: item.color }}>
               {item.value}
             </p>
             

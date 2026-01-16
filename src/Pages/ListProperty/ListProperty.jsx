@@ -12,6 +12,7 @@ import LegalDetails from "./Components/LegalDetails";
 import LeaseDetails from "./Components/LeaseDetails";
 import FinancialDetails from "./Components/FinancialDetails";
 import LocationDetails from "./Components/LocationDetails";
+import bg from "../../assets/Banner/bannerBg.png"
 
 const ListProperty = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -70,6 +71,16 @@ const ListProperty = () => {
   
   const progressPercentage = getProgressPercentage();
 
+  // Calculate step display text based on current step
+  const getStepDisplay = () => {
+    if (currentStep === 0) {
+      return "Step 1 of 6"; // First page shows "1 of 6"
+    } else {
+      // For other pages, show "X of 5" where X starts from 1
+      return `Step ${currentStep} of 5`;
+    }
+  };
+
   function handleNext(formDataFromStep) {
     // Save the form data
     setFormData({
@@ -121,9 +132,23 @@ const ListProperty = () => {
   };
 
   return (
-    <div className="mt-10 max-w-[90%] md:max-w-[85%] lg:max-w-[60%] mx-auto">
-      <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold">List Your Property</h2>
+    <div className="mt-10 ">
+      <div className="text-center space-y-3 relative max-w-[90%] md:max-w-[85%] lg:max-w-[60%] mx-auto">
+        {/* Background Image - Added here */}
+        <div 
+          className="absolute inset-0 -z-10 rounded-lg"
+          style={{
+            backgroundImage: `url(${bg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            height: '350px'
+          }}
+        >
+          <div className="absolute inset-0 bg-white/10"></div>
+        </div>
+        
+        <h2 className="text-xl md:text-2xl lg:text-4xl font-bold">List Your Property</h2>
         <p className="text-[#767676] text-sm">
           Connect with serious investors looking for pre-leased commercial{" "}
           <br /> properties across India
@@ -139,7 +164,7 @@ const ListProperty = () => {
         </button>
       </div>
       
-      <div className="">
+      <div className="max-w-[90%] md:max-w-[85%] lg:max-w-[60%] mx-auto hidden md:block">
         {/* Cards Grid */}
         <div
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 md:mt-8"
@@ -167,7 +192,7 @@ const ListProperty = () => {
                   className={`
                   shadow-lg rounded-xl p-3 sm:p-3 md:p-4 lg:p-4 border-t-4 
                   flex flex-col items-center justify-center 
-                  h-[90px] sm:h-[95px] md:h-[100px] lg:h-[110px] w-full
+                  h-[90px] sm:h-[95px] md:h-[110px] lg:h-[120px] w-full
                   transition-all duration-300
                   ${borderColor}
                   ${isActive ? "bg-white" : "bg-white"}
@@ -182,7 +207,7 @@ const ListProperty = () => {
                   <p
                     className={`
                   text-center mt-1 sm:mt-1.5 md:mt-2 lg:mt-2 
-                  ${isActive ? "font-semibold" : "font-medium"}
+                  ${isActive ? "font-bold" : "font-bold"}
                   ${textColor}
                   transition-colors duration-300
                   ${index <= currentStep ? "group-hover:text-[#EE2529]" : ""} 
@@ -210,7 +235,7 @@ const ListProperty = () => {
       </div>
 
       {/* Form Container */}
-      <div className="mt-6 sm:mt-8 md:mt-10">
+      <div className="mt-6 sm:mt-8 md:mt-10 max-w-[90%] md:max-w-[85%] lg:max-w-[80%] mx-auto">
         <div 
           className="shadow-md rounded-md p-6"
           data-aos="zoom-in"
@@ -223,7 +248,7 @@ const ListProperty = () => {
             data-aos-delay="550"
           >
             <p className="bg-[#FFF3CA] px-2 sm:px-2.5 md:px-3 lg:px-3 py-1 sm:py-1.5 md:py-2 lg:py-2 rounded-3xl text-xs">
-              Step {currentStep + 1} of {cards.length}
+              {getStepDisplay()}
             </p>
             <p className="bg-[#FFF3CA] px-2 sm:px-2.5 md:px-3 lg:px-3 py-1 sm:py-1.5 md:py-2 lg:py-2 rounded-3xl text-xs">
               {progressPercentage}%
@@ -254,7 +279,7 @@ const ListProperty = () => {
           <button
             onClick={handleFormSubmit}
             disabled={!isFormValid}
-            className={`px-8 sm:px-10 py-2.5 sm:py-3 rounded-lg font-medium text-lg transition ${
+            className={`px-5 sm:px-6 py-1.5 sm:py-1.5 rounded-lg font-medium text-lg transition ${
               isFormValid
                 ? "bg-[#EE2529] text-white hover:bg-[#C73834] cursor-pointer shadow-lg"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"

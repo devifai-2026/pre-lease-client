@@ -43,7 +43,7 @@ const ContactCards = () => {
 
   return (
     <div className="w-full lg:w-1/2 lg:h-full">
-      <p className="mb-6 md:mb-8">
+      <p className="mb-3 md:mb-2">
         Whether you're an investor looking for opportunities, a property
         owner wanting to list, or a developer seeking partnerships, we're
         here to help you succeed.
@@ -52,17 +52,17 @@ const ContactCards = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 h-full">
         {cards.map((card) => (
           <div key={card.id} className="shadow-md rounded-md p-4 md:p-5 flex flex-col h-full">
-            <div className="space-y-1 md:space-y-2 mb-3 md:mb-4">
+            <div className="space-y-1 md:space-y-2 mb-2 md:mb-3">
               {card.icon}
               <p className="font-bold text-base md:text-lg">{card.title}</p>
             </div>
-            <p className="text-[#767676] text-sm md:text-base flex-grow">
+            <p className="text-[#767676] text-xs md:text-sm flex-grow">
               {card.content}
             </p>
             <button
               className="px-3 py-2 md:py-3 text-white font-semibold rounded-lg transition 
                 bg-gradient-to-r from-[#EE2529] to-[#C73834]
-                hover:opacity-90 text-xs md:text-sm w-full flex items-center justify-center gap-2 mt-3 md:mt-4"
+                hover:opacity-90 text-xs md:text-sm w-40 text-nowrap flex items-center justify-center gap-2 mt-2 md:mt-3"
             >
               {card.buttonText} {card.buttonIcon}
             </button>

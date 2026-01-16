@@ -98,19 +98,19 @@ const DetailsCashflow = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b">Year</th>
-                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b">Annual Rent</th>
-                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b">Annual Expenses</th>
-                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b">Net Cash Flow</th>
-                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b">Cumulative Cash Flow</th>
-                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b">ROI %</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b-2">Year</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b-2">Annual Rent</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b-2">Annual Expenses</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b-2">Net Cash Flow</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b-2">Cumulative Cash Flow</th>
+                  <th className="py-3 px-4 text-left font-medium text-gray-600 border-b-2">ROI %</th>
                 </tr>
               </thead>
               <tbody>
                 {cashFlowDetails.map((item, index) => (
                   <tr 
                     key={index} 
-                    className={`border-b `}
+                    className={`border-b-2 `}
                   >
                     <td className="py-3 px-4 font-medium">{item.year}</td>
                     <td className="py-3 px-4">{item.annualRent}</td>
