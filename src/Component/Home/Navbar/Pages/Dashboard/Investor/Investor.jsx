@@ -11,16 +11,16 @@ import squarebg from "../../../../../../assets/propertyDetails/squaresbg.png"
 const Investor = () => {
   const [activeTab, setActiveTab] = useState("portfolio");
 
-  // Summary Cards Data
+  // Summary Cards Data with (INR) on next line
   const summaryData = [
-    { label: 'TOTAL INVESTMENT (INR)', value: '₹3,660,000', color: '#EE2529' },
-    { label: 'Total Net Cash Flow (INR)', value: '₹2,90,000', color: '#EE2529' },
-    { label: 'INVESTED PROPERTIES', value: '4', color: '#767676' }
+    { label: 'TOTAL INVESTMENT', inr: '(INR)', value: '₹3,660,000', color: '#EE2529' },
+    { label: 'Total Net Cash Flow', inr: '(INR)', value: '₹2,90,000', color: '#EE2529' },
+    { label: 'INVESTED PROPERTIES', inr: '', value: '4', color: '#767676' }
   ];
 
   return (
     <div 
-      className="max-w-[93%] mx-auto mt-4 sm:mt-5 md:mt-6"
+      className="max-w-[93%] mx-auto mt-4 sm:mt-5 md:mt-6 font-montserrat"
       style={{
         backgroundImage: `url(${squarebg})`,
         backgroundSize: '80% auto',
@@ -174,7 +174,7 @@ const Investor = () => {
               </p>
               {/* Bottom border for active tab */}
               {activeTab === "portfolio" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
               )}
             </div>
 
@@ -194,7 +194,7 @@ const Investor = () => {
               </p>
               {/* Bottom border for active tab */}
               {activeTab === "enquiries" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
               )}
             </div>
 
@@ -214,28 +214,32 @@ const Investor = () => {
               </p>
               {/* Bottom border for active tab */}
               {activeTab === "wishlist" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
               )}
             </div>
           </div>
           
           {/* Content based on active tab */}
           <div className="mt-4 sm:mt-6">
-           <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap justify-center md:justify-start gap-3 mb-4 sm:mb-6">
-  {summaryData.map((item, index) => (
-    <div 
-      key={index} 
-      className="bg-white shadow-lg rounded-lg p-3 sm:p-4 h-[100px] sm:h-[90px] flex flex-col justify-center"
-    >
-      <p className="text-sm md:text-base text-[#767676] mb-1 sm:mb-2 text-center md:text-left">
-        {item.label}
-      </p>
-      <p style={{ color: item.color }} className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-center md:text-left">
-        {item.value}
-      </p>
-    </div>
-  ))}
-</div>
+            {/* Summary Cards with (INR) on next line */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap justify-center md:justify-start gap-3 mb-4 sm:mb-6">
+              {summaryData.map((item, index) => (
+                <div 
+                  key={index} 
+                  className="bg-white shadow-lg rounded-lg p-3 sm:p-4 h-[100px] sm:h-[90px] flex flex-col justify-center"
+                >
+                  <div className="text-sm md:text-base text-[#767676] mb-1 sm:mb-2 text-center md:text-left">
+                    <span className="block">{item.label}</span>
+                    {item.inr && (
+                      <span className="block">{item.inr}</span>
+                    )}
+                  </div>
+                  <p style={{ color: item.color }} className="text-base md:text-base lg:text-lg font-semibold text-center md:text-left">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
 
             {/* Tab Content */}
             <div className="">

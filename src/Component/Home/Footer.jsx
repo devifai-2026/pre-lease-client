@@ -13,19 +13,19 @@ const Footer = () => {
         <div className="footer bg-black text-white mt-16">
             {/* Main Footer Content */}
             <div className="footer-main p-6 md:p-10 max-w-[95%] mx-auto">
-                {/* Links Grid */}
-                <div className="links-grid grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6 lg:gap-12">
-                  {/* Logo Section - Mobile: Left aligned and full width, Desktop: Original */}
-<div className="logo-section flex flex-col justify-start items-start my-auto col-span-2 md:col-span-1">
-    <img 
-        src={logo} 
-        alt="Prelease grid logo" 
-        className="h-12 md:h-24 md:w-36  w-1/2 lg:w-auto mb-4"
-    />
-</div>
+                {/* Links Grid - Updated for tablet layout */}
+                <div className="links-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-6 lg:gap-12">
+                    {/* Logo Section - Tablet: Full width above the 3 columns */}
+                    <div className="logo-section md:col-span-3 lg:col-span-1 md:mb-6 lg:mb-0 col-span-2">
+                        <img 
+                            src={logo} 
+                            alt="Prelease grid logo" 
+                            className="h-12 md:h-16 lg:h-24 w-auto mb-4"
+                        />
+                    </div>
                     
-                    {/* Quick Links Column - Mobile: Column 1, Row 1 */}
-                    <div className="links-column">
+                    {/* Quick Links Column - Tablet: Column 1 of 3 in same row */}
+                    <div className="links-column md:mt-0 lg:mt-0 font-montserrat">
                         <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
                         <ul className="space-y-2">
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Explore Properties</a></li>
@@ -34,8 +34,8 @@ const Footer = () => {
                         </ul>
                     </div>
                     
-                    {/* Resources Column - Mobile: Column 1, Row 2 */}
-                    <div className="links-column">
+                    {/* Resources Column - Tablet: Column 2 of 3 in same row */}
+                    <div className="links-column md:mt-0 lg:mt-0 font-montserrat">
                         <h3 className="text-white font-semibold text-lg mb-4">Resources</h3>
                         <ul className="space-y-2">
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blogs</a></li>
@@ -44,8 +44,8 @@ const Footer = () => {
                         </ul>
                     </div>
                     
-                    {/* Legal Column - Mobile: Column 2, Row 1 */}
-                    <div className="links-column relative">
+                    {/* Legal Column - Tablet: Column 3 of 3 in same row */}
+                    <div className="links-column relative md:mt-0 lg:mt-0 font-montserrat">
                         {/* Desktop: Original Legal content */}
                         <div className="hidden md:block">
                             <h3 className="text-white font-semibold text-lg mb-4">Legal</h3>
@@ -114,7 +114,7 @@ const Footer = () => {
                         </div>
                         
                         {/* Mobile: Legal content */}
-                        <div className="md:hidden">
+                        <div className="md:hidden font-montserrat">
                             <h3 className="text-white font-semibold text-lg mb-4">Legal</h3>
                             <ul className="space-y-2">
                                 <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
@@ -123,7 +123,7 @@ const Footer = () => {
                         </div>
                     </div>
                     
-                    {/* Social Icons Column - Mobile: Column 2, Row 2 */}
+                    {/* Social Icons Column - Mobile only */}
                     <div className="social-column md:hidden my-auto">
                        
                         <div className="social-links flex  space-x-4">
@@ -137,7 +137,7 @@ const Footer = () => {
 
             {/* Copyright Section */}
             <div className="copyright-section border-t border-gray-800 py-6 max-w-[95%] mx-auto">
-                <div className="px-4 md:px-8">
+                <div className="px-4 md:px-8 font-inter">
                     <p className="mb-5 text-gray-400 text-sm md:text-base leading-relaxed">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.
                     </p>

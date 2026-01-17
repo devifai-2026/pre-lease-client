@@ -71,7 +71,7 @@ const Enquiry = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 font-montserrat">
             <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-6 sm:p-8">
                 {/* Logo */}
                 <div className="flex justify-start mb-6">
@@ -178,11 +178,11 @@ const Enquiry = () => {
                                     {otpSent ? "Resend OTP" : "Send OTP"}
                                 </button>
                             </div>
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-[#262626] mt-2">
                                 Didn't received OTP?{' '}
                                 <button 
                                     onClick={handleSendOTP}
-                                    className="text-blue-600 hover:underline"
+                                    className="text-[#262626] underline"
                                 >
                                     Click to resend OTP.
                                 </button>
@@ -219,7 +219,7 @@ const Enquiry = () => {
                             />
                             <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer">
                                 I agree to the{' '}
-                                <a href="#" className="text-blue-600 hover:underline">
+                                <a href="#" className="text-blue-600 underline">
                                     terms & conditions
                                 </a>
                             </label>
@@ -235,7 +235,7 @@ const Enquiry = () => {
                             />
                             <label htmlFor="privacy" className="text-sm text-gray-600 cursor-pointer">
                                 I agree to the{' '}
-                                <a href="#" className="text-blue-600 hover:underline">
+                                <a href="#" className="text-blue-600 underline">
                                     Privacy Policy
                                 </a>
                             </label>
@@ -246,14 +246,14 @@ const Enquiry = () => {
                     <div className="flex gap-4 pt-4">
                         <button
                             onClick={handleCancel}
-                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
+                            className="flex-1 px-6 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors font-semibold text-[#767676]"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSubmit}
                             disabled={!formData.termsAccepted || !formData.privacyAccepted}
-                            className="flex-1 px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                            className="flex-1 px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                             Enquire
                         </button>

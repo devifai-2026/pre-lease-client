@@ -107,7 +107,7 @@ const Calculator = () => {
     className="cursor-pointer relative p-2 text-center"
     onClick={() => setActiveSection("roi")}
   >
-    <div className="flex items-center gap-2">
+    <div className="flex flex-col items-center  gap-2">
       <FaArrowTrendUp
         className={`p-2 w-7 h-7 rounded-md ${
           activeSection === "roi"
@@ -141,7 +141,7 @@ const Calculator = () => {
     className="cursor-pointer relative p-2 text-center"
     onClick={() => setActiveSection("emi")}
   >
-    <div className="flex items-center gap-2">
+    <div className=" flex flex-col items-center gap-2">
       <ImCalculator
         className={`p-2 w-7 h-7 rounded-md ${
           activeSection === "emi"

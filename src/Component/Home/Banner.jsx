@@ -19,7 +19,7 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="relative -mt-5 mt:mt-4 lg:mt-0 flex justify-center">
+    <div className="relative -mt-5 mt:mt-4 lg:mt-0 flex justify-center font-montserrat">
       {/* Background image container - 85% width */}
       <div 
         className="absolute inset-x-0 -z-10 rounded-lg overflow-hidden w-[100%] mx-auto"
@@ -37,7 +37,7 @@ const Banner = () => {
       
       {/* Content container - centered within the 85% width background */}
       <div 
-        className="max-w-xl px-4 sm:px-6 lg:px-0 min-h-[400px] flex flex-col justify-center w-full"
+        className="max-w-2xl px-4 sm:px-6 lg:px-0 min-h-[400px] flex flex-col justify-center w-full"
         data-aos="fade-up"
       >
         <h2 
@@ -59,7 +59,7 @@ const Banner = () => {
           data-aos="fade-up"
           data-aos-delay="600"
         >
-          PreleaseGrid offers carefully curated pre-leased properties designed to
+          PreleaseGrid offers carefully curated pre-leased properties designed to 
           deliver steady, reliable income — with verified assets, trusted tenants,
           and zero management hassle.
         </p>

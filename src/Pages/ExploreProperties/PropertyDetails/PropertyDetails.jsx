@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CiCircleQuestion, CiHeart, CiLocationOn } from "react-icons/ci";
-import { FaBuilding, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { RiShareForwardLine } from "react-icons/ri";
-import { IoIosArrowBack } from "react-icons/io";
-import cardImg from "../../../assets/FeaturedProperties/cardImg.png";
-import tag from "../../../assets/FeaturedProperties/tag.png";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { SiSimpleanalytics } from "react-icons/si";
+import { PiBuildingApartmentFill } from "react-icons/pi";
 import LeaseDetails from "../PropertyDetails/Components/LeaseDetails";
 import Analytics from "../PropertyDetails/Components/Analytics/Analytics";
 import FAQ from "../PropertyDetails/Components/FAQ";
@@ -16,7 +14,7 @@ import PropertyDetailsCards from "../PropertyDetails/Components/PropertyDetailsC
 import squaresbg from "../../../assets/propertyDetails/squaresbg.png";
 import share from "../../../assets/propertyDetails/share.svg"
 import download from "../../../assets/propertyDetails/download.svg"
-import { PiBuildingApartmentFill } from "react-icons/pi";
+import tag from "../../../assets/FeaturedProperties/tag.png";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -24,10 +22,17 @@ const PropertyDetails = () => {
   const [activeTab, setActiveTab] = useState("property");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
   const intervalRef = useRef(null);
 
-  // Property images array
-  const propertyImages = [cardImg, cardImg, cardImg, cardImg];
+  // Property images array with Unsplash images
+  const propertyImages = [
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+  ];
 
   const handleGoBack = () => {
     navigate(-1);
@@ -40,6 +45,55 @@ const PropertyDetails = () => {
   const handleDotClick = (index) => {
     setCurrentImageIndex(index);
     startAutoSlide();
+  };
+
+  // Mouse drag handlers
+  const handleMouseDown = (e) => {
+    setTouchStart(e.clientX);
+  };
+
+  const handleMouseMove = (e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe) {
+      // Swipe left - next image
+      setCurrentImageIndex(prev => (prev + 1) % propertyImages.length);
+    }
+    
+    if (isRightSwipe) {
+      // Swipe right - previous image
+      setCurrentImageIndex(prev => prev === 0 ? propertyImages.length - 1 : prev - 1);
+    }
+    
+    // Reset touch values
+    setTouchStart(null);
+    setTouchEnd(null);
+    
+    // Restart auto-slide after swipe
+    startAutoSlide();
+  };
+
+  // Touch handlers for mobile
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    handleMouseUp();
   };
 
   const handleEnquireClick = () => {
@@ -113,14 +167,10 @@ const PropertyDetails = () => {
                     </span>
                   </p>
                   <div className="relative ">
-                    <img
-                      className="w-12 sm:w-16 md:w-20"
-                      src={tag}
-                      alt="Verified"
-                    />
-                    <p className="absolute bottom-0.5 sm:bottom-1 right-1.5 sm:right-2 text-white text-[10px] sm:text-xs">
-                      Verified
-                    </p>
+                   <div className="relative">
+                          <img className="w-16 sm:w-18 md:w-20" src={tag} alt="Verified" />
+                          <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">Verified</p>
+                        </div>
                   </div>
                 </div>
               </div>
@@ -136,7 +186,6 @@ const PropertyDetails = () => {
                       className="w-full h-16 object-cover"
                     />
                     {/* Verified Badge */}
-                   
                   </div>
 
                   {/* Text Content - Right Side */}
@@ -162,12 +211,6 @@ const PropertyDetails = () => {
                       </p>
                     </div> */}
                   </div>
-
-                  {/* ROI Box - Right */}
-                  {/* <div className="flex-shrink-0 bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-14 h-14 flex flex-col items-center justify-center rounded-lg shadow-md border border-gray-100">
-                    <p className="text-[10px] font-semibold text-gray-700">ROI</p>
-                    <p className="text-[#EE2529] font-bold text-xs">90%</p>
-                  </div> */}
                 </div>
               </div>
 
@@ -184,36 +227,46 @@ const PropertyDetails = () => {
                 </button>
               </div>
 
-              {/* DESKTOP: Full Image Section */}
+              {/* DESKTOP: Full Image Section with swipe functionality */}
               <div className="hidden sm:block relative">
                 <div 
-                  className="relative"
+                  className="relative overflow-hidden cursor-grab active:cursor-grabbing"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                 >
                   <img
                     src={propertyImages[currentImageIndex]}
                     alt="Property"
-                    className="w-full h-[160px] sm:h-[180px] md:h-[200px] lg:h-[250px] object-cover transition-opacity duration-500 ease-in-out"
+                    className="w-full h-[160px] sm:h-[180px] md:h-[200px] lg:h-[250px] object-cover transition-transform duration-300 ease-in-out"
                   />
                   
                   {/* Gradient overlay for bottom blur */}
                   <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
                   
-                  {/* Slider Dots with responsive sizes */}
+                  {/* Slider Dots with auto-slide indicator */}
                   <div className="absolute bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5">
                     {propertyImages.map((_, dotIndex) => (
                       <button
                         key={dotIndex}
                         onClick={() => handleDotClick(dotIndex)}
                         onMouseEnter={handleMouseEnter}
-                        className={`rounded-full transition-all duration-300 cursor-pointer ${
+                        className={`rounded-full transition-all duration-300 cursor-pointer relative ${
                           currentImageIndex === dotIndex
                             ? "bg-red-500 w-2.5 h-2.5 sm:w-3 sm:h-3"
                             : "bg-white w-2 h-2 sm:w-2.5 sm:h-2.5 hover:bg-white/30"
                         }`}
                         aria-label={`Go to image ${dotIndex + 1}`}
-                      />
+                      >
+                        {currentImageIndex === dotIndex && (
+                          <div className="absolute inset-0 bg-red-500 rounded-full animate-pulse"></div>
+                        )}
+                      </button>
                     ))}
                   </div>
                   
@@ -222,7 +275,7 @@ const PropertyDetails = () => {
                     <div className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs sm:text-sm text-[#767676]">
                       MNC Client
                     </div>
-                    <button className="bg-white text-[#EE2529] px-2 py-1 sm:px-3 sm:py-1.5 flex items-center gap-1 sm:gap-2 rounded-md text-xs sm:text-sm hover:bg-gray-50 transition-colors">
+                    <button className="bg-white text-[#EE2529] px-2 py-1 sm:px-3 sm:py-1.5 flex items-center gap-1 sm:gap-2 rounded-md text-xs sm:text-sm hover:bg-gray-50 transition-colors font-semibold">
                       <FaPlus className="text-xs sm:text-sm" /> Compare
                     </button>
                   </div>
@@ -256,7 +309,7 @@ const PropertyDetails = () => {
                   </p>
                 </div>
                 <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-1 sm:ml-2">
-                  <p className="text-sm md:text-base lg:text-xl font-semibold">ROI</p>
+                  <p className="text-xs sm:text-sm font-medium">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">
                     90.21%
                   </p>

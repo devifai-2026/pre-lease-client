@@ -7,8 +7,8 @@ import four from "../../assets/WhyChoose/four.png"
 
 const WhyChoose = () => {
     return (
-        <div className='mt-16'>
-            <div className='max-w-[80%] mx-auto'>
+        <div className='mt-16 font-montserrat'>
+            <div className='max-w-[95%] mx-auto'>
                 <h2 
                     className='text-[#262626] text-center text-2xl md:text-3xl lg:text-4xl'
                     data-aos="fade-up"
@@ -42,12 +42,12 @@ const WhyChoose = () => {
               <div className='flex-1 space-y-4'>
                  {/* 1 */}
                  <div 
-                    className='flex items-start gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
+                    className='flex items-center gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="300"
                  >
                     <div className='flex-shrink-0'>
-                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={one} alt="" />
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-14 lg:h-14  object-contain' src={one} alt="" />
                     </div>
                     <div>
                         <h2 className='font-normal lg:font-semibold text-lg'>Platform Verified Every property authenticated</h2>
@@ -57,12 +57,12 @@ const WhyChoose = () => {
                  
                  {/* 2 */}
                  <div 
-                    className='flex items-start gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
+                    className='flex items-center gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="400"
                  >
                     <div className='flex-shrink-0'>
-                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={two} alt="" />
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-14 lg:h-14   object-contain' src={two} alt="" />
                     </div>
                     <div>
                         <h2 className='font-normal lg:font-semibold text-lg'>12-18% Returns Guaranteed rental income</h2>
@@ -72,12 +72,12 @@ const WhyChoose = () => {
                  
                  {/* 3 */}
                  <div 
-                    className='flex items-start gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
+                    className='flex items-center gap-5 lg:border-b-2 pb-3 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="500"
                  >
                     <div className='flex-shrink-0'>
-                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={three} alt="" />
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-14 lg:h-14  object-contain' src={three} alt="" />
                     </div>
                     <div>
                         <h2 className='font-normal lg:font-semibold text-lg'>Pre-Leased Only Immediate cash flow</h2>
@@ -87,12 +87,12 @@ const WhyChoose = () => {
                  
                  {/* 4 */}
                  <div 
-                    className='flex items-start gap-5 lg:min-h-[120px]'
+                    className='flex items-center gap-5 lg:min-h-[120px]'
                     data-aos="fade-up"
                     data-aos-delay="600"
                  >
                     <div className='flex-shrink-0'>
-                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-40  object-contain' src={four} alt="" />
+                        <img className='w-12 h-12 md:h-16 md:w-16  lg:w-14 lg:h-14  object-contain' src={four} alt="" />
                     </div>
                     <div>
                         <h2 className='font-normal lg:font-semibold text-lg'>Premium Tenants Corporate & MNC leases</h2>
