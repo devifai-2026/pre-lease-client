@@ -328,7 +328,7 @@ const Navbar = () => {
     };
 
     return (
-      <div className="relative" ref={profileRef}>
+      <div className="relative font-montserrat" ref={profileRef}>
         {/* User Profile Button */}
         <button
           onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -991,7 +991,7 @@ const Navbar = () => {
             <h2 className="text-2xl font-bold text-center mb-2 bg-[#FFFCF4] py-2">
               Welcome
             </h2>
-            <div className="px-8 pb-8">
+            <div className="px-8 pb-8 font-montserrat">
               <p className="text-gray-600 text-center mb-6">
                 Sign in to your account to continue
               </p>
@@ -1023,19 +1023,19 @@ const Navbar = () => {
               </div>
 
               {/* Dummy Login Information */}
-              <div className="mb-6 p-3 bg-gray-50 rounded-lg">
+              <div className="mb-6 p-3 bg-gray-50 rounded-lg font-montserrat">
                 <p className="text-sm font-semibold text-gray-700 mb-1">
                   Dummy Login Credentials:
                 </p>
                 <div className="text-xs text-gray-600">
                   <p>
-                    • Investor: <span className="font-mono">9999999991</span>
+                    • Investor: <span className="">9999999991</span>
                   </p>
                   <p>
-                    • Broker: <span className="font-mono">9999999992</span>
+                    • Broker: <span className="">9999999992</span>
                   </p>
                   <p>
-                    • Owner: <span className="font-mono">9999999993</span>
+                    • Owner: <span className="">9999999993</span>
                   </p>
                 </div>
               </div>
@@ -1078,21 +1078,21 @@ const Navbar = () => {
             </div>
 
             {/* Modal Content */}
-            <h2 className="text-base text-center mb-2 bg-[#FFFCF4] py-2">
+            <h2 className="text-base text-center mb-2 bg-[#FFFCF4] py-2 font-montserrat">
               <span className="text-[#262626] font-semibold">Sign UP.</span> To
               live in our space.
             </h2>
             <div className="px-8 pb-8">
               {/* Header Section */}
-              <div className="mb-8">
+              <div className="mb-8 font-montserrat">
                 <p className="text-gray-600 text-center text-sm">
                   Tell us who you are to personalize your experience
                 </p>
               </div>
 
               {/* Role Selection Cards */}
-              <div className="space-y-6 mb-8">
-                <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
+              <div className="space-y-6 mb-8 font-montserrat">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 font-montserrat">
                   {/* Investor Card */}
                   <div
                     onClick={() => handleRoleSelect("investor")}

@@ -22,7 +22,7 @@ const Owner = () => {
 
   return (
     <div
-      className="w-[93%]  mx-auto mt-4 sm:mt-5 md:mt-6"
+      className="w-[93%]  mx-auto mt-4 sm:mt-5 md:mt-6 font-montserrat"
       style={{
         backgroundImage: `url(${squarebg})`,
         backgroundSize: "80% auto",
@@ -59,7 +59,7 @@ const Owner = () => {
             {/* Stats Section */}
             <div className="border-t border-b border-[#7676761A] flex items-center justify-between py-3 mt-3 sm:mt-4">
               <div className="border-r border-[#7676761A] text-center flex-1">
-                <h2 className="text-[#767676] text-sm sm:text-base  leading-5 uppercase">
+                <h2 className="text-[#767676] text-sm sm:text-base  uppercase">
                   Properties <br />
                   Invested
                 </h2>
@@ -68,7 +68,7 @@ const Owner = () => {
                 </p>
               </div>
               <div className="text-center flex-1">
-                <h2 className="text-[#767676] text-sm sm:text-base  leading-5 uppercase">
+                <h2 className="text-[#767676] text-sm sm:text-base   uppercase">
                   PROPERTIES <br /> ENQUIRED
                 </h2>
                 <p className="text-[#EE2529] font-bold mt-1 sm:mt-2 text-base sm:text-lg">
@@ -217,7 +217,7 @@ const Owner = () => {
               </p>
               {/* Bottom border for active tab - UPDATED with w-full */}
               {activeTab === "portfolio" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48  lg:w-56 h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48  lg:w-56 h-[3px] bg-[#EE2529]"></div>
               )}
             </div>
 
@@ -237,7 +237,7 @@ const Owner = () => {
               </p>
               {/* Bottom border for active tab - UPDATED with w-full */}
               {activeTab === "properties" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
               )}
             </div>
 
@@ -257,7 +257,7 @@ const Owner = () => {
               </p>
               {/* Bottom border for active tab - UPDATED with w-full */}
               {activeTab === "enquired" && (
-                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-1 bg-[#EE2529]"></div>
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
               )}
             </div>
           </div>
@@ -271,12 +271,12 @@ const Owner = () => {
                   key={index}
                   className="bg-white shadow-lg rounded-lg p-3 sm:p-4 flex-shrink-0 w-[calc(33.333%-8px)] md:w-[180px] h-[100px] sm:h-[90px] flex flex-col justify-center"
                 >
-                  <p className="text-xs sm:text-sm md:text-base text-[#767676] mb-1 sm:mb-2 text-center md:text-left">
+                  <p className="text-xs sm:text-sm md:text-base text-[#767676] mb-1 sm:mb-2 text-center md:text-left text-nowrap">
                     {item.label}
                   </p>
                   <p
                     style={{ color: item.color }}
-                    className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-center md:text-left"
+                    className="text-base md:text-base lg:text-lg font-semibold text-center md:text-left"
                   >
                     {item.value}
                   </p>

@@ -3,7 +3,6 @@ import { CiHeart, CiLocationOn } from 'react-icons/ci';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { FaPlus, FaChevronDown } from 'react-icons/fa';
 import tag from "../../../../../../assets/FeaturedProperties/tag.png";
-import cardImg from "../../../../../../assets/FeaturedProperties/cardImg.png";
 import { useNavigate } from "react-router-dom";
 import boxes from "../../../../../../assets/Dashboard/boxes.png";
 
@@ -13,8 +12,10 @@ const MyProperties = () => {
   const [filterDays, setFilterDays] = useState('30');
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [selectedProperties, setSelectedProperties] = useState([]);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
-  // Properties for the cards
+  // Properties for the cards with different Unsplash images
   const propertyCards = [
     {
       id: 1,
@@ -26,7 +27,12 @@ const MyProperties = () => {
       tenureLeft: "10 Yrs",
       roi: "90.2%",
       isVerified: true,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
     {
       id: 2,
@@ -38,18 +44,38 @@ const MyProperties = () => {
       tenureLeft: "10 Yrs",
       roi: "90.2%",
       isVerified: false,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&h=400&fit=crop"
+      ],
     },
-   
   ];
 
-  // Initialize currentImageIndex for all properties
+  // Initialize currentImageIndex for all properties and set up auto-slide
   useEffect(() => {
     const initialState = {};
     propertyCards.forEach(property => {
       initialState[property.id] = 0;
     });
     setCurrentImageIndex(initialState);
+
+    // Set up auto-slide interval for each property
+    const intervals = {};
+    propertyCards.forEach(property => {
+      intervals[property.id] = setInterval(() => {
+        setCurrentImageIndex(prev => ({
+          ...prev,
+          [property.id]: (prev[property.id] + 1) % property.images.length
+        }));
+      }, 4000); // Change image every 4 seconds
+    });
+
+    // Cleanup intervals on component unmount
+    return () => {
+      Object.values(intervals).forEach(interval => clearInterval(interval));
+    };
   }, []);
 
   const handleDotClick = (propertyId, index) => {
@@ -57,6 +83,60 @@ const MyProperties = () => {
       ...prev,
       [propertyId]: index
     }));
+  };
+
+  // Mouse drag handlers
+  const handleMouseDown = (propertyId, e) => {
+    setTouchStart(e.clientX);
+  };
+
+  const handleMouseMove = (propertyId, e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.clientX);
+  };
+
+  const handleMouseUp = (propertyId) => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe) {
+      // Swipe left - next image
+      setCurrentImageIndex(prev => ({
+        ...prev,
+        [propertyId]: (prev[propertyId] + 1) % propertyCards.find(p => p.id === propertyId).images.length
+      }));
+    }
+    
+    if (isRightSwipe) {
+      // Swipe right - previous image
+      const property = propertyCards.find(p => p.id === propertyId);
+      const newIndex = prev => prev[propertyId] === 0 ? property.images.length - 1 : prev[propertyId] - 1;
+      setCurrentImageIndex(prev => ({
+        ...prev,
+        [propertyId]: newIndex(prev)
+      }));
+    }
+    
+    // Reset touch values
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
+  // Touch handlers for mobile
+  const handleTouchStart = (propertyId, e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (propertyId, e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (propertyId) => {
+    handleMouseUp(propertyId);
   };
 
   // Handle view button click
@@ -148,7 +228,7 @@ const MyProperties = () => {
           </div>
         </div>
 
-        {/* Cards Grid */}
+        {/* Cards Grid with auto-sliding and swipe functionality */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8">
           {propertyCards.map((property, index) => {
             // Check if this property is selected for comparison
@@ -176,18 +256,32 @@ const MyProperties = () => {
                   </div>
                 </div>
 
-                {/* Property Image Section */}
+                {/* Property Image Section with swipe functionality */}
                 <div className="relative">
-                  <div className="relative">
+                  <div 
+                    className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+                    onMouseDown={(e) => handleMouseDown(property.id, e)}
+                    onMouseMove={(e) => handleMouseMove(property.id, e)}
+                    onMouseUp={() => handleMouseUp(property.id)}
+                    onMouseLeave={() => {
+                      if (touchStart !== null) {
+                        setTouchStart(null);
+                        setTouchEnd(null);
+                      }
+                    }}
+                    onTouchStart={(e) => handleTouchStart(property.id, e)}
+                    onTouchMove={(e) => handleTouchMove(property.id, e)}
+                    onTouchEnd={() => handleTouchEnd(property.id)}
+                  >
                     <img 
-                      className="w-full h-72 md:h-60 lg:h-72 object-cover" 
+                      className="w-full h-72 md:h-60 lg:h-72 object-cover transition-transform duration-300"
                       src={property.images[currentImageIndex[property.id] || 0]} 
                       alt={property.title}
                     />
                     {/* Gradient overlay for bottom blur */}
                     <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white "></div>
                     
-                    {/* Slider Dots - Positioned above the blur */}
+                    {/* Slider Dots with auto-slide indicator */}
                     <div 
                       className="absolute bottom-[72px] md:bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
                     >
@@ -195,13 +289,17 @@ const MyProperties = () => {
                         <button
                           key={dotIndex}
                           onClick={() => handleDotClick(property.id, dotIndex)}
-                          className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                          className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer relative ${
                             currentImageIndex[property.id] === dotIndex
                               ? "bg-red-500 w-2.5"
                               : "bg-white w-2.5 hover:bg-white/80"
                           }`}
                           aria-label={`Go to image ${dotIndex + 1}`}
-                        />
+                        >
+                          {currentImageIndex[property.id] === dotIndex && (
+                            <div className="absolute inset-0 bg-red-500 rounded-full animate-pulse"></div>
+                          )}
+                        </button>
                       ))}
                     </div>
                     

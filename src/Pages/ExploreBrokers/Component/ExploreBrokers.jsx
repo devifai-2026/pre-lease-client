@@ -61,7 +61,7 @@ const ExploreBrokers = () => {
               {/* Left Section */}
               <div className="w-full sm:w-1/2 mb-4 sm:mb-0 flex flex-col h-full">
                 <div className="space-y-3 mt-3 md:mt-0">
-                  <h2 className="text-[#EE2529] text-base md:text-lg sm:text-xl font-bold">
+                  <h2 className="text-[#EE2529] text-base md:text-lg lg:text-2xl font-semibold">
                     APJ Realtors
                   </h2>
                   <img className="w-28 h-28 md:w-44 md:h-40 lg:w-36 lg:h-36 " src={img} alt="Broker logo" />

@@ -10,7 +10,7 @@ const ExploreCategories = () => {
   }, []);
 
   return (
-    <div className="mt-16 max-w-[95%] mx-auto">
+    <div className="mt-16 max-w-[95%] mx-auto font-montserrat">
       <h2
         className="text-center text-2xl md:text-3xl lg:text-4xl"
         data-aos="fade-up"
@@ -29,7 +29,7 @@ const ExploreCategories = () => {
             <img
               src={one}
               alt="Commercial"
-              className="w-full h-36 md:h-52 lg:h-56 object-cover hover:scale-105 transition-transform duration-500"
+              className="w-full h-36 md:h-44 lg:h-48 object-cover hover:scale-105 transition-transform duration-500"
             />
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/20"></div>
@@ -57,7 +57,7 @@ const ExploreCategories = () => {
             <img
               src={two}
               alt="Residential"
-              className="w-full h-36 md:h-52 lg:h-56 object-cover hover:scale-105 transition-transform duration-500"
+              className="w-full h-36 md:h-44 lg:h-48 object-cover hover:scale-105 transition-transform duration-500"
             />
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/20"></div>
@@ -85,7 +85,7 @@ const ExploreCategories = () => {
             <img
               src={three}
               alt="Industrial"
-              className="w-full h-36 md:h-52 lg:h-56 object-cover hover:scale-105 transition-transform duration-500"
+              className="w-full h-36 md:h-44 lg:h-48 object-cover hover:scale-105 transition-transform duration-500"
             />
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/20"></div>
@@ -113,7 +113,7 @@ const ExploreCategories = () => {
             <img
               src={four}
               alt="Others"
-              className="w-full h-36 md:h-52 lg:h-56 object-cover hover:scale-105 transition-transform duration-500"
+              className="w-full h-36 md:h-44 lg:h-48 object-cover hover:scale-105 transition-transform duration-500"
             />
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/20"></div>

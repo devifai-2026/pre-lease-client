@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import { CiHeart, CiLocationOn } from "react-icons/ci";
-import tag from "../../assets/FeaturedProperties/tag.png";
-import cardImg from "../../assets/FeaturedProperties/cardImg.png";
 import { FaPlus } from "react-icons/fa";
 import { RiShareForwardLine } from "react-icons/ri";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
+import tag from "../../assets/FeaturedProperties/tag.png";
 
 const FeaturedProperties = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [isHovered, setIsHovered] = useState({});
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
   const intervalRefs = useRef({});
   const navigate = useNavigate();
 
@@ -29,7 +30,12 @@ const FeaturedProperties = () => {
       tenureLeft: "10 Yrs",
       roi: "90.21%",
       isVerified: true,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
     {
       id: 2,
@@ -41,7 +47,12 @@ const FeaturedProperties = () => {
       tenureLeft: "8 Yrs",
       roi: "90.21%",
       isVerified: false,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
     {
       id: 3,
@@ -53,7 +64,12 @@ const FeaturedProperties = () => {
       tenureLeft: "12 Yrs",
       roi: "90.21%",
       isVerified: true,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
     {
       id: 4,
@@ -65,7 +81,12 @@ const FeaturedProperties = () => {
       tenureLeft: "9 Yrs",
       roi: "90.21%",
       isVerified: false,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
     {
       id: 5,
@@ -77,7 +98,12 @@ const FeaturedProperties = () => {
       tenureLeft: "11 Yrs",
       roi: "90.21%",
       isVerified: true,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
     {
       id: 6,
@@ -89,7 +115,12 @@ const FeaturedProperties = () => {
       tenureLeft: "7 Yrs",
       roi: "90.21%",
       isVerified: false,
-      images: [cardImg, cardImg, cardImg, cardImg],
+      images: [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
+      ],
     },
   ];
 
@@ -151,6 +182,67 @@ const FeaturedProperties = () => {
     startAutoSlide(propertyId);
   };
 
+  // Mouse drag handlers
+  const handleMouseDown = (propertyId, e) => {
+    setTouchStart(e.clientX);
+  };
+
+  const handleMouseMove = (propertyId, e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.clientX);
+  };
+
+  const handleMouseUp = (propertyId) => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe) {
+      // Swipe left - next image
+      setCurrentImageIndex(prev => {
+        const property = propertyCards.find(p => p.id === propertyId);
+        if (!property) return prev;
+        return {
+          ...prev,
+          [propertyId]: (prev[propertyId] + 1) % property.images.length
+        };
+      });
+    }
+    
+    if (isRightSwipe) {
+      // Swipe right - previous image
+      const property = propertyCards.find(p => p.id === propertyId);
+      const newIndex = prev => prev[propertyId] === 0 ? property.images.length - 1 : prev[propertyId] - 1;
+      setCurrentImageIndex(prev => ({
+        ...prev,
+        [propertyId]: newIndex(prev)
+      }));
+    }
+    
+    // Reset touch values
+    setTouchStart(null);
+    setTouchEnd(null);
+    
+    // Restart auto-slide after swipe
+    startAutoSlide(propertyId);
+  };
+
+  // Touch handlers for mobile
+  const handleTouchStart = (propertyId, e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (propertyId, e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (propertyId) => {
+    handleMouseUp(propertyId);
+  };
+
   const handleMouseEnter = (propertyId) => {
     setIsHovered(prev => ({
       ...prev,
@@ -187,10 +279,10 @@ const FeaturedProperties = () => {
 
   return (
     <div 
-      className="bg-[#F2F2F2] py-6 md:py-8"
+      className="bg-[#F2F2F2] py-6 md:py-8 font-montserrat"
       data-aos="fade-up"
     >
-      <div className="max-w-[95%] mx-auto px-2 sm:px-4">
+      <div className="max-w-[95%] mx-auto px-1 md:px-0">
         <h2 
           className="text-center text-2xl md:text-3xl lg:text-4xl text-[#262626]"
           data-aos="fade-up"
@@ -222,22 +314,30 @@ const FeaturedProperties = () => {
                       data-aos="zoom-in"
                       data-aos-delay={200 + (index * 50)}
                     >
-                      <img className="w-16 sm:w-18 md:w-20" src={tag} alt="Verified" />
-                      <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">Verified</p>
+                      <div className="relative">
+                          <img className="w-16 sm:w-18 md:w-20" src={tag} alt="Verified" />
+                          <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">Verified</p>
+                        </div>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Property Image Section */}
+              {/* Property Image Section with swipe functionality */}
               <div className="relative">
                 <div 
-                  className="relative"
+                  className="relative overflow-hidden cursor-grab active:cursor-grabbing"
                   onMouseEnter={() => handleMouseEnter(property.id)}
                   onMouseLeave={() => handleMouseLeave(property.id)}
+                  onMouseDown={(e) => handleMouseDown(property.id, e)}
+                  onMouseMove={(e) => handleMouseMove(property.id, e)}
+                  onMouseUp={() => handleMouseUp(property.id)}
+                  onTouchStart={(e) => handleTouchStart(property.id, e)}
+                  onTouchMove={(e) => handleTouchMove(property.id, e)}
+                  onTouchEnd={() => handleTouchEnd(property.id)}
                 >
                   <img 
-                    className="w-full h-72 md:h-64 lg:h-72 object-cover transition-opacity duration-500 ease-in-out" 
+                    className="w-full h-72 md:h-64 lg:h-72 object-cover transition-transform duration-300 ease-in-out" 
                     src={property.images[currentImageIndex[property.id] || 0]} 
                     alt={property.title}
                     data-aos="zoom-in"
@@ -247,24 +347,27 @@ const FeaturedProperties = () => {
                   {/* Gradient overlay for bottom blur */}
                   <div className="absolute -bottom-4 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white rounded-b-lg"></div>
                   
-               {/* Slider Dots - Positioned above the blur */}
-<div 
-  className="absolute bottom-[72px] md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
->
-  {property.images.map((_, dotIndex) => (
-    <button
-      key={dotIndex}
-      onClick={() => handleDotClick(property.id, dotIndex)}
-      onMouseEnter={() => handleMouseEnter(property.id)}
-      className={`rounded-full transition-all duration-300 cursor-pointer ${
-        currentImageIndex[property.id] === dotIndex
-          ? "bg-red-500 w-3 h-3"
-          : "bg-white w-2 h-2 hover:bg-white/80"
-      }`}
-      aria-label={`Go to image ${dotIndex + 1}`}
-    />
-  ))}
-</div>
+                  {/* Slider Dots with auto-slide indicator */}
+                  <div 
+                    className="absolute bottom-[72px] md:bottom-16 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
+                  >
+                    {property.images.map((_, dotIndex) => (
+                      <button
+                        key={dotIndex}
+                        onClick={() => handleDotClick(property.id, dotIndex)}
+                        className={`rounded-full transition-all duration-300 cursor-pointer relative ${
+                          currentImageIndex[property.id] === dotIndex
+                            ? "bg-red-500 w-3 h-3"
+                            : "bg-white w-2 h-2 hover:bg-white/80"
+                        }`}
+                        aria-label={`Go to image ${dotIndex + 1}`}
+                      >
+                        {currentImageIndex[property.id] === dotIndex && (
+                          <div className="absolute inset-0 bg-red-500 rounded-full animate-pulse"></div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                   
                   {/* Action Buttons on Image */}
                   <div 
@@ -314,7 +417,7 @@ const FeaturedProperties = () => {
                   data-aos="zoom-in"
                   data-aos-delay={450 + (index * 50)}
                 >
-                  <p className="text-base md:text-lg lg:text-xl font-semibold">ROI</p>
+                  <p className="text-xs sm:text-sm font-medium">ROI</p>
                   <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                 </div>
               </div>

@@ -132,7 +132,7 @@ const ListProperty = () => {
   };
 
   return (
-    <div className="mt-10 ">
+    <div className="mt-10 font-montserrat">
       <div className="text-center space-y-3 relative max-w-[90%] md:max-w-[85%] lg:max-w-[60%] mx-auto">
         {/* Background Image - Added here */}
         <div 

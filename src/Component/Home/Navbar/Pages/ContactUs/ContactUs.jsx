@@ -27,7 +27,7 @@ const ContactUs = () => {
             Reach out and we'll get back to you promptly.
           </p>
         </div>
-        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end -mt-10 ">
+        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end -mt-12 ">
           <img className="max-w-full lg:h-[65vh] lg:max-w-[90%] sm:h-[45vh] md:h-[30vh] sm:max-w-[80%]" src={img} alt="Contact illustration" />
         </div>
       </div>

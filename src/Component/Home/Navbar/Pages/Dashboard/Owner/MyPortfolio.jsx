@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { CiHeart, CiLocationOn } from 'react-icons/ci';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { FaPlus, FaChevronDown, FaClock } from 'react-icons/fa';
 import dateArrow from "../../../../../../assets/Dashboard/dateArrow.svg"
 import show from "../../../../../../assets/Dashboard/show.svg"
+import tag from "../../../../../../assets/FeaturedProperties/tag.png";
+
 const MyPortfolio = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [selectedProperties, setSelectedProperties] = useState([]);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const sliderRefs = useRef({});
 
   // Monthly Performance Data
   const monthlyData = [
@@ -78,12 +83,29 @@ const MyPortfolio = () => {
     }
   ];
 
+  // Initialize currentImageIndex for all properties and set up auto-slide
   useEffect(() => {
     const initialState = {};
     propertyCards.forEach(property => {
       initialState[property.id] = 0;
     });
     setCurrentImageIndex(initialState);
+
+    // Set up auto-slide interval for each property
+    const intervals = {};
+    propertyCards.forEach(property => {
+      intervals[property.id] = setInterval(() => {
+        setCurrentImageIndex(prev => ({
+          ...prev,
+          [property.id]: (prev[property.id] + 1) % property.images.length
+        }));
+      }, 4000); // Change image every 4 seconds
+    });
+
+    // Cleanup intervals on component unmount
+    return () => {
+      Object.values(intervals).forEach(interval => clearInterval(interval));
+    };
   }, []);
 
   const handleDotClick = (propertyId, index) => {
@@ -91,6 +113,60 @@ const MyPortfolio = () => {
       ...prev,
       [propertyId]: index
     }));
+  };
+
+  // Mouse drag handlers
+  const handleMouseDown = (propertyId, e) => {
+    setTouchStart(e.clientX);
+  };
+
+  const handleMouseMove = (propertyId, e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.clientX);
+  };
+
+  const handleMouseUp = (propertyId) => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe) {
+      // Swipe left - next image
+      setCurrentImageIndex(prev => ({
+        ...prev,
+        [propertyId]: (prev[propertyId] + 1) % propertyCards.find(p => p.id === propertyId).images.length
+      }));
+    }
+    
+    if (isRightSwipe) {
+      // Swipe right - previous image
+      const property = propertyCards.find(p => p.id === propertyId);
+      const newIndex = prev => prev[propertyId] === 0 ? property.images.length - 1 : prev[propertyId] - 1;
+      setCurrentImageIndex(prev => ({
+        ...prev,
+        [propertyId]: newIndex(prev)
+      }));
+    }
+    
+    // Reset touch values
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
+  // Touch handlers for mobile
+  const handleTouchStart = (propertyId, e) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (propertyId, e) => {
+    if (touchStart === null) return;
+    setTouchEnd(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (propertyId) => {
+    handleMouseUp(propertyId);
   };
 
   const handleCompareClick = (propertyId, propertyTitle) => {
@@ -240,7 +316,7 @@ const MyPortfolio = () => {
         </div>
       </div>
 
-      {/* Properties Owned Section - UPDATED TO MATCH SECOND CODE */}
+      {/* Properties Owned Section */}
       <div className="mb-6">
         <div className="flex flex-col md:flex-row items-center justify-between mb-6 space-y-2">
           <h1 className="text-base md:text-lg lg:text-xl font-bold text-[#EE2529]">Properties Owned</h1>
@@ -260,7 +336,7 @@ const MyPortfolio = () => {
           </div>
         </div>
 
-        {/* Updated Cards Grid to match second code */}
+        {/* Cards Grid with auto-sliding and swipe functionality */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8">
           {propertyCards.map((property) => {
             const isSelected = selectedProperties.some(p => p.id === property.id);
@@ -280,23 +356,34 @@ const MyPortfolio = () => {
                     </p>
                     {property.isVerified && (
                       <div className="relative ">
-                        {/* Simulating the verified tag - you can replace with actual image */}
-                        <div className="w-16 sm:w-18 md:w-20 h-6 bg-red-600 rounded-sm relative">
-                          <p className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">
-                            Verified
-                          </p>
-                          <div className="absolute right-0 top-0 h-full w-2 bg-red-700 transform skew-x-12"></div>
-                        </div>
+                        <div className="relative">
+                                               <img className="w-16 sm:w-18 md:w-20" src={tag} alt="Verified" />
+                                               <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">Verified</p>
+                                             </div>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Property Image Section */}
+                {/* Property Image Section with swipe functionality */}
                 <div className="relative">
-                  <div className="relative">
+                  <div 
+                    className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+                    onMouseDown={(e) => handleMouseDown(property.id, e)}
+                    onMouseMove={(e) => handleMouseMove(property.id, e)}
+                    onMouseUp={() => handleMouseUp(property.id)}
+                    onMouseLeave={() => {
+                      if (touchStart !== null) {
+                        setTouchStart(null);
+                        setTouchEnd(null);
+                      }
+                    }}
+                    onTouchStart={(e) => handleTouchStart(property.id, e)}
+                    onTouchMove={(e) => handleTouchMove(property.id, e)}
+                    onTouchEnd={() => handleTouchEnd(property.id)}
+                  >
                     <img 
-                      className="w-full h-72 md:h-60 lg:h-72 object-cover" 
+                      className="w-full h-72 md:h-60 lg:h-72 object-cover transition-transform duration-300"
                       src={property.images[currentImageIndex[property.id] || 0]} 
                       alt={property.title}
                     />
@@ -304,19 +391,23 @@ const MyPortfolio = () => {
                     {/* Gradient overlay for bottom blur */}
                     <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-white/80 to-transparent backdrop-blur-[2px] border-t border-white "></div>
                     
-                    {/* Slider Dots */}
+                    {/* Slider Dots with auto-slide indicator */}
                     <div className="absolute bottom-[72px] md:bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5">
                       {property.images.map((_, dotIndex) => (
                         <button
                           key={dotIndex}
                           onClick={() => handleDotClick(property.id, dotIndex)}
-                          className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                          className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer relative ${
                             currentImageIndex[property.id] === dotIndex
                               ? "bg-red-500 w-2.5"
                               : "bg-white w-2.5 hover:bg-white/80"
                           }`}
                           aria-label={`Go to image ${dotIndex + 1}`}
-                        />
+                        >
+                          {currentImageIndex[property.id] === dotIndex && (
+                            <div className="absolute inset-0 bg-red-500 rounded-full animate-pulse"></div>
+                          )}
+                        </button>
                       ))}
                     </div>
                     

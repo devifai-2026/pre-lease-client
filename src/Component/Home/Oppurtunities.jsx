@@ -83,11 +83,11 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
 
   return (
     <div
-      className="max-w-[95%] md:max-w-[80%] lg:max-w-[65%] mx-auto px-4 lg:px-0"
+      className="max-w-[95%] md:max-w-[80%] lg:max-w-[65%] mx-auto px-4 lg:px-0 font-montserrat"
       data-aos="fade-up"
     >
       <h2
-        className="text-center mt-4 md:mt-8 lg:mt-12 text-3xl md:text-4xl lg:text-4xl"
+        className="text-center mt-4 md:mt-8 lg:mt-12 text-2xl md:text-4xl lg:text-4xl"
         data-aos="fade-up"
         data-aos-delay="100"
       >
@@ -96,7 +96,7 @@ const Opportunities = ({ onSkip, onShowProperties }) => {
 
       {/* Cards Grid - Responsive */}
       <div
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 md:mt-8 hidden lg:grid"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 md:mt-8 lg:mt-12 hidden lg:grid"
         data-aos="fade-up"
         data-aos-delay="200"
       >
