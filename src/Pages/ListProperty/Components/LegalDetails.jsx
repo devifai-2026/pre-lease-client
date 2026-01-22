@@ -9,7 +9,6 @@ const LegalDetails = ({ onNext, onFormValid }) => {
     leaseRegistration: "",
     pendingLitigations: "no",
     litigationNote: "",
-    reraNumber: "",
     certifications: {
       rera: false,
       leed: false,
@@ -128,7 +127,7 @@ const LegalDetails = ({ onNext, onFormValid }) => {
           Title & Ownership Status
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Title Status */}
+          {/* Title Status - Updated dropdown */}
           <div>
             <label className="block text-xs font-semibold mb-2">
               Title Status <span className="text-[#EE2529]">*</span>
@@ -142,17 +141,15 @@ const LegalDetails = ({ onNext, onFormValid }) => {
               }`}
             >
               <option value="">Select Status</option>
-              <option value="clear">Clear Title</option>
-              <option value="encumbered">Encumbered Title</option>
-              <option value="litigated">Litigated Title</option>
-              <option value="pending">Pending</option>
+              <option value="no-litigation">No Litigation</option>
+              <option value="pending-litigation">Pending Litigation</option>
             </select>
             {errors.titleStatus && (
               <p className="text-xs text-red-500 mt-1">{errors.titleStatus}</p>
             )}
           </div>
 
-          {/* Occupancy Certificate */}
+          {/* Occupancy Certificate - Updated options */}
           <div>
             <label className="block text-xs font-semibold mb-2">
               Occupancy Certificate (OC) <span className="text-[#EE2529]">*</span>
@@ -166,10 +163,9 @@ const LegalDetails = ({ onNext, onFormValid }) => {
               }`}
             >
               <option value="">Select Status</option>
-              <option value="available">Available</option>
-              <option value="applied">Applied</option>
-              <option value="not-available">Not Available</option>
-              <option value="pending">Pending</option>
+              <option value="available">Yes, available</option>
+              <option value="in-process">In Process</option>
+              <option value="not-available">Not available</option>
             </select>
             {errors.occupancyCertificate && (
               <p className="text-xs text-red-500 mt-1">
@@ -178,7 +174,7 @@ const LegalDetails = ({ onNext, onFormValid }) => {
             )}
           </div>
 
-          {/* Lease Registration */}
+          {/* Lease Registration - Updated options */}
           <div>
             <label className="block text-xs font-semibold mb-2">
               Lease Registration <span className="text-[#EE2529]">*</span>
@@ -192,10 +188,9 @@ const LegalDetails = ({ onNext, onFormValid }) => {
               }`}
             >
               <option value="">Select Status</option>
-              <option value="registered">Registered</option>
-              <option value="unregistered">Unregistered</option>
-              <option value="in-process">In Process</option>
-              <option value="not-applicable">Not Applicable</option>
+              <option value="registered">Registered Lease</option>
+              <option value="notorized">Notorized Lease</option>
+              <option value="no-document">No lease document</option>
             </select>
             {errors.leaseRegistration && (
               <p className="text-xs text-red-500 mt-1">
@@ -206,7 +201,7 @@ const LegalDetails = ({ onNext, onFormValid }) => {
         </div>
       </div>
 
-      {/* Litigation Status Section */}
+      {/* Litigation Status Section - Moved here from Title Status */}
       <div>
         <h4 className="text-sm font-bold text-[#EE2529] mb-4">
           Litigation Status
@@ -260,111 +255,99 @@ const LegalDetails = ({ onNext, onFormValid }) => {
         </div>
       </div>
 
-      {/* Licenses & Certifications Section */}
+      {/* Licenses & Certifications Section - Fixed layout */}
       <div>
         <h4 className="text-sm font-bold text-[#EE2529] mb-4">
           Licenses & Certifications
         </h4>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* RERA Number */}
-          <div>
-            <label className="block text-xs font-semibold mb-2">RERA Number</label>
-            <input
-              type="text"
-              name="reraNumber"
-              value={formData.reraNumber}
-              onChange={handleInputChange}
-              placeholder="Enter RERA Number"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-            />
-          </div>
+        {/* Available Certifications - Full width without empty left side */}
+        <div>
+          <label className="block text-xs font-semibold mb-3">
+            Available Certifications
+          </label>
+          <p className="text-xs text-gray-500 mb-3">
+            Select all applicable licenses and certifications for the property
+          </p>
+          <div className="space-y-2">
+            {/* RERA Checkbox */}
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="rera"
+                checked={formData.certifications.rera}
+                onChange={() => handleCertificationChange("rera")}
+                className="w-4 h-4 accent-[#EE2529] cursor-pointer"
+              />
+              <label htmlFor="rera" className="text-sm cursor-pointer">
+                RERA
+              </label>
+            </div>
 
-          {/* Available Certifications */}
-          <div>
-            <label className="block text-xs font-semibold mb-3">
-              Available Certifications
-            </label>
-            <div className="space-y-2">
-              {/* RERA Checkbox */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="rera"
-                  checked={formData.certifications.rera}
-                  onChange={() => handleCertificationChange("rera")}
-                  className="w-4 h-4 accent-[#EE2529] cursor-pointer"
-                />
-                <label htmlFor="rera" className="text-sm cursor-pointer">
-                  RERA
-                </label>
-              </div>
+            {/* LEED Checkbox */}
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="leed"
+                checked={formData.certifications.leed}
+                onChange={() => handleCertificationChange("leed")}
+                className="w-4 h-4 accent-[#EE2529] cursor-pointer"
+              />
+              <label htmlFor="leed" className="text-sm cursor-pointer">
+                LEED
+              </label>
+            </div>
 
-              {/* LEED Checkbox */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="leed"
-                  checked={formData.certifications.leed}
-                  onChange={() => handleCertificationChange("leed")}
-                  className="w-4 h-4 accent-[#EE2529] cursor-pointer"
-                />
-                <label htmlFor="leed" className="text-sm cursor-pointer">
-                  LEED
-                </label>
-              </div>
+            {/* IGBC Checkbox */}
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="igbc"
+                checked={formData.certifications.igbc}
+                onChange={() => handleCertificationChange("igbc")}
+                className="w-4 h-4 accent-[#EE2529] cursor-pointer"
+              />
+              <label htmlFor="igbc" className="text-sm cursor-pointer">
+                IGBC
+              </label>
+            </div>
 
-              {/* IGBC Checkbox */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="igbc"
-                  checked={formData.certifications.igbc}
-                  onChange={() => handleCertificationChange("igbc")}
-                  className="w-4 h-4 accent-[#EE2529] cursor-pointer"
-                />
-                <label htmlFor="igbc" className="text-sm cursor-pointer">
-                  IGBC
-                </label>
-              </div>
-
-              {/* Other Certifications */}
-              <div className="mt-3">
-                <p className="text-xs font-semibold text-gray-700 mb-2">
-                  Add Others (if Any)
-                </p>
-                <div className="space-y-2">
-                  {formData.otherCertifications.map((cert, index) => (
-                    <div key={index} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={cert}
-                        onChange={(e) =>
-                          handleOtherCertificationChange(index, e.target.value)
-                        }
-                        placeholder="Enter certification"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-                      />
-                      {index === formData.otherCertifications.length - 1 ? (
-                        <button
-                          type="button"
-                          onClick={addOtherCertification}
-                          className="px-3 py-2 bg-[#EE2529] text-white rounded-md hover:bg-[#C73834] transition flex items-center justify-center"
-                        >
-                          <AiOutlinePlus className="text-lg" />
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => removeOtherCertification(index)}
-                          className="px-3 py-2 bg-gray-300 text-gray-600 rounded-md hover:bg-gray-400 transition"
-                        >
-                          ×
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
+            {/* Other Certifications */}
+            <div className="mt-3">
+              <p className="text-xs font-semibold text-gray-700 mb-2">
+                Add Others (if Any)
+              </p>
+              <div className="space-y-2">
+                {formData.otherCertifications.map((cert, index) => (
+                  <div key={index} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={cert}
+                      onChange={(e) =>
+                        handleOtherCertificationChange(index, e.target.value)
+                      }
+                      placeholder="Enter certification"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
+                    />
+                    {index === formData.otherCertifications.length - 1 ? (
+                      <button
+                        type="button"
+                        onClick={addOtherCertification}
+                        className="px-3 py-2 bg-[#EE2529] text-white rounded-md hover:bg-[#C73834] transition flex items-center justify-center"
+                      >
+                        <AiOutlinePlus className="text-lg" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => removeOtherCertification(index)}
+                        className="px-3 py-2 bg-gray-300 text-gray-600 rounded-md hover:bg-gray-400 transition"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
