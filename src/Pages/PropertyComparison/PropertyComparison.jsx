@@ -10,6 +10,7 @@ import Facilities from './Components/Facilities';
 import Document from './Components/Document';
 import logo from "../../assets/Navbar/Preleasegrid logo 1.png"
 import squarebg from "../../assets/propertyDetails/squaresbg.png"
+import share from "../../assets/propertyDetails/share.svg"
 
 const PropertyComparison = () => {
     const reportRef = useRef(null);
@@ -137,7 +138,19 @@ const PropertyComparison = () => {
                     <span className='text-[#767676] font-normal'> (3 properties selected)</span>
                 </h2>
                 
-                {/* Buttons */}
+              
+            </div>
+            
+            {/* Report content for PDF - This is what appears in UI */}
+            <div ref={reportRef} className=' p-4 bg-white'>
+                <PropertyCards />
+                <OverView />
+                <Productivity />
+                <LeaseTerms />
+                <Facilities />
+                <Document />
+            </div>
+              {/* Buttons */}
                 <div className="flex justify-center gap-4 ">
                     <button 
                         onClick={handleDownload}
@@ -150,21 +163,10 @@ const PropertyComparison = () => {
                         onClick={handleShare}
                         className="flex items-center gap-2 border border-[#767676] text-[#767676] rounded-md px-4 py-2 text-sm hover:bg-gray-50 transition-colors bg-white"
                     >
-                        <FaShareAlt />
+                        <img src={share} alt="" />
                         Share Report
                     </button>
                 </div>
-            </div>
-            
-            {/* Report content for PDF - This is what appears in UI */}
-            <div ref={reportRef} className=' p-4 bg-white'>
-                <PropertyCards />
-                <OverView />
-                <Productivity />
-                <LeaseTerms />
-                <Facilities />
-                <Document />
-            </div>
         </div>
     );
 };

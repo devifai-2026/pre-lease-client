@@ -156,7 +156,7 @@ const PropertyDetails = () => {
             <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
               {/* DESKTOP: Header Section */}
               <div className="hidden sm:block pt-3 sm:pt-4 md:pt-5">
-                <p className="text-base sm:text-lg font-medium pl-3 sm:pl-4">
+                <p className="text-base md:text-lg lg:text-2xl font-normal pl-3 sm:pl-4">
                   Residential Space
                 </p>
                 <div className="flex items-center justify-between mt-1 mb-1 sm:mb-2">
@@ -287,7 +287,7 @@ const PropertyDetails = () => {
               </div>
 
               {/* DESKTOP: Details Section */}
-              <div className="hidden sm:flex items-center justify-around mt-1 p-1">
+              <div className="hidden sm:flex items-center justify-between px-4 mt-1 p-1">
                 <div className="space-y-1 sm:space-y-2">
                   <p className="text-xs sm:text-sm text-[#767676]">
                     Cost:{" "}

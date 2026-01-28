@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { AiOutlinePlus, AiOutlineInfoCircle, AiOutlineClose } from "react-icons/ai";
 import { LuFolder, LuUpload, LuX } from "react-icons/lu";
+import { FaAngleDown } from "react-icons/fa";
 
 const BasicDetails = ({ onNext, onFormValid }) => {
   // Generate years array: current year to 30 years in the past
@@ -93,11 +94,12 @@ const BasicDetails = ({ onNext, onFormValid }) => {
     hvacType: "",
     furnishingStatus: "",
     buildingMaintained: "",
-    keyAmenities: [], // Changed from otherAmenities to keyAmenities
+    keyAmenities: [],
     propertyDescription: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showAreaInfo, setShowAreaInfo] = useState(false);
@@ -163,11 +165,114 @@ const BasicDetails = ({ onNext, onFormValid }) => {
   }, [showAreaInfo, showGradeInfo, showAmenitiesDropdown]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    
+    // Prevent negative numbers for numeric inputs
+    if (type === 'number' && value !== '' && parseFloat(value) < 0) {
+      return; // Don't update if negative
+    }
+    
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  // Handle field blur for validation
+  const handleBlur = (fieldName) => {
+    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    validateField(fieldName);
+  };
+
+  // Validate individual field
+  const validateField = (fieldName) => {
+    let error = "";
+    
+    switch(fieldName) {
+      case 'propertyType':
+        if (!formData.propertyType.trim()) {
+          error = "Property Type is required";
+        }
+        break;
+        
+      case 'builtYear':
+        if (!formData.builtYear.trim()) {
+          error = "Built Year is required";
+        } else if (parseFloat(formData.builtYear) < 1800 || parseFloat(formData.builtYear) > currentYear) {
+          error = `Please enter a valid year between 1800 and ${currentYear}`;
+        } else if (parseFloat(formData.builtYear) < 0) {
+          error = "Built Year cannot be negative";
+        }
+        break;
+        
+      case 'buildingGrade':
+        if (!formData.buildingGrade.trim()) {
+          error = "Building Grade is required";
+        }
+        break;
+        
+      case 'carpetArea':
+        if (!formData.carpetArea.trim()) {
+          error = "Carpet Area is required";
+        } else if (parseFloat(formData.carpetArea) <= 0) {
+          error = "Carpet Area must be greater than 0";
+        } else if (parseFloat(formData.carpetArea) < 0) {
+          error = "Carpet Area cannot be negative";
+        }
+        break;
+        
+      case 'ownership':
+        if (!formData.ownership.trim()) {
+          error = "Ownership is required";
+        }
+        break;
+        
+      case 'fourWheelerParkings':
+        if (!formData.fourWheelerParkings.trim()) {
+          error = "Number of 4 Wheeler Parkings is required";
+        } else if (parseFloat(formData.fourWheelerParkings) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'twoWheelerParkings':
+        if (!formData.twoWheelerParkings.trim()) {
+          error = "Number of 2 Wheeler Parkings is required";
+        } else if (parseFloat(formData.twoWheelerParkings) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'furnishingStatus':
+        if (!formData.furnishingStatus.trim()) {
+          error = "Furnishing Status is required";
+        }
+        break;
+        
+      case 'lastRefurbished':
+        if (formData.lastRefurbished !== "" && parseFloat(formData.lastRefurbished) < 1800) {
+          error = "Please enter a valid year";
+        }
+        break;
+        
+      case 'numLifts':
+        if (formData.numLifts !== "" && parseFloat(formData.numLifts) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+    }
+    
+    setErrors(prev => ({
+      ...prev,
+      [fieldName]: error
+    }));
+    
+    return !error;
   };
 
   const handleUnitChange = (e) => {
@@ -279,23 +384,44 @@ const BasicDetails = ({ onNext, onFormValid }) => {
     return "📄";
   };
 
-  // Validation for form submission
+  // Main validation for form submission
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.propertyType)
+    if (!formData.propertyType.trim())
       newErrors.propertyType = "Property Type is required";
-    if (!formData.builtYear) newErrors.builtYear = "Built Year is required";
-    if (!formData.buildingGrade)
+    
+    if (!formData.builtYear.trim()) 
+      newErrors.builtYear = "Built Year is required";
+    else if (parseFloat(formData.builtYear) < 1800 || parseFloat(formData.builtYear) > currentYear) {
+      newErrors.builtYear = `Please enter a valid year between 1800 and ${currentYear}`;
+    }
+    
+    if (!formData.buildingGrade.trim())
       newErrors.buildingGrade = "Building Grade is required";
-    if (!formData.carpetArea) newErrors.carpetArea = "Carpet Area is required";
-    if (!formData.ownership) newErrors.ownership = "Ownership is required";
-    if (!formData.fourWheelerParkings)
-      newErrors.fourWheelerParkings =
-        "Number of 4 Wheeler Parkings is required";
-    if (!formData.twoWheelerParkings)
+    
+    if (!formData.carpetArea.trim()) 
+      newErrors.carpetArea = "Carpet Area is required";
+    else if (parseFloat(formData.carpetArea) <= 0) {
+      newErrors.carpetArea = "Carpet Area must be greater than 0";
+    }
+    
+    if (!formData.ownership.trim()) 
+      newErrors.ownership = "Ownership is required";
+    
+    if (!formData.fourWheelerParkings.trim())
+      newErrors.fourWheelerParkings = "Number of 4 Wheeler Parkings is required";
+    else if (parseFloat(formData.fourWheelerParkings) < 0) {
+      newErrors.fourWheelerParkings = "Cannot be negative";
+    }
+    
+    if (!formData.twoWheelerParkings.trim())
       newErrors.twoWheelerParkings = "Number of 2 Wheeler Parkings is required";
-    if (!formData.furnishingStatus)
+    else if (parseFloat(formData.twoWheelerParkings) < 0) {
+      newErrors.twoWheelerParkings = "Cannot be negative";
+    }
+    
+    if (!formData.furnishingStatus.trim())
       newErrors.furnishingStatus = "Furnishing Status is required";
 
     setErrors(newErrors);
@@ -305,14 +431,17 @@ const BasicDetails = ({ onNext, onFormValid }) => {
   // Validation for Next button enable/disable
   const validateFormForButton = () => {
     const isValid =
-      formData.propertyType !== "" &&
-      formData.builtYear !== "" &&
-      formData.buildingGrade !== "" &&
-      formData.carpetArea !== "" &&
-      formData.ownership !== "" &&
-      formData.fourWheelerParkings !== "" &&
-      formData.twoWheelerParkings !== "" &&
-      formData.furnishingStatus !== "";
+      formData.propertyType.trim() !== "" &&
+      formData.builtYear.trim() !== "" &&
+      formData.buildingGrade.trim() !== "" &&
+      formData.carpetArea.trim() !== "" &&
+      formData.ownership.trim() !== "" &&
+      formData.fourWheelerParkings.trim() !== "" &&
+      formData.twoWheelerParkings.trim() !== "" &&
+      formData.furnishingStatus.trim() !== "" &&
+      parseFloat(formData.carpetArea) > 0 &&
+      parseFloat(formData.fourWheelerParkings) >= 0 &&
+      parseFloat(formData.twoWheelerParkings) >= 0;
 
     onFormValid(isValid);
     return isValid;
@@ -326,7 +455,24 @@ const BasicDetails = ({ onNext, onFormValid }) => {
         ...formData,
         uploadedFiles: uploadedFiles.map((f) => f.file), // Send actual File objects
       });
+    } else {
+      // Mark all fields as touched to show errors
+      setTouched({
+        propertyType: true,
+        builtYear: true,
+        buildingGrade: true,
+        carpetArea: true,
+        ownership: true,
+        fourWheelerParkings: true,
+        twoWheelerParkings: true,
+        furnishingStatus: true,
+      });
     }
+  };
+
+  // Helper to show error only when field is touched
+  const showError = (fieldName) => {
+    return touched[fieldName] && errors[fieldName];
   };
 
   // Cleanup preview URLs on unmount
@@ -364,22 +510,26 @@ const BasicDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               Property Type <span className="text-[#EE2529]">*</span>
             </label>
-            <select
-              name="propertyType"
-              value={formData.propertyType}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.propertyType ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Property Type</option>
-              <option value="residential">Residential</option>
-              <option value="retail">Retail</option>
-              <option value="commercial">Offices</option>
-              <option value="industrial">Industrial</option>
-              <option value="others">Others</option>
-            </select>
-            {errors.propertyType && (
+            <div className="relative">
+              <select
+                name="propertyType"
+                value={formData.propertyType}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('propertyType')}
+                className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10 ${
+                  showError('propertyType') ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select Property Type</option>
+                <option value="residential">Residential</option>
+                <option value="retail">Retail</option>
+                <option value="commercial">Offices</option>
+                <option value="industrial">Industrial</option>
+                <option value="others">Others</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('propertyType') && (
               <p className="text-xs text-red-500 mt-1">{errors.propertyType}</p>
             )}
           </div>
@@ -406,22 +556,28 @@ const BasicDetails = ({ onNext, onFormValid }) => {
                 name="carpetArea"
                 value={formData.carpetArea}
                 onChange={handleInputChange}
+                onBlur={() => handleBlur('carpetArea')}
                 placeholder="Carpet Area Official/RERA Figure"
+                min="0"
+                step="0.01"
                 className={`flex-1 px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                  errors.carpetArea ? "border-red-500" : "border-gray-300"
+                  showError('carpetArea') ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              <select
-                name="carpetAreaUnit"
-                value={formData.carpetAreaUnit}
-                onChange={handleUnitChange}
-                className="w-32 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-              >
-                <option value="sqft">Sq. Feet</option>
-                <option value="sqm">Sq. Meters</option>
-              </select>
+              <div className="relative">
+                <select
+                  name="carpetAreaUnit"
+                  value={formData.carpetAreaUnit}
+                  onChange={handleUnitChange}
+                  className="w-32 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10"
+                >
+                  <option value="sqft">Sq. Feet</option>
+                  <option value="sqm">Sq. Meters</option>
+                </select>
+                <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-sm" />
+              </div>
             </div>
-            {errors.carpetArea && (
+            {showError('carpetArea') && (
               <p className="text-xs text-red-500 mt-1">{errors.carpetArea}</p>
             )}
 
@@ -506,12 +662,15 @@ const BasicDetails = ({ onNext, onFormValid }) => {
               name="builtYear"
               value={formData.builtYear}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('builtYear')}
               placeholder="Enter the Built Year"
+              min="1800"
+              max={currentYear}
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.builtYear ? "border-red-500" : "border-gray-300"
+                showError('builtYear') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.builtYear && (
+            {showError('builtYear') && (
               <p className="text-xs text-red-500 mt-1">{errors.builtYear}</p>
             )}
           </div>
@@ -521,19 +680,26 @@ const BasicDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               Last Refurbished
             </label>
-            <select
-              name="lastRefurbished"
-              value={formData.lastRefurbished}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-            >
-              <option value="">Select Year</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                name="lastRefurbished"
+                value={formData.lastRefurbished}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('lastRefurbished')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10"
+              >
+                <option value="">Select Year</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('lastRefurbished') && (
+              <p className="text-xs text-red-500 mt-1">{errors.lastRefurbished}</p>
+            )}
           </div>
 
           {/* Building Grade */}
@@ -552,21 +718,25 @@ const BasicDetails = ({ onNext, onFormValid }) => {
                 <AiOutlineInfoCircle className="text-lg" />
               </button>
             </div>
-            <select
-              name="buildingGrade"
-              value={formData.buildingGrade}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.buildingGrade ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Grade</option>
-              <option value="A++">A++</option>
-              <option value="A+">A+</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-            </select>
-            {errors.buildingGrade && (
+            <div className="relative">
+              <select
+                name="buildingGrade"
+                value={formData.buildingGrade}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('buildingGrade')}
+                className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10 ${
+                  showError('buildingGrade') ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select Grade</option>
+                <option value="A++">A++</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('buildingGrade') && (
               <p className="text-xs text-red-500 mt-1">
                 {errors.buildingGrade}
               </p>
@@ -668,21 +838,25 @@ const BasicDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               Ownership <span className="text-[#EE2529]">*</span>
             </label>
-            <select
-              name="ownership"
-              value={formData.ownership}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.ownership ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Ownership</option>
-              <option value="freehold">Freehold</option>
-              <option value="leasehold">Leasehold</option>
-              <option value="shared">Jointly-hold</option>
-              <option value="shared">Government Owned</option>
-            </select>
-            {errors.ownership && (
+            <div className="relative">
+              <select
+                name="ownership"
+                value={formData.ownership}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('ownership')}
+                className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10 ${
+                  showError('ownership') ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select Ownership</option>
+                <option value="freehold">Freehold</option>
+                <option value="leasehold">Leasehold</option>
+                <option value="shared">Jointly-hold</option>
+                <option value="shared">Government Owned</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('ownership') && (
               <p className="text-xs text-red-500 mt-1">{errors.ownership}</p>
             )}
           </div>
@@ -706,14 +880,16 @@ const BasicDetails = ({ onNext, onFormValid }) => {
               name="fourWheelerParkings"
               value={formData.fourWheelerParkings}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('fourWheelerParkings')}
               placeholder="Enter 4 Wheeler Parking Slots"
+              min="0"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.fourWheelerParkings
+                showError('fourWheelerParkings')
                   ? "border-red-500"
                   : "border-gray-300"
               }`}
             />
-            {errors.fourWheelerParkings && (
+            {showError('fourWheelerParkings') && (
               <p className="text-xs text-red-500 mt-1">
                 {errors.fourWheelerParkings}
               </p>
@@ -731,12 +907,14 @@ const BasicDetails = ({ onNext, onFormValid }) => {
               name="twoWheelerParkings"
               value={formData.twoWheelerParkings}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('twoWheelerParkings')}
               placeholder="Enter 2 Wheeler Parking Slots"
+              min="0"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.twoWheelerParkings ? "border-red-500" : "border-gray-300"
+                showError('twoWheelerParkings') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.twoWheelerParkings && (
+            {showError('twoWheelerParkings') && (
               <p className="text-xs text-red-500 mt-1">
                 {errors.twoWheelerParkings}
               </p>
@@ -751,21 +929,24 @@ const BasicDetails = ({ onNext, onFormValid }) => {
           Building Amenities & Infrastructure
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Power Backup - Changed to Yes/No dropdown */}
+          {/* Power Backup */}
           <div>
             <label className="block text-xs font-semibold mb-2">
               Power Backup
             </label>
-            <select
-              name="powerBackup"
-              value={formData.powerBackup}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-            >
-              <option value="">Select Power Backup</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
+            <div className="relative">
+              <select
+                name="powerBackup"
+                value={formData.powerBackup}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10"
+              >
+                <option value="">Select Power Backup</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
           </div>
 
           {/* Number of Lifts */}
@@ -778,9 +959,16 @@ const BasicDetails = ({ onNext, onFormValid }) => {
               name="numLifts"
               value={formData.numLifts}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('numLifts')}
               placeholder="Enter No of Lifts"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
+              min="0"
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
+                showError('numLifts') ? "border-red-500" : "border-gray-300"
+              }`}
             />
+            {showError('numLifts') && (
+              <p className="text-xs text-red-500 mt-1">{errors.numLifts}</p>
+            )}
           </div>
 
           {/* HVAC Type */}
@@ -788,17 +976,20 @@ const BasicDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               HVAC Type
             </label>
-            <select
-              name="hvacType"
-              value={formData.hvacType}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-            >
-              <option value="">Select HVAC Type</option>
-              <option value="central">Central AC</option>
-              <option value="split">Split AC</option>
-              <option value="vrf">VRF System</option>
-            </select>
+            <div className="relative">
+              <select
+                name="hvacType"
+                value={formData.hvacType}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10"
+              >
+                <option value="">Select HVAC Type</option>
+                <option value="central">Central AC</option>
+                <option value="split">Split AC</option>
+                <option value="vrf">VRF System</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
           </div>
 
           {/* Furnishing Status */}
@@ -806,51 +997,58 @@ const BasicDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               Furnishing Status <span className="text-[#EE2529]">*</span>
             </label>
-            <select
-              name="furnishingStatus"
-              value={formData.furnishingStatus}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.furnishingStatus ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Furnishing Status</option>
-              <option value="furnished">Fully Furnished by landowner</option>
-              <option value="semi-furnished">
-                Semi-Furnished by landowner
-              </option>
-              <option value="unfurnished">Not Furnished by landowner</option>
-            </select>
-            {errors.furnishingStatus && (
+            <div className="relative">
+              <select
+                name="furnishingStatus"
+                value={formData.furnishingStatus}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('furnishingStatus')}
+                className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10 ${
+                  showError('furnishingStatus') ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select Furnishing Status</option>
+                <option value="furnished">Fully Furnished by landowner</option>
+                <option value="semi-furnished">
+                  Semi-Furnished by landowner
+                </option>
+                <option value="unfurnished">Not Furnished by landowner</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('furnishingStatus') && (
               <p className="text-xs text-red-500 mt-1">
                 {errors.furnishingStatus}
               </p>
             )}
           </div>
 
-          {/* Building Maintained By - Updated with detailed list */}
+          {/* Building Maintained By */}
           <div>
             <label className="block text-xs font-semibold mb-2">
               Building Maintained By
             </label>
-            <select
-              name="buildingMaintained"
-              value={formData.buildingMaintained}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-            >
-              <option value="">Select Building Maintenance</option>
-              {buildingMaintenanceOptions.map((operator, index) => (
-                <option key={index} value={operator}>
-                  {operator}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                name="buildingMaintained"
+                value={formData.buildingMaintained}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10"
+              >
+                <option value="">Select Building Maintenance</option>
+                {buildingMaintenanceOptions.map((operator, index) => (
+                  <option key={index} value={operator}>
+                    {operator}
+                  </option>
+                ))}
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Key Amenities Section - Updated with dropdown and chips */}
+      {/* Key Amenities Section */}
       <div>
         <h4 className="text-sm font-bold text-[#EE2529] mb-4">Key Amenities</h4>
         <div ref={amenitiesRef} className="relative">
@@ -858,11 +1056,27 @@ const BasicDetails = ({ onNext, onFormValid }) => {
             Select Key Amenities
           </label>
           
-          {/* Selected Amenities as Chips - Same design */}
+          {/* Selected Amenities as Chips */}
           <div className="space-y-2">
-          
+            <div className="flex flex-wrap gap-2 mb-2">
+              {formData.keyAmenities.map((amenity, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-1 px-3 py-2 bg-gray-300 text-gray-600 rounded-md hover:bg-gray-400 transition"
+                >
+                  <span className="text-sm">{amenity}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveAmenity(amenity)}
+                    className="ml-1 hover:text-gray-800 transition"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
             
-            {/* Add Amenity Button - Same design */}
+            {/* Add Amenity Button */}
             <div className="flex gap-2">
               <input
                 type="text"
@@ -879,23 +1093,6 @@ const BasicDetails = ({ onNext, onFormValid }) => {
               >
                 <AiOutlinePlus className="text-lg" />
               </button>
-            </div>
-              <div className="flex flex-wrap gap-2 mb-2">
-              {formData.keyAmenities.map((amenity, index) => (
-                <div
-                  key={index}
-                  className="inline-flex items-center gap-1 px-3 py-2 bg-gray-300 text-gray-600 rounded-md hover:bg-gray-400 transition"
-                >
-                  <span className="text-sm">{amenity}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveAmenity(amenity)}
-                    className="ml-1 hover:text-gray-800 transition"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
             </div>
           </div>
 

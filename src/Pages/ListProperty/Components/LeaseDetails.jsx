@@ -1,5 +1,6 @@
 // LeaseDetails.js
 import { useState, useRef, useEffect } from "react";
+import { FaAngleDown } from "react-icons/fa";
 
 const LeaseDetails = ({ onNext, onFormValid }) => {
   const [formData, setFormData] = useState({
@@ -17,12 +18,13 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
     securityDepositAmount: "",
     escalationPercentage: "",
     escalationFrequency: "",
-    maintenanceScope: "", // Added: "included" or "excluded"
-    maintenanceType: "", // Added: "perSqFt" or "lumpSum"
-    maintenanceAmount: "", // Added
+    maintenanceScope: "",
+    maintenanceType: "",
+    maintenanceAmount: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const formRef = useRef(null);
   const [showLeaseDurationInfo, setShowLeaseDurationInfo] = useState(false);
 
@@ -32,44 +34,198 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
   }, [formData]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    
+    // Prevent negative numbers for numeric inputs
+    if (type === 'number' && value !== '' && parseFloat(value) < 0) {
+      return; // Don't update if negative
+    }
+    
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
   };
 
-  // Validation for form submission
+  // Handle field blur for validation
+  const handleBlur = (fieldName) => {
+    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    validateField(fieldName);
+  };
+
+  // Validate individual field
+  const validateField = (fieldName) => {
+    let error = "";
+    
+    switch(fieldName) {
+      case 'tenantType':
+        if (!formData.tenantType.trim()) {
+          error = "Tenant Type is required";
+        }
+        break;
+        
+      case 'leaseStartDate':
+        if (!formData.leaseStartDate.trim()) {
+          error = "Lease Start Date is required";
+        } else if (formData.leaseExpiryDate && new Date(formData.leaseStartDate) >= new Date(formData.leaseExpiryDate)) {
+          error = "Start date must be before end date";
+        }
+        break;
+        
+      case 'leaseExpiryDate':
+        if (!formData.leaseExpiryDate.trim()) {
+          error = "Lease Expiry Date is required";
+        } else if (formData.leaseStartDate && new Date(formData.leaseExpiryDate) <= new Date(formData.leaseStartDate)) {
+          error = "End date must be after start date";
+        }
+        break;
+        
+      case 'lockInYears':
+        if (formData.lockInYears !== "" && parseFloat(formData.lockInYears) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'lockInMonths':
+        if (formData.lockInMonths !== "" && parseFloat(formData.lockInMonths) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'leaseDuration':
+        if (!formData.leaseDuration.trim()) {
+          error = "Lease Duration is required";
+        } else if (parseFloat(formData.leaseDuration) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'rentPerSqFt':
+        if (formData.rentType === "perSqFt" && !formData.rentPerSqFt.trim()) {
+          error = "Rent per Sq Ft is required";
+        } else if (formData.rentPerSqFt !== "" && parseFloat(formData.rentPerSqFt) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'totalMonthlyRent':
+        if (formData.rentType === "lumpSum" && !formData.totalMonthlyRent.trim()) {
+          error = "Total Monthly Rent is required";
+        } else if (formData.totalMonthlyRent !== "" && parseFloat(formData.totalMonthlyRent) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'securityDepositMonths':
+        if (formData.securityDepositType === "months" && !formData.securityDepositMonths.trim()) {
+          error = "Security Deposit (Months) is required";
+        } else if (formData.securityDepositMonths !== "" && parseFloat(formData.securityDepositMonths) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'securityDepositAmount':
+        if (formData.securityDepositType === "lumpSum" && !formData.securityDepositAmount.trim()) {
+          error = "Security Deposit Amount is required";
+        } else if (formData.securityDepositAmount !== "" && parseFloat(formData.securityDepositAmount) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'escalationPercentage':
+        if (!formData.escalationPercentage.trim()) {
+          error = "Escalation Percentage is required";
+        } else if (parseFloat(formData.escalationPercentage) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'escalationFrequency':
+        if (!formData.escalationFrequency.trim()) {
+          error = "Escalation Frequency is required";
+        } else if (parseFloat(formData.escalationFrequency) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+        
+      case 'maintenanceScope':
+        if (!formData.maintenanceScope.trim()) {
+          error = "Maintenance Scope is required";
+        }
+        break;
+        
+      case 'maintenanceType':
+        if (formData.maintenanceScope === "included" && !formData.maintenanceType.trim()) {
+          error = "Maintenance Type is required";
+        }
+        break;
+        
+      case 'maintenanceAmount':
+        if (formData.maintenanceScope === "included" && !formData.maintenanceAmount.trim()) {
+          error = "Maintenance Amount is required";
+        } else if (formData.maintenanceAmount !== "" && parseFloat(formData.maintenanceAmount) < 0) {
+          error = "Cannot be negative";
+        }
+        break;
+    }
+    
+    setErrors(prev => ({
+      ...prev,
+      [fieldName]: error
+    }));
+    
+    return !error;
+  };
+
+  // Main validation for form submission
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.tenantType) newErrors.tenantType = "Tenant Type is required";
-    if (!formData.leaseStartDate) newErrors.leaseStartDate = "Lease Start Date is required";
-    if (!formData.leaseExpiryDate) newErrors.leaseExpiryDate = "Lease Expiry Date is required";
-    if (!formData.leaseDuration) newErrors.leaseDuration = "Lease Duration is required";
+    if (!formData.tenantType.trim()) newErrors.tenantType = "Tenant Type is required";
+    if (!formData.leaseStartDate.trim()) newErrors.leaseStartDate = "Lease Start Date is required";
+    if (!formData.leaseExpiryDate.trim()) newErrors.leaseExpiryDate = "Lease Expiry Date is required";
+    if (!formData.leaseDuration.trim()) newErrors.leaseDuration = "Lease Duration is required";
     
-    // Rent validation based on type
+    // Date validation
+    if (formData.leaseStartDate && formData.leaseExpiryDate && new Date(formData.leaseStartDate) >= new Date(formData.leaseExpiryDate)) {
+      newErrors.leaseExpiryDate = "End date must be after start date";
+    }
+    
+    // Rent validation
     if (formData.rentType === "perSqFt") {
-      if (!formData.rentPerSqFt) newErrors.rentPerSqFt = "Rent per Sq Ft is required";
+      if (!formData.rentPerSqFt.trim()) newErrors.rentPerSqFt = "Rent per Sq Ft is required";
+      else if (parseFloat(formData.rentPerSqFt) < 0) newErrors.rentPerSqFt = "Cannot be negative";
     } else {
-      if (!formData.totalMonthlyRent) newErrors.totalMonthlyRent = "Total Monthly Rent is required";
+      if (!formData.totalMonthlyRent.trim()) newErrors.totalMonthlyRent = "Total Monthly Rent is required";
+      else if (parseFloat(formData.totalMonthlyRent) < 0) newErrors.totalMonthlyRent = "Cannot be negative";
     }
     
-    // Security deposit validation based on type
+    // Security deposit validation
     if (formData.securityDepositType === "months") {
-      if (!formData.securityDepositMonths) newErrors.securityDepositMonths = "Security Deposit (Months) is required";
+      if (!formData.securityDepositMonths.trim()) newErrors.securityDepositMonths = "Security Deposit (Months) is required";
+      else if (parseFloat(formData.securityDepositMonths) < 0) newErrors.securityDepositMonths = "Cannot be negative";
     } else {
-      if (!formData.securityDepositAmount) newErrors.securityDepositAmount = "Security Deposit Amount is required";
+      if (!formData.securityDepositAmount.trim()) newErrors.securityDepositAmount = "Security Deposit Amount is required";
+      else if (parseFloat(formData.securityDepositAmount) < 0) newErrors.securityDepositAmount = "Cannot be negative";
     }
     
-    if (!formData.escalationPercentage) newErrors.escalationPercentage = "Escalation Percentage is required";
-    if (!formData.escalationFrequency) newErrors.escalationFrequency = "Escalation Frequency is required";
-    if (!formData.maintenanceScope) newErrors.maintenanceScope = "Maintenance Scope is required";
+    if (!formData.escalationPercentage.trim()) newErrors.escalationPercentage = "Escalation Percentage is required";
+    else if (parseFloat(formData.escalationPercentage) < 0) newErrors.escalationPercentage = "Cannot be negative";
     
-    // Maintenance validation if included
+    if (!formData.escalationFrequency.trim()) newErrors.escalationFrequency = "Escalation Frequency is required";
+    else if (parseFloat(formData.escalationFrequency) < 0) newErrors.escalationFrequency = "Cannot be negative";
+    
+    if (!formData.maintenanceScope.trim()) newErrors.maintenanceScope = "Maintenance Scope is required";
+    
     if (formData.maintenanceScope === "included") {
-      if (!formData.maintenanceType) newErrors.maintenanceType = "Maintenance Type is required";
-      if (!formData.maintenanceAmount) newErrors.maintenanceAmount = "Maintenance Amount is required";
+      if (!formData.maintenanceType.trim()) newErrors.maintenanceType = "Maintenance Type is required";
+      if (!formData.maintenanceAmount.trim()) newErrors.maintenanceAmount = "Maintenance Amount is required";
+      else if (parseFloat(formData.maintenanceAmount) < 0) newErrors.maintenanceAmount = "Cannot be negative";
     }
 
     setErrors(newErrors);
@@ -79,16 +235,23 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
   // Validation for Next button enable/disable
   const validateFormForButton = () => {
     const isValid = 
-      formData.tenantType !== "" &&
-      formData.leaseStartDate !== "" &&
-      formData.leaseExpiryDate !== "" &&
-      formData.leaseDuration !== "" &&
-      (formData.rentType === "perSqFt" ? formData.rentPerSqFt !== "" : formData.totalMonthlyRent !== "") &&
-      (formData.securityDepositType === "months" ? formData.securityDepositMonths !== "" : formData.securityDepositAmount !== "") &&
-      formData.escalationPercentage !== "" &&
-      formData.escalationFrequency !== "" &&
-      formData.maintenanceScope !== "" &&
-      (formData.maintenanceScope === "excluded" || (formData.maintenanceType !== "" && formData.maintenanceAmount !== ""));
+      formData.tenantType.trim() !== "" &&
+      formData.leaseStartDate.trim() !== "" &&
+      formData.leaseExpiryDate.trim() !== "" &&
+      formData.leaseDuration.trim() !== "" &&
+      (formData.rentType === "perSqFt" ? formData.rentPerSqFt.trim() !== "" : formData.totalMonthlyRent.trim() !== "") &&
+      (formData.securityDepositType === "months" ? formData.securityDepositMonths.trim() !== "" : formData.securityDepositAmount.trim() !== "") &&
+      formData.escalationPercentage.trim() !== "" &&
+      formData.escalationFrequency.trim() !== "" &&
+      formData.maintenanceScope.trim() !== "" &&
+      (formData.maintenanceScope === "excluded" || (formData.maintenanceType.trim() !== "" && formData.maintenanceAmount.trim() !== "")) &&
+      // Additional checks for negative numbers
+      parseFloat(formData.leaseDuration) >= 0 &&
+      (formData.rentType === "perSqFt" ? parseFloat(formData.rentPerSqFt) >= 0 : parseFloat(formData.totalMonthlyRent) >= 0) &&
+      (formData.securityDepositType === "months" ? parseFloat(formData.securityDepositMonths) >= 0 : parseFloat(formData.securityDepositAmount) >= 0) &&
+      parseFloat(formData.escalationPercentage) >= 0 &&
+      parseFloat(formData.escalationFrequency) >= 0 &&
+      (formData.maintenanceScope === "excluded" || parseFloat(formData.maintenanceAmount) >= 0);
 
     onFormValid(isValid);
     return isValid;
@@ -99,7 +262,31 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
 
     if (validateForm()) {
       onNext(formData);
+    } else {
+      // Mark all fields as touched to show errors
+      setTouched({
+        tenantType: true,
+        leaseStartDate: true,
+        leaseExpiryDate: true,
+        lockInYears: true,
+        lockInMonths: true,
+        leaseDuration: true,
+        rentPerSqFt: true,
+        totalMonthlyRent: true,
+        securityDepositMonths: true,
+        securityDepositAmount: true,
+        escalationPercentage: true,
+        escalationFrequency: true,
+        maintenanceScope: true,
+        maintenanceType: true,
+        maintenanceAmount: true,
+      });
     }
+  };
+
+  // Helper to show error only when field is touched
+  const showError = (fieldName) => {
+    return touched[fieldName] && errors[fieldName];
   };
 
   return (
@@ -120,22 +307,26 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               Tenant Type <span className="text-[#EE2529]">*</span>
             </label>
-            <select
-              name="tenantType"
-              value={formData.tenantType}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.tenantType ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Select Tenant Type</option>
-              <option value="government">Government</option>
-              <option value="startup">Startup</option>
-              <option value="mnc">MNC</option>
-              <option value="corporate">Corporate</option>
-              <option value="others">Others</option>
-            </select>
-            {errors.tenantType && (
+            <div className="relative">
+              <select
+                name="tenantType"
+                value={formData.tenantType}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('tenantType')}
+                className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10 ${
+                  showError('tenantType') ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select Tenant Type</option>
+                <option value="government">Government</option>
+                <option value="startup">Startup</option>
+                <option value="mnc">MNC</option>
+                <option value="corporate">Corporate</option>
+                <option value="others">Others</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('tenantType') && (
               <p className="text-xs text-red-500 mt-1">{errors.tenantType}</p>
             )}
           </div>
@@ -156,11 +347,12 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
               name="leaseStartDate"
               value={formData.leaseStartDate}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('leaseStartDate')}
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.leaseStartDate ? "border-red-500" : "border-gray-300"
+                showError('leaseStartDate') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.leaseStartDate && (
+            {showError('leaseStartDate') && (
               <p className="text-xs text-red-500 mt-1">{errors.leaseStartDate}</p>
             )}
           </div>
@@ -175,11 +367,12 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
               name="leaseExpiryDate"
               value={formData.leaseExpiryDate}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('leaseExpiryDate')}
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.leaseExpiryDate ? "border-red-500" : "border-gray-300"
+                showError('leaseExpiryDate') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.leaseExpiryDate && (
+            {showError('leaseExpiryDate') && (
               <p className="text-xs text-red-500 mt-1">{errors.leaseExpiryDate}</p>
             )}
           </div>
@@ -187,29 +380,47 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
           {/* Lock In Period - Split into Years and Months */}
           <div>
             <label className="block text-xs font-semibold mb-2">
-              Lock In Period <span className="text-[#EE2529]">*</span>
+              Lock In Period <span className="text-gray-500">(Optional)</span>
             </label>
             <div className="flex gap-2">
-              <input
-                type="number"
-                name="lockInYears"
-                value={formData.lockInYears}
-                onChange={handleInputChange}
-                placeholder="Years"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-              />
-              <input
-                type="number"
-                name="lockInMonths"
-                value={formData.lockInMonths}
-                onChange={handleInputChange}
-                placeholder="Months"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
-              />
+              <div className="flex-1">
+                <input
+                  type="number"
+                  name="lockInYears"
+                  value={formData.lockInYears}
+                  onChange={handleInputChange}
+                  onBlur={() => handleBlur('lockInYears')}
+                  placeholder="Years"
+                  min="0"
+                  className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
+                    showError('lockInYears') ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {showError('lockInYears') && (
+                  <p className="text-xs text-red-500 mt-1">{errors.lockInYears}</p>
+                )}
+              </div>
+              <div className="flex-1">
+                <input
+                  type="number"
+                  name="lockInMonths"
+                  value={formData.lockInMonths}
+                  onChange={handleInputChange}
+                  onBlur={() => handleBlur('lockInMonths')}
+                  placeholder="Months"
+                  min="0"
+                  className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
+                    showError('lockInMonths') ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {showError('lockInMonths') && (
+                  <p className="text-xs text-red-500 mt-1">{errors.lockInMonths}</p>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Lease Duration - NEW FIELD */}
+          {/* Lease Duration */}
           <div>
             <div className="flex items-center gap-2 mb-2">
               <label className="block text-xs font-semibold">
@@ -237,12 +448,15 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
               name="leaseDuration"
               value={formData.leaseDuration}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('leaseDuration')}
               placeholder="Enter lease duration"
+              min="0"
+              step="0.5"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.leaseDuration ? "border-red-500" : "border-gray-300"
+                showError('leaseDuration') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.leaseDuration && (
+            {showError('leaseDuration') && (
               <p className="text-xs text-red-500 mt-1">{errors.leaseDuration}</p>
             )}
           </div>
@@ -326,12 +540,15 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
                 name="rentPerSqFt"
                 value={formData.rentPerSqFt}
                 onChange={handleInputChange}
+                onBlur={() => handleBlur('rentPerSqFt')}
                 placeholder="Enter Rent per Sq ft"
+                min="0"
+                step="0.01"
                 className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                  errors.rentPerSqFt ? "border-red-500" : "border-gray-300"
+                  showError('rentPerSqFt') ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {errors.rentPerSqFt && (
+              {showError('rentPerSqFt') && (
                 <p className="text-xs text-red-500 mt-1">{errors.rentPerSqFt}</p>
               )}
             </div>
@@ -345,12 +562,15 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
                 name="totalMonthlyRent"
                 value={formData.totalMonthlyRent}
                 onChange={handleInputChange}
+                onBlur={() => handleBlur('totalMonthlyRent')}
                 placeholder="Enter Monthly Rent"
+                min="0"
+                step="0.01"
                 className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                  errors.totalMonthlyRent ? "border-red-500" : "border-gray-300"
+                  showError('totalMonthlyRent') ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {errors.totalMonthlyRent && (
+              {showError('totalMonthlyRent') && (
                 <p className="text-xs text-red-500 mt-1">{errors.totalMonthlyRent}</p>
               )}
             </div>
@@ -367,13 +587,14 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
                 name="securityDepositMonths"
                 value={formData.securityDepositMonths}
                 onChange={handleInputChange}
+                onBlur={() => handleBlur('securityDepositMonths')}
                 placeholder="0"
                 min="0"
                 className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                  errors.securityDepositMonths ? "border-red-500" : "border-gray-300"
+                  showError('securityDepositMonths') ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {errors.securityDepositMonths && (
+              {showError('securityDepositMonths') && (
                 <p className="text-xs text-red-500 mt-1">{errors.securityDepositMonths}</p>
               )}
             </div>
@@ -387,13 +608,15 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
                 name="securityDepositAmount"
                 value={formData.securityDepositAmount}
                 onChange={handleInputChange}
+                onBlur={() => handleBlur('securityDepositAmount')}
                 placeholder="0"
                 min="0"
+                step="0.01"
                 className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                  errors.securityDepositAmount ? "border-red-500" : "border-gray-300"
+                  showError('securityDepositAmount') ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {errors.securityDepositAmount && (
+              {showError('securityDepositAmount') && (
                 <p className="text-xs text-red-500 mt-1">{errors.securityDepositAmount}</p>
               )}
             </div>
@@ -407,7 +630,7 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
           Escalation Terms & Maintenance
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Escalation Frequency - Moved first */}
+          {/* Escalation Frequency */}
           <div>
             <label className="block text-xs font-semibold mb-2">
               Escalation Frequency (Years) <span className="text-[#EE2529]">*</span>
@@ -417,13 +640,14 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
               name="escalationFrequency"
               value={formData.escalationFrequency}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('escalationFrequency')}
               placeholder="Every X years"
               min="0"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.escalationFrequency ? "border-red-500" : "border-gray-300"
+                showError('escalationFrequency') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.escalationFrequency && (
+            {showError('escalationFrequency') && (
               <p className="text-xs text-red-500 mt-1">{errors.escalationFrequency}</p>
             )}
           </div>
@@ -438,14 +662,15 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
               name="escalationPercentage"
               value={formData.escalationPercentage}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('escalationPercentage')}
               placeholder="0"
               min="0"
               step="0.01"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.escalationPercentage ? "border-red-500" : "border-gray-300"
+                showError('escalationPercentage') ? "border-red-500" : "border-gray-300"
               }`}
             />
-            {errors.escalationPercentage && (
+            {showError('escalationPercentage') && (
               <p className="text-xs text-red-500 mt-1">{errors.escalationPercentage}</p>
             )}
           </div>
@@ -455,19 +680,23 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
             <label className="block text-xs font-semibold mb-2">
               Maintenance Costs <span className="text-[#EE2529]">*</span>
             </label>
-            <select
-              name="maintenanceScope"
-              value={formData.maintenanceScope}
-              onChange={handleInputChange}
-              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.maintenanceScope ? "border-red-500" : "border-gray-300"
-              }`}
-            >
-              <option value="">Are maintenance costs included?</option>
-              <option value="included">Yes, included in rent</option>
-              <option value="excluded">No, excluded from rent</option>
-            </select>
-            {errors.maintenanceScope && (
+            <div className="relative">
+              <select
+                name="maintenanceScope"
+                value={formData.maintenanceScope}
+                onChange={handleInputChange}
+                onBlur={() => handleBlur('maintenanceScope')}
+                className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition appearance-none pr-10 ${
+                  showError('maintenanceScope') ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Are maintenance costs included?</option>
+                <option value="included">Yes, included in rent</option>
+                <option value="excluded">No, excluded from rent</option>
+              </select>
+              <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+            {showError('maintenanceScope') && (
               <p className="text-xs text-red-500 mt-1">{errors.maintenanceScope}</p>
             )}
 
@@ -499,7 +728,7 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
                     <span className="text-sm">Lump Sum</span>
                   </label>
                 </div>
-                {errors.maintenanceType && (
+                {showError('maintenanceType') && (
                   <p className="text-xs text-red-500 mb-2">{errors.maintenanceType}</p>
                 )}
 
@@ -513,13 +742,15 @@ const LeaseDetails = ({ onNext, onFormValid }) => {
                     name="maintenanceAmount"
                     value={formData.maintenanceAmount}
                     onChange={handleInputChange}
+                    onBlur={() => handleBlur('maintenanceAmount')}
                     placeholder={formData.maintenanceType === "perSqFt" ? "Amount per Sq Ft" : "Total Amount"}
                     min="0"
+                    step="0.01"
                     className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                      errors.maintenanceAmount ? "border-red-500" : "border-gray-300"
+                      showError('maintenanceAmount') ? "border-red-500" : "border-gray-300"
                     }`}
                   />
-                  {errors.maintenanceAmount && (
+                  {showError('maintenanceAmount') && (
                     <p className="text-xs text-red-500 mt-1">{errors.maintenanceAmount}</p>
                   )}
                 </div>

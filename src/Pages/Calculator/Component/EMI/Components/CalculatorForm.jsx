@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaInfoCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaAngleDown } from 'react-icons/fa';
 
 const CalculatorForm = () => {
   const [propertyType, setPropertyType] = useState('Residential Space');
@@ -24,6 +24,162 @@ const CalculatorForm = () => {
   const [brokerage, setBrokerage] = useState('67500');
   const [otherCosts, setOtherCosts] = useState('25000');
   const [includeDevelopment, setIncludeDevelopment] = useState(true);
+  
+  // Enhanced validation function to ensure positive numbers
+  const validatePositiveNumber = (value, setter) => {
+    // Remove any non-numeric characters except decimal point
+    let cleaned = value.replace(/[^0-9.]/g, '');
+    
+    // Remove leading zeros except for decimal numbers
+    cleaned = cleaned.replace(/^0+(\d)/, '$1');
+    
+    // Ensure it doesn't start with a decimal point
+    if (cleaned.startsWith('.')) {
+      cleaned = '0' + cleaned;
+    }
+    
+    // Remove multiple decimal points
+    const parts = cleaned.split('.');
+    if (parts.length > 2) {
+      cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // Don't allow empty string if there's input
+    if (value === '' || cleaned === '') {
+      setter('');
+      return;
+    }
+    
+    // Convert to number and ensure it's not negative
+    const num = parseFloat(cleaned);
+    if (isNaN(num)) {
+      setter('');
+      return;
+    }
+    
+    // Return the cleaned value (as string to maintain input format)
+    setter(cleaned);
+  };
+
+  // Handle percentage fields (0-100)
+  const validatePercentage = (value, setter) => {
+    let cleaned = value.replace(/[^0-9.]/g, '');
+    
+    // Remove leading zeros except for decimal numbers
+    cleaned = cleaned.replace(/^0+(\d)/, '$1');
+    
+    if (cleaned.startsWith('.')) {
+      cleaned = '0' + cleaned;
+    }
+    
+    const parts = cleaned.split('.');
+    if (parts.length > 2) {
+      cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    const num = parseFloat(cleaned);
+    if (isNaN(num)) {
+      setter('');
+      return;
+    }
+    
+    // Cap at 100 if it's a percentage field
+    if (num > 100) {
+      setter('100');
+      return;
+    }
+    
+    setter(cleaned);
+  };
+
+  // Validation for loan tenure (years, typically 1-30)
+  const validateLoanTenure = (value, setter) => {
+    let cleaned = value.replace(/[^0-9]/g, '');
+    
+    // Remove leading zeros
+    cleaned = cleaned.replace(/^0+/, '');
+    
+    const num = parseInt(cleaned);
+    if (isNaN(num)) {
+      setter('');
+      return;
+    }
+    
+    // Typical loan tenure range (1-30 years)
+    if (num > 30) {
+      setter('30');
+      return;
+    }
+    if (num < 1) {
+      setter('1');
+      return;
+    }
+    
+    setter(cleaned);
+  };
+
+  // Validation for lease term (years)
+  const validateLeaseTerm = (value, setter) => {
+    let cleaned = value.replace(/[^0-9]/g, '');
+    
+    // Remove leading zeros
+    cleaned = cleaned.replace(/^0+/, '');
+    
+    const num = parseInt(cleaned);
+    if (isNaN(num)) {
+      setter('');
+      return;
+    }
+    
+    if (num < 1) {
+      setter('1');
+      return;
+    }
+    
+    setter(cleaned);
+  };
+
+  // Validation for days calculation (1-30)
+  const validateDaysCalculation = (value, setter) => {
+    let cleaned = value.replace(/[^0-9]/g, '');
+    
+    // Remove leading zeros
+    cleaned = cleaned.replace(/^0+/, '');
+    
+    const num = parseInt(cleaned);
+    if (isNaN(num)) {
+      setter('');
+      return;
+    }
+    
+    if (num > 31) {
+      setter('31');
+      return;
+    }
+    if (num < 1) {
+      setter('1');
+      return;
+    }
+    
+    setter(cleaned);
+  };
+
+  // Validation for date format (dd/mm/yyyy)
+  const validateDate = (value, setter) => {
+    // Allow date format with slashes and numbers
+    const cleaned = value.replace(/[^0-9/]/g, '');
+    setter(cleaned);
+  };
+
+  // Handler for positive number inputs
+  const handlePositiveNumber = (value, setter) => {
+    validatePositiveNumber(value, setter);
+  };
+
+  // Handler for percentage inputs
+  const handlePercentage = (value, setter) => {
+    validatePercentage(value, setter);
+  };
 
   return (
     <div className="font-montserrat bg-white p-4 md:p-6 lg:p-8">
@@ -40,7 +196,7 @@ const CalculatorForm = () => {
         </p>
       </div>
 
-      {/* Info Cards - Same design as ROI */}
+      {/* Info Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 lg:mb-8 max-w-[95%] mx-auto">
         <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
           <p className="text-[#767676] text-xs font-semibold">
@@ -59,29 +215,31 @@ const CalculatorForm = () => {
         </div>
       </div>
 
-      {/* Form Content - Now in ROI style containers */}
+      {/* Form Content */}
       <div className="space-y-4 md:space-y-6">
-        {/* Property Details - ROI style container */}
+        {/* Property Details */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
             Property Details
           </h3>
           <div className="space-y-3 md:space-y-4">
-            {/* Property Type and Carpet Area - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
                   <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
                     Property Type <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
-                  <select 
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(e.target.value)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
-                  >
-                    <option>Residential Space</option>
-                    <option>Commercial Space</option>
-                  </select>
+                  <div className="relative w-full sm:w-2/3">
+                    <select 
+                      value={propertyType}
+                      onChange={(e) => setPropertyType(e.target.value)}
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676] appearance-none pr-8"
+                    >
+                      <option>Residential Space</option>
+                      <option>Commercial Space</option>
+                    </select>
+                    <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                  </div>
                 </div>
               </div>
               <div>
@@ -90,15 +248,17 @@ const CalculatorForm = () => {
                     Purchase Price (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={purchasePrice}
-                    onChange={(e) => setPurchasePrice(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setPurchasePrice)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter amount"
                   />
                 </div>
               </div>
             </div>
-            {/* Carpet Area - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -106,10 +266,13 @@ const CalculatorForm = () => {
                     Carpet Area (sq ft) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={carpetArea}
-                    onChange={(e) => setCarpetArea(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setCarpetArea)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter area"
                   />
                 </div>
               </div>
@@ -118,7 +281,7 @@ const CalculatorForm = () => {
           </div>
         </div>
 
-        {/* EMI Options - ROI style container */}
+        {/* EMI Options */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 lg:mb-4 gap-2 sm:gap-0">
             <h3 className="text-[#EE2529] font-bold text-sm md:text-base">
@@ -141,7 +304,6 @@ const CalculatorForm = () => {
             Note: EMI amount is current property purchase price.
           </div>
           <div className="space-y-3 md:space-y-4">
-            {/* Loan Amount and Down Payment - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -149,10 +311,13 @@ const CalculatorForm = () => {
                     Loan Amount (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={loanAmount}
-                    onChange={(e) => setLoanAmount(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setLoanAmount)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter loan amount"
                   />
                 </div>
               </div>
@@ -162,15 +327,17 @@ const CalculatorForm = () => {
                     Down Payment (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={downPayment}
-                    onChange={(e) => setDownPayment(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setDownPayment)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter down payment"
                   />
                 </div>
               </div>
             </div>
-            {/* Interest Rate and Loan Tenure - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -178,10 +345,14 @@ const CalculatorForm = () => {
                     Interest (% per annum) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
                     value={interestRate}
-                    onChange={(e) => setInterestRate(e.target.value)}
+                    onChange={(e) => handlePercentage(e.target.value, setInterestRate)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter interest rate"
                   />
                 </div>
               </div>
@@ -191,10 +362,14 @@ const CalculatorForm = () => {
                     Loan Tenure (Years) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="1"
+                    max="30"
+                    step="1"
                     value={loanTenure}
-                    onChange={(e) => setLoanTenure(e.target.value)}
+                    onChange={(e) => validateLoanTenure(e.target.value, setLoanTenure)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="1-30 years"
                   />
                 </div>
               </div>
@@ -202,13 +377,12 @@ const CalculatorForm = () => {
           </div>
         </div>
 
-        {/* Rental Details - ROI style container */}
+        {/* Rental Details */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
             Rental Details
           </h3>
           <div className="space-y-3 md:space-y-4">
-            {/* Monthly Rent and Security Deposit - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -216,10 +390,13 @@ const CalculatorForm = () => {
                     Monthly Rent (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={monthlyRent}
-                    onChange={(e) => setMonthlyRent(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setMonthlyRent)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter monthly rent"
                   />
                 </div>
               </div>
@@ -229,15 +406,17 @@ const CalculatorForm = () => {
                     Security Deposit (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={securityDeposit}
-                    onChange={(e) => setSecurityDeposit(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setSecurityDeposit)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter security deposit"
                   />
                 </div>
               </div>
             </div>
-            {/* Days Calculation and Rent Escalation - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -245,10 +424,14 @@ const CalculatorForm = () => {
                     Days Calculation Gregorian <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="1"
+                    max="31"
+                    step="1"
                     value={daysCalculation}
-                    onChange={(e) => setDaysCalculation(e.target.value)}
+                    onChange={(e) => validateDaysCalculation(e.target.value, setDaysCalculation)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="1-31 days"
                   />
                 </div>
               </div>
@@ -258,15 +441,18 @@ const CalculatorForm = () => {
                     Rent Escalation (% per year) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.1"
                     value={rentEscalation}
-                    onChange={(e) => setRentEscalation(e.target.value)}
+                    onChange={(e) => handlePercentage(e.target.value, setRentEscalation)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter percentage"
                   />
                 </div>
               </div>
             </div>
-            {/* Lease Start Date and Lease Term - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -276,8 +462,9 @@ const CalculatorForm = () => {
                   <input 
                     type="text"
                     value={leaseStartDate}
-                    onChange={(e) => setLeaseStartDate(e.target.value)}
+                    onChange={(e) => validateDate(e.target.value, setLeaseStartDate)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="DD/MM/YYYY"
                   />
                 </div>
               </div>
@@ -287,17 +474,19 @@ const CalculatorForm = () => {
                     Lease Term (Yrs) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="1"
+                    step="1"
                     value={leaseTerm}
-                    onChange={(e) => setLeaseTerm(e.target.value)}
+                    onChange={(e) => validateLeaseTerm(e.target.value, setLeaseTerm)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter years"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Balance Lease Tenure Alert - ROI style */}
           <div className="mt-3 md:mt-4 bg-[#FFFCF4] border border-[#EE2529] p-2 md:p-3 rounded">
             <p className="text-xs text-[#767676]">
               <span className="font-semibold">Balance Lease Tenure:</span>
@@ -311,13 +500,12 @@ const CalculatorForm = () => {
           </div>
         </div>
 
-        {/* Recurring Expenses - ROI style container */}
+        {/* Recurring Expenses */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
             Recurring Expenses (Annual)
           </h3>
           <div className="space-y-3 md:space-y-4">
-            {/* Property Tax and Maintenance - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -325,10 +513,13 @@ const CalculatorForm = () => {
                     Property Tax (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={propertyTax}
-                    onChange={(e) => setPropertyTax(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setPropertyTax)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter property tax"
                   />
                 </div>
               </div>
@@ -338,15 +529,17 @@ const CalculatorForm = () => {
                     Maintenance per sq ft (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="0.01"
                     value={maintenance}
-                    onChange={(e) => setMaintenance(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setMaintenance)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter maintenance cost"
                   />
                 </div>
               </div>
             </div>
-            {/* Insurance and Maintenance Lump sum - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -354,10 +547,13 @@ const CalculatorForm = () => {
                     Insurance (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={insurance}
-                    onChange={(e) => setInsurance(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setInsurance)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter insurance cost"
                   />
                 </div>
               </div>
@@ -367,10 +563,13 @@ const CalculatorForm = () => {
                     Maintenance Lump sum (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={maintenanceLumpsum}
-                    onChange={(e) => setMaintenanceLumpsum(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setMaintenanceLumpsum)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter lump sum amount"
                   />
                 </div>
               </div>
@@ -378,13 +577,12 @@ const CalculatorForm = () => {
           </div>
         </div>
 
-        {/* One-time Costs - ROI style container */}
+        {/* One-time Costs */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
             One-time Costs
           </h3>
           <div className="space-y-3 md:space-y-4">
-            {/* Stamp Duty and Legal Fees - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -392,10 +590,14 @@ const CalculatorForm = () => {
                     Stamp Duty (% of Price) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.1"
                     value={stampDuty}
-                    onChange={(e) => setStampDuty(e.target.value)}
+                    onChange={(e) => handlePercentage(e.target.value, setStampDuty)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter percentage"
                   />
                 </div>
               </div>
@@ -405,15 +607,17 @@ const CalculatorForm = () => {
                     Legal Fees (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={legalFees}
-                    onChange={(e) => setLegalFees(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setLegalFees)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter legal fees"
                   />
                 </div>
               </div>
             </div>
-            {/* Brokerage and Other Costs - flex row layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
@@ -421,10 +625,13 @@ const CalculatorForm = () => {
                     Brokerage (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={brokerage}
-                    onChange={(e) => setBrokerage(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setBrokerage)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter brokerage"
                   />
                 </div>
               </div>
@@ -434,10 +641,13 @@ const CalculatorForm = () => {
                     Other One-time Cash (₹) <FaInfoCircle className="text-gray-400" size={12} />
                   </label>
                   <input 
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="1"
                     value={otherCosts}
-                    onChange={(e) => setOtherCosts(e.target.value)}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setOtherCosts)}
                     className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    placeholder="Enter other costs"
                   />
                 </div>
               </div>
@@ -445,7 +655,7 @@ const CalculatorForm = () => {
           </div>
         </div>
 
-        {/* Calculate Button - Centered like ROI */}
+        {/* Calculate Button */}
         <div className="mt-6 md:mt-8 flex gap-4 mx-auto">
           <button className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 md:px-8 py-2 rounded font-bold text-xs md:text-sm hover:opacity-90 transition-opacity mx-auto">
             Calculate ROI & Rental Yield
