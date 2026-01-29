@@ -83,7 +83,7 @@ const PropertyCards = () => {
   return (
     <div className="font-montserrat">
       {/* Header - responsive */}
-      <div className="grid grid-cols-2 lg:grid-cols-4  border-b-2 border-[#767676] pb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 border-b-2 border-[#767676] pb-4">
         {/* 1 */}
         <div className="border-r-0 sm:border-r-2 lg:border-r-2 border-[#EDECEC] p-2 sm:p-3 lg:p-4 text-center">
           <p className="text-xs sm:text-sm font-semibold">
@@ -122,32 +122,32 @@ const PropertyCards = () => {
         </h2>
 
         {/* Property Cards Grid - Exactly like PropertiesCard */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-3 mb-8">
           {comparisonProperties.map((property) => (
             <div
               key={property.id}
               className="bg-white rounded-xl overflow-hidden relative shadow-xl"
             >
               {/* Property Title and Location */}
-             <div className="relative">
-  <p className="text-sm sm:text-base md:text-lg font-medium pl-3 sm:pl-4 mt-4 sm:mt-5">
-    {property.title}
-  </p>
-  <div className="flex items-center justify-between mt-1 mb-2">
-    <p className="flex items-center gap-1 text-xs sm:text-sm md:text-base text-gray-700 pl-3 sm:pl-4">
-      <CiLocationOn className="text-[#EE2529] flex-shrink-0" />
-      {property.location}
-    </p>
-  </div>
-  
-  {/* Cross button positioned at top right */}
-  <button
-    onClick={() => handleRemoveClick(property.id)}
-    className="absolute  top-2 right-1 md:right-3 hover:text-red-500 text-base font-bold rounded-full h-6 w-6 hover:bg-red-500 transition-colors"
-  >
-    <img src={cross} alt="Remove" />
-  </button>
-</div>
+              <div className="relative">
+                <p className="text-sm sm:text-base md:text-lg font-normal pl-3 sm:pl-4 mt-4 sm:mt-5">
+                  {property.title}
+                </p>
+                <div className="flex items-center mt-1 mb-2 pl-3 sm:pl-4">
+                  <p className="flex items-center gap-1 text-xs sm:text-sm md:text-base text-gray-700">
+                    <CiLocationOn className="text-[#EE2529] flex-shrink-0 h-4 w-4" />
+                    <span className="align-middle">{property.location}</span>
+                  </p>
+                </div>
+
+                {/* Cross button positioned at top right */}
+                <button
+                  onClick={() => handleRemoveClick(property.id)}
+                  className="absolute top-2 right-1 md:right-3 hover:text-red-500 text-base font-bold rounded-full h-6 w-6 hover:bg-red-500 transition-colors"
+                >
+                  <img src={cross} alt="Remove" />
+                </button>
+              </div>
               {/* Property Image Section */}
               <div className="relative">
                 <div className="relative">
@@ -177,15 +177,15 @@ const PropertyCards = () => {
 
                   {/* Client Type Badge */}
                   <div className="absolute bottom-2 sm:bottom-3 left-0 px-3 sm:px-4">
-                    <p className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs text-[#767676]">
+                    <p className="bg-[#FFF3CA] py-1 px-2 sm:px-3 rounded-3xl text-xs text-[#767676] flex items-center h-6">
                       {property.clientType}
                     </p>
                   </div>
 
                   {/* Share and Like Icons */}
                   <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-2">
-                    <RiShareForwardLine className="bg-[#2626268A] rounded-full p-1 text-white h-5 w-5 sm:h-6 sm:w-6 cursor-pointer hover:scale-110 transition-transform" />
-                    <CiHeart className="bg-[#2626268A] rounded-full p-1 text-white h-5 w-5 sm:h-6 sm:w-6 cursor-pointer hover:scale-110 transition-transform" />
+                    <RiShareForwardLine className="bg-[#2626268A] rounded-full p-1 text-white h-6 w-6 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" />
+                    <CiHeart className="bg-[#2626268A] rounded-full p-1 text-white h-6 w-6 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" />
                   </div>
                 </div>
               </div>
