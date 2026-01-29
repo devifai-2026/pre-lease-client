@@ -1,7 +1,8 @@
 // FinancialDetails.js
 import { useState, useEffect, useRef } from "react";
+import { FaAngleDown } from "react-icons/fa";
 
-const FinancialDetails = ({ onNext, onFormValid }) => {
+const FinancialDetails = ({ onNext, onFormValid, basicDetails, leaseDetails }) => {
   const [formData, setFormData] = useState({
     sellingPrice: "",
     propertyTax: "",
@@ -27,17 +28,79 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
   const [showAdditionalIncomeInfo, setShowAdditionalIncomeInfo] = useState(false);
 
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const formRef = useRef(null);
 
-  // Get carpet area and total monthly rent from previous steps (you might need to pass these as props)
-  const carpetArea = 5000; // This should come from BasicDetails
-  const totalMonthlyRent = 150000; // This should come from LeaseDetails
+  // Get carpet area and total monthly rent from props
+  const carpetArea = basicDetails?.carpetArea || 0;
+  const totalMonthlyRent = leaseDetails?.totalMonthlyRent || 
+    (leaseDetails?.rentType === "perSqFt" && carpetArea > 0 ? 
+      (leaseDetails.rentPerSqFt * carpetArea) : 
+      (leaseDetails?.totalMonthlyRent || 0));
 
   // Calculate metrics and validate whenever formData changes
   useEffect(() => {
     calculateMetrics();
     validateFormForButton();
-  }, [formData]);
+  }, [formData, carpetArea, totalMonthlyRent]);
+
+  // Handle field blur for validation
+  const handleBlur = (fieldName) => {
+    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    validateField(fieldName);
+  };
+
+  // Validate individual field
+  const validateField = (fieldName) => {
+    let error = "";
+    
+    switch(fieldName) {
+      case 'sellingPrice':
+        if (!formData.sellingPrice.trim()) {
+          error = "Selling Price is required";
+        } else if (parseFloat(formData.sellingPrice) <= 0) {
+          error = "Selling Price must be greater than 0";
+        } else if (parseFloat(formData.sellingPrice) < 0) {
+          error = "Selling Price cannot be negative";
+        }
+        break;
+        
+      case 'propertyTax':
+        if (formData.propertyTax === "") {
+          error = "Property Tax is required";
+        } else if (parseFloat(formData.propertyTax) < 0) {
+          error = "Property Tax cannot be negative";
+        }
+        break;
+        
+      case 'insurance':
+        if (formData.insurance === "") {
+          error = "Insurance is required";
+        } else if (parseFloat(formData.insurance) < 0) {
+          error = "Insurance cannot be negative";
+        }
+        break;
+        
+      case 'otherCosts':
+        if (formData.otherCosts !== "" && parseFloat(formData.otherCosts) < 0) {
+          error = "Other Costs cannot be negative";
+        }
+        break;
+        
+      case 'additionalIncome':
+        if (formData.additionalIncome !== "" && parseFloat(formData.additionalIncome) < 0) {
+          error = "Additional Income cannot be negative";
+        }
+        break;
+    }
+    
+    setErrors(prev => ({
+      ...prev,
+      [fieldName]: error
+    }));
+    
+    return !error;
+  };
 
   const calculateMetrics = () => {
     const sellingPrice = parseFloat(formData.sellingPrice) || 0;
@@ -76,20 +139,60 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    
+    // Prevent negative numbers for numeric inputs
+    if (type === 'number' && value !== '' && parseFloat(value) < 0) {
+      return; // Don't update if negative
+    }
+    
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
   };
 
-  // Validation for form submission
+  // Main validation for form submission
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.sellingPrice) newErrors.sellingPrice = "Selling Price is required";
-    if (formData.propertyTax === "") newErrors.propertyTax = "Property Tax is required";
-    if (formData.insurance === "") newErrors.insurance = "Insurance is required";
+    // Selling Price validation
+    if (!formData.sellingPrice.trim()) {
+      newErrors.sellingPrice = "Selling Price is required";
+    } else if (parseFloat(formData.sellingPrice) <= 0) {
+      newErrors.sellingPrice = "Selling Price must be greater than 0";
+    } else if (parseFloat(formData.sellingPrice) < 0) {
+      newErrors.sellingPrice = "Selling Price cannot be negative";
+    }
+
+    // Property Tax validation
+    if (formData.propertyTax === "") {
+      newErrors.propertyTax = "Property Tax is required";
+    } else if (parseFloat(formData.propertyTax) < 0) {
+      newErrors.propertyTax = "Property Tax cannot be negative";
+    }
+
+    // Insurance validation
+    if (formData.insurance === "") {
+      newErrors.insurance = "Insurance is required";
+    } else if (parseFloat(formData.insurance) < 0) {
+      newErrors.insurance = "Insurance cannot be negative";
+    }
+
+    // Other Costs validation
+    if (formData.otherCosts !== "" && parseFloat(formData.otherCosts) < 0) {
+      newErrors.otherCosts = "Other Costs cannot be negative";
+    }
+
+    // Additional Income validation
+    if (formData.additionalIncome !== "" && parseFloat(formData.additionalIncome) < 0) {
+      newErrors.additionalIncome = "Additional Income cannot be negative";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -97,10 +200,19 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
 
   // Validation for Next button enable/disable
   const validateFormForButton = () => {
+    const sellingPrice = parseFloat(formData.sellingPrice) || 0;
+    const propertyTax = parseFloat(formData.propertyTax) || 0;
+    const insurance = parseFloat(formData.insurance) || 0;
+    
     const isValid = 
-      formData.sellingPrice !== "" &&
+      formData.sellingPrice.trim() !== "" &&
       formData.propertyTax !== "" &&
-      formData.insurance !== "";
+      formData.insurance !== "" &&
+      sellingPrice > 0 &&
+      propertyTax >= 0 &&
+      insurance >= 0 &&
+      (formData.otherCosts === "" || parseFloat(formData.otherCosts) >= 0) &&
+      (formData.additionalIncome === "" || parseFloat(formData.additionalIncome) >= 0);
 
     onFormValid(isValid);
     return isValid;
@@ -111,7 +223,21 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
 
     if (validateForm()) {
       onNext(formData);
+    } else {
+      // Mark all fields as touched to show errors
+      setTouched({
+        sellingPrice: true,
+        propertyTax: true,
+        insurance: true,
+        otherCosts: true,
+        additionalIncome: true,
+      });
     }
+  };
+
+  // Helper to show error only when field is touched
+  const showError = (fieldName) => {
+    return touched[fieldName] && errors[fieldName];
   };
 
   return (
@@ -123,11 +249,11 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
         </h3>
       </div>
 
-      {/* Acquisition Details Section - Changed to Selling Price */}
+      {/* Property Details Section */}
       <div>
         <h4 className="text-sm font-bold text-[#EE2529] mb-4">Property Details</h4>
         <div className="grid grid-cols-1 gap-4">
-          {/* Selling Price (was Acquisition Price) */}
+          {/* Selling Price */}
           <div>
             <div className="flex items-center gap-2 mb-2">
               <label className="block text-xs font-semibold">
@@ -155,20 +281,22 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
               name="sellingPrice"
               value={formData.sellingPrice}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('sellingPrice')}
               placeholder="Enter Property Selling Price"
+              min="0"
+              step="0.01"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.sellingPrice ? "border-red-500" : "border-gray-300"
+                showError('sellingPrice') ? "border-red-500" : "border-gray-300"
               }`}
             />
-           
-            {errors.sellingPrice && (
+            {showError('sellingPrice') && (
               <p className="text-xs text-red-500 mt-1">{errors.sellingPrice}</p>
             )}
           </div>
         </div>
       </div>
 
-      {/* Annual Operating Costs Section - Removed CAM Charges */}
+      {/* Annual Operating Costs Section */}
       <div>
         <h4 className="text-sm font-bold text-[#EE2529] mb-4">Annual Operating Costs</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -200,14 +328,15 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
               name="propertyTax"
               value={formData.propertyTax}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('propertyTax')}
               placeholder="0"
               min="0"
+              step="0.01"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.propertyTax ? "border-red-500" : "border-gray-300"
+                showError('propertyTax') ? "border-red-500" : "border-gray-300"
               }`}
             />
-
-            {errors.propertyTax && (
+            {showError('propertyTax') && (
               <p className="text-xs text-red-500 mt-1">{errors.propertyTax}</p>
             )}
           </div>
@@ -240,14 +369,15 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
               name="insurance"
               value={formData.insurance}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('insurance')}
               placeholder="0"
               min="0"
+              step="0.01"
               className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
-                errors.insurance ? "border-red-500" : "border-gray-300"
+                showError('insurance') ? "border-red-500" : "border-gray-300"
               }`}
             />
-          
-            {errors.insurance && (
+            {showError('insurance') && (
               <p className="text-xs text-red-500 mt-1">{errors.insurance}</p>
             )}
           </div>
@@ -260,11 +390,17 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
               name="otherCosts"
               value={formData.otherCosts}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('otherCosts')}
               placeholder="0"
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
+              step="0.01"
+              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
+                showError('otherCosts') ? "border-red-500" : "border-gray-300"
+              }`}
             />
-           
+            {showError('otherCosts') && (
+              <p className="text-xs text-red-500 mt-1">{errors.otherCosts}</p>
+            )}
           </div>
         </div>
 
@@ -277,7 +413,7 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
                 (parseFloat(formData.propertyTax) || 0) +
                 (parseFloat(formData.insurance) || 0) +
                 (parseFloat(formData.otherCosts) || 0)
-              ).toLocaleString('en-IN')}
+              ).toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
             </span>
           </div>
         </div>
@@ -313,10 +449,17 @@ const FinancialDetails = ({ onNext, onFormValid }) => {
               name="additionalIncome"
               value={formData.additionalIncome}
               onChange={handleInputChange}
+              onBlur={() => handleBlur('additionalIncome')}
               placeholder="Enter Additional Income"
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition"
+              step="0.01"
+              className={`w-full px-3 py-2 border rounded-md text-sm bg-gray-100 focus:outline-none focus:bg-white transition ${
+                showError('additionalIncome') ? "border-red-500" : "border-gray-300"
+              }`}
             />
+            {showError('additionalIncome') && (
+              <p className="text-xs text-red-500 mt-1">{errors.additionalIncome}</p>
+            )}
             <p className="text-xs text-gray-500 mt-1">Any additional income from parking, advertisements, etc.</p>
           </div>
         </div>

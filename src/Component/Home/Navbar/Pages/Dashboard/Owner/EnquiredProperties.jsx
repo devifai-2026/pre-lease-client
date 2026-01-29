@@ -245,7 +245,7 @@ const EnquiredProperties = () => {
         </div>
 
         {/* Cards Grid with auto-sliding and swipe functionality */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 md:gap-2 mb-8">
           {enquiredProperties.map((property) => {
             const isSelected = selectedProperties.some(p => p.id === property.id);
             
@@ -256,7 +256,7 @@ const EnquiredProperties = () => {
               >
                 {/* Property Title and Location */}
                 <div className="">
-                  <p className="text-sm sm:text-base md:text-lg font-medium pl-3 sm:pl-4 mt-5">{property.title}</p>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-2xl font-normal pl-3 sm:pl-4 mt-5">{property.title}</p>
                   <div className="flex items-center justify-between mt-1 mb-2">
                     <p className="flex items-center gap-1 text-xs sm:text-sm md:text-base text-gray-700 pl-4">
                       <CiLocationOn className="text-[#EE2529] flex-shrink-0" />
@@ -345,7 +345,7 @@ const EnquiredProperties = () => {
                 </div>
 
                 {/* Property Details */}
-                <div className="flex items-center justify-around mt-1 p-1 ">
+                <div className="flex items-center justify-between px-4 mt-1 p-1 ">
                   <div className="space-y-2">
                     <p className="text-xs sm:text-sm text-[#767676]">
                       Cost: <span className="font-semibold text-[#262626]">{property.cost}</span>

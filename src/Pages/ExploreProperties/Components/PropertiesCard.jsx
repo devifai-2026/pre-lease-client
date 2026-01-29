@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CiHeart, CiLocationOn } from "react-icons/ci";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import { RiShareForwardLine } from "react-icons/ri";
 import circle from "../../../assets/PropertyCard/rounded.png";
 import { useNavigate } from "react-router-dom";
 import tag from "../../../assets/FeaturedProperties/tag.png";
+import modalImg from "../../../assets/ExploreProperties/modal.jpg"
+import cross from "../../../assets/ExploreProperties/cross-circle.png"
+import warning from "../../../assets/ExploreProperties/warning.png"
 
 const PropertiesCard = () => {
   const navigate = useNavigate();
@@ -192,11 +195,6 @@ const PropertiesCard = () => {
     navigate('/explore-brokers');
   };
 
-  // Handle back button
-  const handleBack = () => {
-    navigate(-1);
-  };
-
   // Handle compare button click
   const handleCompareClick = (propertyId, propertyTitle) => {
     setSelectedProperties(prev => {
@@ -207,15 +205,24 @@ const PropertiesCard = () => {
         // Remove from selection
         return prev.filter(p => p.id !== propertyId);
       } else {
-        // Add to selection (limit to 4 properties for comparison)
-        if (prev.length < 4) {
-          return [...prev, { id: propertyId, title: propertyTitle }];
+        // Add to selection (limit to 3 properties for comparison)
+        if (prev.length < 3) {
+          return [...prev, { 
+            id: propertyId, 
+            title: propertyTitle,
+            location: propertyCards.find(p => p.id === propertyId)?.location || "Pune, Mundhva"
+          }];
         } else {
-          alert("You can compare up to 4 properties at a time.");
+          alert("You can compare up to 3 properties at a time.");
           return prev;
         }
       }
     });
+  };
+
+  // Remove property from comparison
+  const removePropertyFromCompare = (propertyId) => {
+    setSelectedProperties(prev => prev.filter(p => p.id !== propertyId));
   };
 
   // Navigate to comparison page with selected properties
@@ -231,26 +238,100 @@ const PropertiesCard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] pt-6 pb-10">
-      <div className=" mx-auto font-montserrat max-w-[95%] ">
+    <div className="min-h-screen bg-[#F9F9F9] pt-6 pb-5">
+      {/* Sticky Compare Banner - Always visible when properties are selected */}
+      {selectedProperties.length > 0 && (
+        <div className="sticky top-0 z-40 bg-white shadow-lg border-b border-gray-200">
+          <div className="mx-auto font-montserrat max-w-[95%]">
+            {/* Banner Header */}
+            <div className="flex justify-between items-center py-3">
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-semibold text-[#EE2529]">
+                  Compare Properties
+                </h2>
+                <span className="text-gray-700 font-bold text-base">|</span>
+                <span className="text-sm text-[#262626]"> 
+                  {selectedProperties.length} of 3 properties added
+                </span>
+                {/* Show warning message only when exactly 1 property is selected */}
+                {selectedProperties.length === 1 && (
+                  <span className="bg-[#FFE0E080] rounded-3xl py-1 px-2 flex items-center gap-1 text-sm">
+                    <img src={warning} alt="warning" className="w-2 h-2" />
+                    Add 2 properties to compare
+                  </span>
+                )}
+              </div>
+              <button 
+                onClick={() => setSelectedProperties([])}
+                className="text-gray-500 hover:text-gray-700 flex items-center"
+              >
+                <img src={cross} alt="Clear all" className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Selected Properties Grid - Cards and Compare Button in same row */}
+            <div className="py-3">
+              <div className="flex items-center gap-5">
+                {/* Selected Property Cards */}
+                {selectedProperties.map((property) => (
+                  <div 
+                    key={property.id}
+                    className="flex items-center justify-between p-2 bg-white rounded-xl px-3 shadow-md flex-1 min-h-[70px] relative"
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="w-20 h-12  overflow-hidden flex-shrink-0">
+                        <img src={modalImg} alt={property.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="min-w-0 space-y-1 flex-1">
+                        <p className="font-normal text-lg text-[#262626] truncate">{property.title}</p>
+                        <p className="text-sm text-[#262626] truncate flex items-center "><CiLocationOn className="text-[#EE2529]"/>{property.location}</p>
+                      </div>
+                    </div>
+                    {/* Cross button for individual card */}
+                    <button 
+                      onClick={() => removePropertyFromCompare(property.id)}
+                      className="absolute top-1 right-2 bg-slate-600 rounded-full p-1  hover:shadow-lg"
+                    >
+                      <FaTimes className="text-gray-400 hover:text-[#EE2529] w-2 h-2" />
+                    </button>
+                  </div>
+                ))}
+                
+                {/* Empty Box with dashed border */}
+                {selectedProperties.length < 3 && (
+                  <div className="flex-1 border-2 border-dashed border-gray-300 rounded-lg min-h-[70px]"></div>
+                )}
+                
+                {/* Compare Button - Positioned in the same row */}
+                <div className="flex-shrink-0">
+                  <button 
+                    onClick={navigateToComparison}
+                    disabled={selectedProperties.length < 2}
+                    className={`px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
+                      selectedProperties.length >= 2 
+                        ? 'bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90' 
+                        : 'bg-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    Compare ({selectedProperties.length})
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content Container */}
+      <div className="mx-auto font-montserrat max-w-[95%] mt-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-base md:text-lg text-[#262626]">
             <span className="text-[#EE2529]">Properties</span> found based on your above search criteria.
           </h2>
-          
-          {/* Compare Selected Button */}
-          {selectedProperties.length > 0 && (
-            <button 
-              onClick={navigateToComparison}
-              className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-4 py-2 text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
-            >
-              <FaPlus /> Compare Selected ({selectedProperties.length})
-            </button>
-          )}
         </div>
         
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 mb-8">
           {propertyCards.map((property, index) => {
             // Check if this property is selected for comparison
             const isSelected = selectedProperties.some(p => p.id === property.id);
@@ -281,7 +362,7 @@ const PropertiesCard = () => {
               >
                 {/* Property Title and Location */}
                 <div className="">
-                  <p className="text-sm sm:text-base md:text-lg font-medium pl-3 sm:pl-4 mt-5">{property.title}</p>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-2xl font-normal pl-3 sm:pl-4 mt-5">{property.title}</p>
                   <div className="flex items-center justify-between mt-1 mb-2">
                     <p className="flex items-center gap-1 text-xs sm:text-sm md:text-base text-gray-700 pl-4">
                       <CiLocationOn className="text-[#EE2529] flex-shrink-0" />
@@ -368,7 +449,7 @@ const PropertiesCard = () => {
                 </div>
 
                 {/* Property Details */}
-                <div className="flex items-center justify-around mt-1 p-1 ">
+                <div className="flex items-center justify-between px-4 mt-1 p-1 ">
                   <div className="space-y-2">
                     <p className="text-xs sm:text-sm text-[#767676]">
                       Cost: <span className="font-semibold text-[#262626]">{property.cost}</span>
@@ -405,18 +486,6 @@ const PropertiesCard = () => {
             );
           })}
         </div>
-
-        {/* Compare Selected Button at bottom */}
-        {selectedProperties.length > 0 && (
-          <div className="flex justify-center mb-6">
-            <button 
-              onClick={navigateToComparison}
-              className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 py-3 rounded-md text-sm hover:opacity-90 transition-opacity flex items-center gap-2 font-semibold"
-            >
-              <FaPlus /> Compare {selectedProperties.length} Selected Properties
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

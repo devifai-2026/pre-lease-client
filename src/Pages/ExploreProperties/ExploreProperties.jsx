@@ -16,19 +16,21 @@ import squarebg from "../../assets/propertyDetails/squaresbg.png";
 
 const ExploreProperties = () => {
   const [filters, setFilters] = useState({
-    proximity: [],
+    // proximity: [], // Commented out proximity
     pricing: { min: 0, max: 50000000 },
     rent: { min: 0, max: 5000000 },
     roi: 100,
     tenure: 20,
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [activeTab, setActiveTab] = useState("location");
+  const [activeTab, setActiveTab] = useState("pricing"); // Changed default to "pricing"
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Commented out proximity options
+  /*
   const proximityOptions = [
     { id: "metro", label: "Metro Station" },
     { id: "business", label: "Business District" },
@@ -39,7 +41,10 @@ const ExploreProperties = () => {
     { id: "airport", label: "Airport" },
     { id: "port", label: "Port/Harbor" },
   ];
+  */
 
+  // Commented out proximity handler
+  /*
   const handleProximityChange = (id) => {
     setFilters((prev) => ({
       ...prev,
@@ -48,6 +53,7 @@ const ExploreProperties = () => {
         : [...prev.proximity, id],
     }));
   };
+  */
 
   const handlePricingChange = (pricingData) => {
     setFilters((prev) => ({
@@ -79,7 +85,7 @@ const ExploreProperties = () => {
 
   const handleResetFilters = () => {
     setFilters({
-      proximity: [],
+      // proximity: [], // Commented out proximity
       pricing: { min: 0, max: 50000000 },
       rent: { min: 0, max: 5000000 },
       roi: 100,
@@ -98,6 +104,8 @@ const ExploreProperties = () => {
 
   const renderActiveTabContent = () => {
     switch (activeTab) {
+      // Commented out location tab
+      /*
       case "location":
         return (
           <>
@@ -105,7 +113,6 @@ const ExploreProperties = () => {
               <h3 className="text-sm font-bold text-[#262626] mb-4">
                 Proximity to
               </h3>
-              {/* Desktop Grid - 3 columns */}
               <div className="hidden lg:grid lg:grid-cols-3 gap-2">
                 {proximityOptions.map((option) => (
                   <label
@@ -124,7 +131,6 @@ const ExploreProperties = () => {
                   </label>
                 ))}
               </div>
-              {/* Mobile/Tablet - Flex column */}
               <div className="lg:hidden flex flex-col gap-3">
                 {proximityOptions.map((option) => (
                   <label
@@ -146,6 +152,7 @@ const ExploreProperties = () => {
             </div>
           </>
         );
+      */
       case "pricing":
         return (
           <Pricing
@@ -176,9 +183,9 @@ const ExploreProperties = () => {
     }
   };
 
-  // Updated tabOptions with \n for line break
+  // Updated tabOptions - removed "location" tab
   const tabOptions = [
-    { id: "location", label: "Location\nProximity" },
+    // { id: "location", label: "Location\nProximity" }, // Commented out location tab
     { id: "pricing", label: "Pricing" },
     { id: "unit", label: "Type of Unit" },
     { id: "rent", label: "Annual Rent\nAchieved" },

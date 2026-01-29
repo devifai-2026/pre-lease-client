@@ -600,7 +600,7 @@ const MyPortfolio = () => {
                 >
                   {/* Property Title and Location */}
                   <div className="">
-                    <p className="text-sm sm:text-base md:text-lg font-medium pl-3 sm:pl-4 mt-5">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-2xl font-normal pl-3 sm:pl-4 mt-5">
                       {property.title}
                     </p>
                     <div className="flex items-center justify-between mt-1 mb-2">
@@ -697,7 +697,7 @@ const MyPortfolio = () => {
                   </div>
 
                   {/* Property Details */}
-                  <div className="flex items-center justify-around mt-1 p-1">
+                  <div className="flex items-center justify-between px-4 mt-1 p-1">
                     <div className="space-y-2">
                       <p className="text-xs sm:text-sm text-[#767676]">
                         Cost:{" "}
