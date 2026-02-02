@@ -29,7 +29,7 @@ const TypeOfUnit = () => {
             </h3>
             
             {/* Property Type Grid - 3 columns like in image */}
-            <div className="grid grid-cols-3 gap-1 mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mb-2">
                 {/* Row 1 */}
                 <div className="space-y-1">
                     <label className="flex items-center gap-2 cursor-pointer p-1 hover:bg-gray-50 rounded">

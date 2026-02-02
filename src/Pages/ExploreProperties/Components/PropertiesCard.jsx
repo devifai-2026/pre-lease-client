@@ -339,9 +339,9 @@ const PropertiesCard = () => {
             // Show special card at 8th position (index 7 in 0-based array)
             if (index === 7) {
               return (
-                <div key="special-card" className="bg-[#FFFFFF] rounded-2xl shadow-lg overflow-hidden p-6 flex flex-col items-start h-full min-h-[400px]">
+                <div key="special-card" className="bg-[#FFFFFF] rounded-2xl shadow-lg overflow-hidden p-6 flex flex-col items-start h-full min-h-[400px] space-y-3 pt-8">
                   <img src={circle} alt="Assistance" className="w-24 h-24 mb-4" />
-                  <p className="text-sm md:text-base lg:text-xl text-gray-700 mb-2">Need assistance with your Investment ?</p>
+                  <p className="text-sm md:text-base lg:text-xl text-gray-700 mb-3">Need assistance with your Investment ?</p>
                   <p className="text-xl md:text-2xl lg:text-3xl  text-[#262626] mb-6">
                     Get in touch with our expert to find a customized solution for preleased property for you
                   </p>
@@ -371,8 +371,8 @@ const PropertiesCard = () => {
                     {property.isVerified && (
                       <div className="relative ">
                         <div className="relative">
-                          <img className="w-16 sm:w-18 md:w-20" src={tag} alt="Verified" />
-                          <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">Verified</p>
+                          <img className="w-20 md:w-24" src={tag} alt="Verified" />
+                          <p className="absolute bottom-0 md:bottom-0 right-2 text-white text-sm md:text-base font-semibold">Verified</p>
                         </div>
                       </div>
                     )}
@@ -429,13 +429,13 @@ const PropertiesCard = () => {
                       </p>
                       <button 
                         onClick={() => handleCompareClick(property.id, property.title)}
-                        className={`flex items-center gap-1 sm:gap-2 border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm transition-colors font-semibold ${
+                        className={`flex items-center gap-1 sm:gap-2 border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 text-xs md:text-sm transition-colors font-semibold ${
                           isSelected 
-                            ? 'bg-[#EE2529] text-white border-[#EE2529]' 
-                            : 'bg-white text-[#EE2529]  hover:bg-gray-50'
+                            ? 'bg-[#EE2529] text-white border-[#EE2529] font-semibold' 
+                            : 'bg-white text-[#EE2529]  hover:bg-gray-50 font-semibold'
                         }`}
                       >
-                        <FaPlus className="text-xs sm:text-sm" /> 
+                        <FaPlus className="text-sm md:text-base" /> 
                         {isSelected ? 'Remove' : 'Compare'}
                       </button>
                     </div>
@@ -451,18 +451,18 @@ const PropertiesCard = () => {
                 {/* Property Details */}
                 <div className="flex items-center justify-between px-4 mt-1 p-1 ">
                   <div className="space-y-2">
-                    <p className="text-xs sm:text-sm text-[#767676]">
-                      Cost: <span className="font-semibold text-[#262626]">{property.cost}</span>
+                    <p className="text-base md:text-lg font-normal text-[#767676] ">
+                      Cost: <span className="font-semibold text-[#262626] ">{property.cost}</span>
                     </p>
-                    <p className="text-xs sm:text-sm text-[#767676]">
+                    <p className="text-base md:text-lg font-normal text-[#767676]">
                       Annual Rent: <span className="font-semibold text-[#262626]">{property.annualRent}</span>
                     </p>
-                    <p className="text-xs sm:text-sm text-[#767676]">
+                    <p className="text-base md:text-lg font-normal text-[#767676]">
                       Tenure Left: <span className="font-semibold text-[#262626]">{property.tenureLeft}</span>
                     </p>
                   </div>
                   <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-2">
-                    <p className="text-xs sm:text-sm font-medium">ROI</p>
+                    <p className="text-xl sm:text-2xl font-semibold">ROI</p>
                     <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                   </div>
                 </div>

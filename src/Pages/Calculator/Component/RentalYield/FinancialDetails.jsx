@@ -35,9 +35,9 @@ const FinancialDetails = () => {
   ];
 
   return (
-    <div className="font-montserrat bg-white rounded-lg mt-6">
+    <div className="font-montserrat bg-white rounded-lg mt-8">
       {/* Heading */}
-      <h2 className="text-[#EE2529] font-bold text-base md:text-lg mb-4 md:mb-6 text-center">
+      <h2 className="text-[#EE2529] font-semibold text-lg md:text-xl lg:text-2xl mb-4 md:mb-6 ">
         Financing Details Breakdown
       </h2>
 
@@ -49,18 +49,18 @@ const FinancialDetails = () => {
             className="bg-white  rounded-lg p-3 md:p-4 text-left shadow-lg hover:shadow-md transition-shadow"
           >
             {/* Label */}
-            <p className="text-[#767676] text-xs font-semibold mb-1 md:mb-2">
+            <p className="text-[#767676] text-sm md:text-base lg:text-lg font-bold mb-1 md:mb-2">
               {item.label}
             </p>
             
             {/* Value with dynamic color */}
-            <p className="font-bold text-base md:text-lg lg:text-xl mb-1" style={{ color: item.color }}>
+            <p className="font-bold text-xl md:text-2xl lg:text-3xl mb-1" style={{ color: item.color }}>
               {item.value}
             </p>
             
             {/* Subtext */}
             {item.subtext && (
-              <p className="text-[#767676] text-xs font-normal">
+              <p className="text-[#767676] text-base font-normal">
                 {item.subtext}
               </p>
             )}

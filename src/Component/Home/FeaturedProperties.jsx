@@ -305,7 +305,7 @@ const FeaturedProperties = () => {
       {/* Sticky Compare Banner - Same as PropertiesCard */}
       {selectedProperties.length > 0 && (
         <div className="sticky top-0 z-40 bg-white shadow-lg border-b border-gray-200">
-          <div className="mx-auto font-montserrat max-w-[95%]">
+          <div className="mx-auto font-montserrat max-w-[90%]">
             {/* Banner Header */}
             <div className="flex justify-between items-center py-3">
               <div className="flex items-center gap-2">
@@ -334,7 +334,7 @@ const FeaturedProperties = () => {
 
             {/* Selected Properties Grid - Cards and Compare Button in same row */}
             <div className="py-3">
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-6">
                 {/* Selected Property Cards */}
                 {selectedProperties.map((property) => (
                   <div 
@@ -375,8 +375,8 @@ const FeaturedProperties = () => {
                     disabled={selectedProperties.length < 2}
                     className={`px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
                       selectedProperties.length >= 2 
-                        ? 'bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90' 
-                        : 'bg-gray-400 cursor-not-allowed'
+                        ? 'bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90 font-semibold' 
+                        : 'bg-gray-400 cursor-not-allowed font-semibold'
                     }`}
                   >
                     Compare ({selectedProperties.length})
@@ -394,7 +394,7 @@ const FeaturedProperties = () => {
         </h2>
         
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2 mt-6 sm:mt-8 md:mt-10 mb-6 sm:mb-8 md:mb-10 font-montserrat">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 mt-6 sm:mt-8 md:mt-10 mb-6 sm:mb-8 md:mb-10 font-montserrat px-8">
           {propertyCards.map((property, index) => {
             const isSelected = selectedProperties.some(p => p.id === property.id);
             
@@ -414,8 +414,8 @@ const FeaturedProperties = () => {
                     {property.isVerified && (
                       <div className="relative">
                         <div className="relative">
-                          <img className="w-16 sm:w-18 md:w-20" src={tag} alt="Verified" />
-                          <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">Verified</p>
+                          <img className="w-20 md:w-24" src={tag} alt="Verified" />
+                          <p className="absolute bottom-0 md:bottom-0 right-2 text-white text-sm md:text-base font-semibold">Verified</p>
                         </div>
                       </div>
                     )}
@@ -490,18 +490,18 @@ const FeaturedProperties = () => {
                 {/* Property Details */}
                 <div className="flex items-center justify-between px-4 mt-4">
                   <div className="space-y-1 sm:space-y-2">
-                    <p className="text-xs sm:text-sm text-[#767676]">
-                      Cost: <span className="font-semibold text-[#262626]">{property.cost}</span>
+                    <p className="text-sm md:text-base text-[#767676] font-normal">
+                      Cost: <span className="font-semibold text-[#262626] text-lg">{property.cost}</span>
                     </p>
-                    <p className="text-xs sm:text-sm text-[#767676]">
-                      Annual Rent: <span className="font-semibold text-[#262626]">{property.annualRent}</span>
+                    <p className="text-sm md:text-base font-normal text-[#767676]">
+                      Annual Rent: <span className="font-semibold text-[#262626]  text-lg">{property.annualRent}</span>
                     </p>
-                    <p className="text-xs sm:text-sm text-[#767676]">
-                      Tenure Left: <span className="font-semibold text-[#262626]">{property.tenureLeft}</span>
+                    <p className="text-sm md:text-base font-normal text-[#767676]">
+                      Tenure Left: <span className="font-semibold text-[#262626]  text-lg">{property.tenureLeft}</span>
                     </p>
                   </div>
                   <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-2">
-                    <p className="text-xs sm:text-sm font-medium">ROI</p>
+                    <p className="text-lg md:text-xl font-semibold">ROI</p>
                     <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">{property.roi}</p>
                   </div>
                 </div>
@@ -510,13 +510,13 @@ const FeaturedProperties = () => {
                 <div className="flex items-center justify-center gap-2 sm:gap-3 mt-4 mb-4 sm:mt-5 sm:mb-5 sm:px-4">
                   <button 
                     onClick={() => handleViewClick(property.id)}
-                    className="border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105"
+                    className="border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105 font-semibold"
                   >
                     View
                   </button>
                   <button 
                     onClick={() => handleEnquireClick(property.id)}
-                    className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105"
+                    className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105 font-semibold"
                   >
                     Enquire
                   </button>
@@ -530,7 +530,7 @@ const FeaturedProperties = () => {
         <div className="flex justify-center mx-auto">
           <button 
             onClick={handleExploreProperties}
-            className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105"
+            className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-3 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-sm md:text-base hover:opacity-90 transition-opacity hover:scale-105 font-semibold"
           >
             Explore Properties
           </button>

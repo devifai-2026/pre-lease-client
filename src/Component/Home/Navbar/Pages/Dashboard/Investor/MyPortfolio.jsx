@@ -14,12 +14,15 @@ import {
 } from "recharts";
 import { CiHeart, CiLocationOn } from "react-icons/ci";
 import { RiShareForwardLine } from "react-icons/ri";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import tag from "../../../../../../assets/FeaturedProperties/tag.png";
 import circle from "../../../../../../assets/PropertyCard/rounded.png";
 import { useNavigate } from "react-router-dom";
 import dateArrow from "../../../../../../assets/Dashboard/dateArrow.svg";
 import show from "../../../../../../assets/Dashboard/show.svg";
+import cross from "../../../../../../assets/ExploreProperties/cross-circle.png";
+import warning from "../../../../../../assets/ExploreProperties/warning.png";
+import modalImg from "../../../../../../assets/ExploreProperties/modal.jpg";
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
@@ -245,13 +248,23 @@ const MyPortfolio = () => {
       } else {
         // Add to selection (limit to 4 properties for comparison)
         if (prev.length < 4) {
-          return [...prev, { id: propertyId, title: propertyTitle }];
+          const property = propertyCards.find(p => p.id === propertyId);
+          return [...prev, { 
+            id: propertyId, 
+            title: propertyTitle,
+            location: property?.location || "Pune, Mundhva"
+          }];
         } else {
           alert("You can compare up to 4 properties at a time.");
           return prev;
         }
       }
     });
+  };
+
+  // Remove property from comparison
+  const removePropertyFromCompare = (propertyId) => {
+    setSelectedProperties(prev => prev.filter(p => p.id !== propertyId));
   };
 
   // Navigate to comparison page with selected properties
@@ -268,15 +281,89 @@ const MyPortfolio = () => {
 
   return (
     <div className="min-h-screen font-montserrat">
-      {/* Compare Selected Button */}
+      {/* Sticky Compare Banner - Same as FeaturedProperties */}
       {selectedProperties.length > 0 && (
-        <div className="mb-4">
-          <button
-            onClick={navigateToComparison}
-            className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-4 py-2 rounded-md text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
-          >
-            <FaPlus /> Compare Selected ({selectedProperties.length})
-          </button>
+        <div className="sticky top-20 z-40 bg-white shadow-lg border-b border-gray-200 mb-6">
+          <div className="mx-auto font-montserrat max-w-[90%]">
+            {/* Banner Header */}
+            <div className="flex justify-between items-center py-3">
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-semibold text-[#EE2529]">
+                  Compare Properties
+                </h2>
+                <span className="text-gray-700 font-bold text-base">|</span>
+                <span className="text-sm text-[#262626]"> 
+                  {selectedProperties.length} of 4 properties added
+                </span>
+                {/* Show warning message only when exactly 1 property is selected */}
+                {selectedProperties.length === 1 && (
+                  <span className="bg-[#FFE0E080] rounded-3xl py-1 px-2 flex items-center gap-1 text-sm">
+                    <img src={warning} alt="warning" className="w-2 h-2" />
+                    Add 2 properties to compare
+                  </span>
+                )}
+              </div>
+              <button 
+                onClick={() => setSelectedProperties([])}
+                className="text-gray-500 hover:text-gray-700 flex items-center"
+              >
+                <img src={cross} alt="Clear all" className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Selected Properties Grid - Cards and Compare Button in same row */}
+            <div className="py-3">
+              <div className="flex items-center gap-4">
+                {/* Selected Property Cards */}
+                {selectedProperties.map((property) => (
+                  <div 
+                    key={property.id}
+                    className="flex items-center justify-between p-2 bg-white rounded-xl px-3 shadow-md flex-1 min-h-[70px] relative"
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="w-20 h-12 overflow-hidden flex-shrink-0">
+                        <img src={modalImg} alt={property.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="min-w-0 space-y-1 flex-1">
+                        <p className="font-normal text-lg text-[#262626] truncate">{property.title}</p>
+                        <p className="text-sm text-[#262626] truncate flex items-center">
+                          <CiLocationOn className="text-[#EE2529]"/>
+                          {property.location}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Cross button for individual card */}
+                    <button 
+                      onClick={() => removePropertyFromCompare(property.id)}
+                      className="absolute top-1 right-2 bg-slate-600 rounded-full p-1 hover:shadow-lg"
+                    >
+                      <FaTimes className="text-gray-400 hover:text-[#EE2529] w-2 h-2" />
+                    </button>
+                  </div>
+                ))}
+                
+                {/* Empty Boxes with dashed border */}
+                {Array.from({ length: 2 - selectedProperties.length }).map((_, index) => (
+                  <div key={`empty-${index}`} className="flex-1 border-2 border-dashed border-gray-300 rounded-lg min-h-[70px]"></div>
+                ))}
+                
+                {/* Compare Button - Positioned in the same row */}
+                <div className="flex-shrink-0">
+                  <button 
+                    onClick={navigateToComparison}
+                    disabled={selectedProperties.length < 2}
+                    className={`px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
+                      selectedProperties.length >= 2 
+                        ? 'bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90 font-semibold' 
+                        : 'bg-gray-400 cursor-not-allowed font-semibold'
+                    }`}
+                  >
+                    Compare ({selectedProperties.length})
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -611,11 +698,11 @@ const MyPortfolio = () => {
                       {property.isVerified && (
                         <div className="relative">
                           <img
-                            className="w-16 sm:w-18 md:w-20"
+                            className="w-20 md:w-24"
                             src={tag}
                             alt="Verified"
                           />
-                          <p className="absolute bottom-0 md:bottom-1 right-2 text-white text-xs md:text-xs">
+                          <p className="absolute bottom-0 md:bottom-0 right-2 text-white text-sm md:text-base font-semibold">
                             Verified
                           </p>
                         </div>
@@ -677,7 +764,7 @@ const MyPortfolio = () => {
                           onClick={() =>
                             handleCompareClick(property.id, property.title)
                           }
-                          className={`flex items-center gap-1 sm:gap-2 border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm transition-colors ${
+                          className={`flex items-center gap-1 sm:gap-2 border rounded-md px-2 sm:px-3 py-1 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm transition-colors font-semibold ${
                             isSelected
                               ? "bg-[#EE2529] text-white border-[#EE2529]"
                               : "bg-white text-[#EE2529] hover:bg-gray-50"
@@ -699,27 +786,27 @@ const MyPortfolio = () => {
                   {/* Property Details */}
                   <div className="flex items-center justify-between px-4 mt-1 p-1">
                     <div className="space-y-2">
-                      <p className="text-xs sm:text-sm text-[#767676]">
+                      <p className="text-xs sm:text-sm text-[#767676] ">
                         Cost:{" "}
-                        <span className="font-semibold text-[#262626]">
+                        <span className="font-semibold text-[#262626] text-base">
                           {property.cost}
                         </span>
                       </p>
-                      <p className="text-xs sm:text-sm text-[#767676]">
+                      <p className="text-xs sm:text-sm text-[#767676] ">
                         Annual Rent:{" "}
-                        <span className="font-semibold text-[#262626]">
+                        <span className="font-semibold text-[#262626] text-base">
                           {property.annualRent}
                         </span>
                       </p>
                       <p className="text-xs sm:text-sm text-[#767676]">
                         Tenure Left:{" "}
-                        <span className="font-semibold text-[#262626]">
+                        <span className="font-semibold text-[#262626] text-base">
                           {property.tenureLeft}
                         </span>
                       </p>
                     </div>
                     <div className="bg-gradient-to-r from-[#F2F2F2] to-[#FFFFFF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex flex-col items-center justify-center rounded-lg shadow-lg ml-2">
-                      <p className="text-base md:text-lg lg:text-xl font-semibold">
+                      <p className="text-base md:text-xl lg:text-2xl font-semibold">
                         ROI
                       </p>
                       <p className="text-[#EE2529] font-bold text-sm sm:text-base md:text-lg">
@@ -735,19 +822,19 @@ const MyPortfolio = () => {
                       <>
                         <button
                           onClick={() => handleViewClick(property.id)}
-                          className="flex-1 border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105"
+                          className="flex-1 border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105 font-semibold"
                         >
                           View
                         </button>
                         <button
                           onClick={() => handleAddToListing(property.id)}
-                          className="flex-1 border rounded-md text-white px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105 text-nowrap"
+                          className="flex-1 border rounded-md text-white px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105 text-nowrap font-semibold"
                         >
                           Add to Listing
                         </button>
                         <button
                           onClick={() => handleEdit(property.id)}
-                          className="flex-1 border rounded-md text-white px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105"
+                          className="flex-1 border rounded-md text-white px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105 font-semibold"
                         >
                           Edit
                         </button>
@@ -757,13 +844,13 @@ const MyPortfolio = () => {
                       <>
                         <button
                           onClick={() => handleViewClick(property.id)}
-                          className="border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105"
+                          className="border border-[#767676] text-[#767676] rounded-md px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-gray-50 transition-colors hover:scale-105 font-semibold"
                         >
                           View
                         </button>
                         <button
                           onClick={() => handleEnquireClick(property.id)}
-                          className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105"
+                          className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs sm:text-sm hover:opacity-90 transition-opacity hover:scale-105 font-semibold"
                         >
                           Enquire
                         </button>
@@ -832,13 +919,13 @@ const MyPortfolio = () => {
                         <div className="flex gap-2 justify-center">
                           <button
                             onClick={() => handleViewClick(property.id)}
-                            className="border border-[#767676] text-[#767676] rounded px-3 py-1 text-xs hover:bg-gray-50"
+                            className="border border-[#767676] text-[#767676] rounded px-3 py-1 text-xs hover:bg-gray-50 font-semibold"
                           >
                             View
                           </button>
                           <button
                             onClick={() => handleCompareClick(property.id, property.title)}
-                            className={`border rounded px-3 py-1 text-xs ${
+                            className={`border rounded px-3 py-1 text-xs font-semibold ${
                               isSelected
                                 ? "bg-[#EE2529] text-white border-[#EE2529]"
                                 : "bg-white text-[#EE2529] border-[#EE2529] hover:bg-gray-50"
@@ -853,18 +940,6 @@ const MyPortfolio = () => {
                 })}
               </tbody>
             </table>
-          </div>
-        )}
-
-        {/* Compare Selected Button at bottom */}
-        {selectedProperties.length > 0 && (
-          <div className="flex justify-center mb-6">
-            <button
-              onClick={navigateToComparison}
-              className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 py-3 rounded-md text-sm hover:opacity-90 transition-opacity flex items-center gap-2 font-semibold"
-            >
-              <FaPlus /> Compare {selectedProperties.length} Selected Properties
-            </button>
           </div>
         )}
       </div>

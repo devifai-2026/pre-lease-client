@@ -108,9 +108,9 @@ const RentalDetailsCashflow = () => {
   ];
 
   return (
-    <div className="font-montserrat bg-white rounded-lg mt-4 md:mt-6">
+    <div className="font-montserrat bg-white rounded-lg mt-4 md:mt-8">
       {/* Heading */}
-      <h2 className="text-[#262626] font-bold text-base md:text-lg mb-4 md:mb-6 text-center">
+      <h2 className="text-[#262626] font-semibold text-lg md:text-xl lg:text-2xl mb-4 md:mb-6 text-center">
         Detailed Cashflow Projections
       </h2>
       
@@ -119,27 +119,27 @@ const RentalDetailsCashflow = () => {
         <table className="w-full text-xs md:text-sm">
           <thead>
             <tr className="border-b-2 border-[#262626]">
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Year</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Annual Rent</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">EMI Paid</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Principal</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Interest</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Balance</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Annual Expenses</th>
-              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-medium text-[#767676]">Net Cash Flow</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Year</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Annual Rent</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">EMI Paid</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Principal</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Interest</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Balance</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Annual Expenses</th>
+              <th className="py-2 md:py-3 px-2 md:px-4 text-left font-bold text-lg">Net Cash Flow</th>
             </tr>
           </thead>
           <tbody>
             {cashFlowDetails.map((item, index) => (
               <tr key={index} className="border-b-2">
-                <td className="py-2 md:py-3 px-2 md:px-4">{item.year}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4">{item.annualRent}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4 text-[#C73834]">{item.emiPaid}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4">{item.principal}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4">{item.interest}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4 text-[#429482]">{item.balance}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4">{item.annualExpenses}</td>
-                <td className="py-2 md:py-3 px-2 md:px-4 text-[#429482]">{item.netCashFlow}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-lg">{item.year}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-lg">{item.annualRent}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-[#C73834] text-lg">{item.emiPaid}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-lg">{item.principal}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-lg">{item.interest}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-[#429482] text-lg">{item.balance}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-lg">{item.annualExpenses}</td>
+                <td className="py-2 md:py-3 px-2 md:px-4 text-[#429482] text-lg">{item.netCashFlow}</td>
               </tr>
             ))}
           </tbody>

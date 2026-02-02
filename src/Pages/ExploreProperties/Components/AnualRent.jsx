@@ -10,18 +10,18 @@ const AnnualRent = ({ onRentChange, initialRent }) => {
 
   useEffect(() => {
     if (initialRent) {
-      setMinRent(initialRent.min);
-      setMaxRent(initialRent.max);
+      setMinRent(Math.max(initialRent.min, 0));
+      setMaxRent(Math.max(initialRent.max, 100000));
       setRentRange([
-        Math.floor(initialRent.min / 100000),
-        Math.floor(initialRent.max / 100000)
+        Math.max(Math.floor(initialRent.min / 100000), 0),
+        Math.min(Math.max(Math.floor(initialRent.max / 100000), 1), 50)
       ]);
     }
   }, [initialRent]);
 
   // Convert value to percentage (0-50 Lakhs range)
   const valueToPercent = (value) => {
-    return ((value - 0) / (50 - 0)) * 100;
+    return ((Math.min(Math.max(value, 0), 50) - 0) / (50 - 0)) * 100;
   };
 
   // Handle slider click or drag for both min and max
@@ -44,16 +44,18 @@ const AnnualRent = ({ onRentChange, initialRent }) => {
   };
 
   const updateSliderValue = (value, thumbType) => {
+    value = Math.min(Math.max(value, 0), 50); // Clamp between 0-50
+    
     if (thumbType === 'min') {
       if (value <= rentRange[1] - 1) { // Keep at least 1 gap between min and max
-        const newMinRent = value * 100000; // Convert to actual rupees
+        const newMinRent = Math.max(value * 100000, 0);
         setRentRange([value, rentRange[1]]);
         setMinRent(newMinRent);
         onRentChange?.({ min: newMinRent, max: maxRent });
       }
     } else if (thumbType === 'max') {
       if (value >= rentRange[0] + 1) { // Keep at least 1 gap between min and max
-        const newMaxRent = value * 100000; // Convert to actual rupees
+        const newMaxRent = value * 100000;
         setRentRange([rentRange[0], value]);
         setMaxRent(newMaxRent);
         onRentChange?.({ min: minRent, max: newMaxRent });
@@ -63,19 +65,99 @@ const AnnualRent = ({ onRentChange, initialRent }) => {
 
   // Handle input field changes
   const handleInputChange = (e, type) => {
-    const value = parseInt(e.target.value) || 0;
-    const lakhValue = Math.floor(value / 100000);
+    let value = e.target.value;
+    
+    // Allow empty string for typing - just update the displayed value
+    if (value === '') {
+      if (type === 'min') {
+        setMinRent('');
+      } else {
+        setMaxRent('');
+      }
+      return;
+    }
+    
+    // Parse the value
+    const numValue = parseInt(value, 10);
+    
+    // Check if it's a valid number
+    if (isNaN(numValue)) return;
+    
+    // Ensure no negative values
+    if (numValue < 0) return;
     
     if (type === 'min') {
-      const constrainedLakhValue = Math.min(Math.max(lakhValue, 0), rentRange[1] - 1);
-      setMinRent(value);
-      setRentRange([constrainedLakhValue, rentRange[1]]);
-      onRentChange?.({ min: value, max: maxRent });
+      // Cap the value to reasonable maximum
+      const cappedValue = Math.min(numValue, 4900000); // Max 49 lakhs to keep 1 lakh gap
+      
+      // Calculate lakh value for slider (max 49 to keep gap)
+      const lakhValue = Math.min(Math.floor(cappedValue / 100000), 49);
+      
+      setMinRent(cappedValue);
+      setRentRange([lakhValue, rentRange[1]]);
+      onRentChange?.({ min: cappedValue, max: maxRent });
     } else {
-      const constrainedLakhValue = Math.min(Math.max(lakhValue, rentRange[0] + 1), 50);
-      setMaxRent(value);
-      setRentRange([rentRange[0], constrainedLakhValue]);
-      onRentChange?.({ min: minRent, max: value });
+      // For max input, allow any value while typing
+      // We'll validate on blur
+      setMaxRent(numValue);
+      // Don't update parent or slider while typing
+    }
+  };
+
+  // Handle input blur - final validation
+  const handleInputBlur = (e, type) => {
+    let value = e.target.value;
+    
+    // If empty, set to default
+    if (value === '') {
+      if (type === 'min') {
+        const defaultMin = 0;
+        setMinRent(defaultMin);
+        onRentChange?.({ min: defaultMin, max: maxRent });
+      } else {
+        const defaultMax = 5000000;
+        setMaxRent(defaultMax);
+        setRentRange([rentRange[0], 50]); // Reset slider to max
+        onRentChange?.({ min: minRent, max: defaultMax });
+      }
+      return;
+    }
+    
+    const numValue = parseInt(value, 10);
+    
+    // If invalid, reset to default
+    if (isNaN(numValue) || numValue < 0) {
+      if (type === 'min') {
+        setMinRent(0);
+        onRentChange?.({ min: 0, max: maxRent });
+      } else {
+        setMaxRent(5000000);
+        setRentRange([rentRange[0], 50]);
+        onRentChange?.({ min: minRent, max: 5000000 });
+      }
+      return;
+    }
+    
+    // Final validation for max input
+    if (type === 'max') {
+      // Ensure max is at least 1 lakh and cap at 50 lakhs
+      const cappedValue = Math.max(Math.min(numValue, 5000000), 100000);
+      
+      // Calculate lakh value for slider (min 1, max 50)
+      const lakhValue = Math.min(Math.max(Math.floor(cappedValue / 100000), 1), 50);
+      
+      setMaxRent(cappedValue);
+      setRentRange([rentRange[0], lakhValue]);
+      onRentChange?.({ min: minRent, max: cappedValue });
+    } else if (type === 'min') {
+      // Ensure min doesn't exceed max - 1 lakh
+      const maxAllowed = maxRent - 100000;
+      const finalValue = Math.min(Math.max(numValue, 0), maxAllowed);
+      
+      const lakhValue = Math.min(Math.floor(finalValue / 100000), 49);
+      setMinRent(finalValue);
+      setRentRange([lakhValue, rentRange[1]]);
+      onRentChange?.({ min: finalValue, max: maxRent });
     }
   };
 
@@ -171,10 +253,11 @@ const AnnualRent = ({ onRentChange, initialRent }) => {
             type="number"
             value={minRent}
             onChange={(e) => handleInputChange(e, 'min')}
+            onBlur={(e) => handleInputBlur(e, 'min')}
             className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base"
             placeholder="0"
             min="0"
-            max={maxRent - 100000}
+            max="4900000"
           />
         </div>
         <div>
@@ -185,9 +268,10 @@ const AnnualRent = ({ onRentChange, initialRent }) => {
             type="number"
             value={maxRent}
             onChange={(e) => handleInputChange(e, 'max')}
+            onBlur={(e) => handleInputBlur(e, 'max')}
             className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base"
             placeholder="5000000"
-            min={minRent + 100000}
+            min="100000"
             max="5000000"
           />
         </div>

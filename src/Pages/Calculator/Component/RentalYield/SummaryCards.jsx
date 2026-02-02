@@ -6,25 +6,25 @@ const SummaryCards = () => {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {/* 1 */}
                       <div className="p-3 shadow-md rounded-md">
-                        <h2 className="text-[#EE2529] text-lg md:text-xl mb-3 font-semibold">
+                        <h2 className="text-[#EE2529] text-lg md:text-xl lg:text-2xl mb-3 font-semibold">
                           Investment Summery
                         </h2>
                         <div className="space-y-5">
                           <div className="flex justify-between items-center">
-                            <p className="text-[#767676] text-sm">
+                            <p className="text-[#767676] text-lg">
                               Total Initial Investment (₹)
                             </p>
-                            <p className="font-semibold">48,52,500</p>
+                            <p className="font-semibold text-lg">48,52,500</p>
                           </div>
                           <div className="flex justify-between items-center">
-                            <p className="text-[#767676] text-sm">Gross Annual Rent (₹)</p>
-                            <p className="font-semibold">6,00,000</p>
+                            <p className="text-[#767676] text-lg">Gross Annual Rent (₹)</p>
+                            <p className="font-semibold text-lg">6,00,000</p>
                           </div>
                           <div className="flex justify-between items-center">
-                            <p className="text-[#767676] text-sm">
+                            <p className="text-[#767676] text-lg">
                               Total Annual Expenses (₹)
                             </p>
-                            <p className="font-semibold">65,000</p>
+                            <p className="font-semibold text-lg">65,000</p>
                           </div>
                         </div>
                         <div className="mt-5">
@@ -39,21 +39,21 @@ const SummaryCards = () => {
                       </div>
                       {/* 2 */}
                       <div className="p-3 shadow-md rounded-md">
-                        <h2 className="text-[#EE2529] text-lg md:text-xl mb-3 font-semibold">
+                        <h2 className="text-[#EE2529] text-lg md:text-xl lg:text-2xl mb-3 font-semibold">
                           Additional Income
                         </h2>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <p className="text-[#767676] text-sm">
-                              Annual Interest on <br /> Security Deposit (₹)
+                            <p className="text-[#767676] text-lg">
+                              Annual Interest on  Security Deposit (₹)
                             </p>
-                            <p className="font-semibold text-[#429482]">25,500</p>
+                            <p className="font-semibold text-[#429482] text-lg">25,500</p>
                           </div>
                           <div className="flex justify-between items-center">
-                            <p className="text-[#000000] text-sm">
+                            <p className="text-[#000000] text-lg">
                               Total Annual Return (₹)
                             </p>
-                            <p className="font-semibold text-[#429482]">5,60,500</p>
+                            <p className="font-semibold text-[#429482] text-lg">5,60,500</p>
                           </div>
                         </div>
                       </div>
