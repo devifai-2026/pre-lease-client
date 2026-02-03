@@ -51,13 +51,13 @@ const EMIAnalytics = () => {
   ];
 
   return (
-    <div className="bg-white p-4 md:p-6 lg:p-8">
-      <h1 className="text-xl md:text-2xl font-bold text-red-500 mb-4 md:mb-6 lg:mb-8 text-center">EMI Analytics</h1>
+    <div className="bg-white mt-8 font-montserrat">
+      <h1 className="text-xl md:text-2xl  font-semibold text-red-500 mb-4 md:mb-6 lg:mb-8 ">EMI Analytics</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-4 md:mb-6 lg:mb-8">
         {/* EMI vs Rent Coverage */}
         <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg shadow">
-          <h2 className="text-base md:text-lg font-semibold mb-1 md:mb-2 text-center">EMI vs Rent Coverage</h2>
+          <h2 className="text-lg md:text-xl lg:text-2xl font-semibold mb-1 md:mb-2 text-center">EMI vs Rent Coverage</h2>
           <p className="text-xs md:text-sm text-gray-500 mb-3 md:mb-4 text-center">Monthly EMI compared to rental income over time</p>
           
           <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">
@@ -98,7 +98,7 @@ const EMIAnalytics = () => {
 
         {/* Total Loan Cost Breakdown */}
         <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg shadow">
-          <h2 className="text-base md:text-lg font-semibold mb-1 md:mb-2 text-center">Total Loan Cost Breakdown</h2>
+          <h2 className="text-lg md:text-xl lg:text-2xl font-semibold mb-1 md:mb-2 text-center">Total Loan Cost Breakdown</h2>
           <p className="text-xs md:text-sm text-gray-500 mb-3 md:mb-4 text-center">Principal amount vs total interest payable</p>
           
           <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">
@@ -143,7 +143,7 @@ const EMIAnalytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
         {/* Loan Balance Reduction */}
         <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg shadow">
-          <h2 className="text-base md:text-lg font-semibold mb-1 md:mb-2 text-center">Loan Balance Reduction</h2>
+          <h2 className="text-lg md:text-xl lg:text-2xl font-semibold mb-1 md:mb-2 text-center">Loan Balance Reduction</h2>
           <p className="text-xs md:text-sm text-gray-500 mb-3 md:mb-4 text-center">Outstanding loan balance and equity building over time</p>
           
           <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">
@@ -184,7 +184,7 @@ const EMIAnalytics = () => {
 
         {/* Cash Flow Analysis */}
         <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg shadow">
-          <h2 className="text-base md:text-lg font-semibold mb-1 md:mb-2 text-center">Cash Flow Analysis</h2>
+          <h2 className="text-lg md:text-xl lg:text-2xl font-semibold mb-1 md:mb-2 text-center">Cash Flow Analysis</h2>
           <p className="text-xs md:text-sm text-gray-500 mb-3 md:mb-4 text-center">Monthly and cumulative cash flow after EMI payments</p>
           
           <ResponsiveContainer width="100%" height={250} className="md:h-[300px]">

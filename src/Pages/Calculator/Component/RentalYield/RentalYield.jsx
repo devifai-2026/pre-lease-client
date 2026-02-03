@@ -312,29 +312,29 @@ const RentalYield = () => {
       </div>
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 lg:mb-8 max-w-[80%] mx-auto hidden lg:grid">
-        <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
-          <p className="text-[#767676] text-xs font-semibold">
-            Get clarity on your <br /> monthly or annual yield.
-          </p>
-        </div>
-        <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
-          <p className="text-[#767676] text-xs font-semibold">
-            Compare ROI across different <br /> properties or investments.
-          </p>
-        </div>
-        <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
-          <p className="text-[#767676] text-xs font-semibold">
-            Adjust variables like rent, <br /> purchase price, and taxes to see <br /> impact in real time
-          </p>
-        </div>
-      </div>
+     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 lg:mb-8 max-w-[88%] mx-auto hidden lg:grid">
+  <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md flex items-center justify-center">
+    <p className="text-[#767676] text-lg font-semibold">
+      Get clarity on your <br /> monthly or annual yield.
+    </p>
+  </div>
+  <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md flex items-center justify-center">
+    <p className="text-[#767676] text-lg font-semibold">
+      Compare ROI across different <br /> properties or investments.
+    </p>
+  </div>
+  <div className="border-b-2 border-[#EE2529] p-2 md:p-2 text-center shadow-md rounded-md flex items-center justify-center">
+    <p className="text-[#767676] text-lg font-semibold">
+      Adjust variables like rent, <br /> purchase price, and taxes to see <br /> impact in real time
+    </p>
+  </div>
+</div>
 
       {/* Form Content */}
       <div className="space-y-4 md:space-y-6">
         {/* Property Details */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             Property Details
           </h3>
           <div className="space-y-3 md:space-y-4">
@@ -342,7 +342,7 @@ const RentalYield = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Property Type *
                   </label>
                   <div className="relative w-2/3">
@@ -350,7 +350,7 @@ const RentalYield = () => {
                       name="propertyType"
                       value={formData.propertyType}
                       onChange={handleInputChange}
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold appearance-none pr-8 cursor-pointer hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold appearance-none pr-8 cursor-pointer hover:border-[#EE2529] transition-colors"
                     >
                       <option>Residential Space</option>
                       <option>Commercial Space</option>
@@ -362,7 +362,7 @@ const RentalYield = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Carpet Area (sq ft) *
                   </label>
                   <div className="w-2/3">
@@ -375,7 +375,7 @@ const RentalYield = () => {
                       min="0"
                       step="1"
                       placeholder="5000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.carpetArea && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.carpetArea}</p>
@@ -388,7 +388,7 @@ const RentalYield = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
                 <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Purchase Price (₹) *
                   </label>
                   <div className="w-2/3">
@@ -401,7 +401,7 @@ const RentalYield = () => {
                       min="0"
                       step="1000"
                       placeholder="4500000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.purchasePrice && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.purchasePrice}</p>
@@ -417,12 +417,12 @@ const RentalYield = () => {
         {/* Financing Options */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 lg:mb-4 gap-2 sm:gap-0">
-            <h3 className="text-[#EE2529] font-bold text-sm md:text-base">
+            <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl">
               Financing Options
             </h3>
             <div className="flex items-center gap-3">
               <span className={`text-xs font-semibold ${includeLoan ? 'text-[#262626]' : 'text-[#767676]'}`}>
-                Include loan financing
+                Include Downpayment
               </span>
               <button
                 type="button"
@@ -439,15 +439,15 @@ const RentalYield = () => {
               </button>
             </div>
           </div>
-          <div className="text-[#767676] text-xs font-semibold mb-2 md:mb-3">
+          <div className="text-[#767676] text-xs md:text-sm font-semibold mb-2 md:mb-3">
             Note: Loan amount should be less than or equal to property value
           </div>
           <div className="space-y-3 md:space-y-4">
             {/* Row 1: Loan Amount and Down Payment */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Loan Amount (₹) *
                   </label>
                   <div className="w-2/3">
@@ -461,7 +461,7 @@ const RentalYield = () => {
                       step="1000"
                       placeholder="3150000"
                       disabled={!includeLoan}
-                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs font-bold hover:border-[#EE2529] transition-colors ${
+                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
                         !includeLoan ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
                       }`}
                     />
@@ -472,8 +472,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Down Payment (₹) *
                   </label>
                   <div className="w-2/3">
@@ -487,7 +487,7 @@ const RentalYield = () => {
                       step="1000"
                       placeholder="1350000"
                       disabled={!includeLoan}
-                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs font-bold hover:border-[#EE2529] transition-colors ${
+                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
                         !includeLoan ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
                       }`}
                     />
@@ -501,8 +501,8 @@ const RentalYield = () => {
             {/* Row 2: Interest Rate and Loan Tenure */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-14 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Interest (% per annum) *
                   </label>
                   <div className="w-2/3">
@@ -517,7 +517,7 @@ const RentalYield = () => {
                       step="0.1"
                       placeholder="8.5"
                       disabled={!includeLoan}
-                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs font-bold hover:border-[#EE2529] transition-colors ${
+                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
                         !includeLoan ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
                       }`}
                     />
@@ -528,8 +528,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Loan Tenure (Years) *
                   </label>
                   <div className="w-2/3">
@@ -544,7 +544,7 @@ const RentalYield = () => {
                       step="1"
                       placeholder="20"
                       disabled={!includeLoan}
-                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs font-bold hover:border-[#EE2529] transition-colors ${
+                      className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
                         !includeLoan ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
                       }`}
                     />
@@ -560,15 +560,15 @@ const RentalYield = () => {
 
         {/* Rental Details */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             Rental Details
           </h3>
           <div className="space-y-3 md:space-y-4">
             {/* Row 1: Monthly Rent and Security Deposit */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Monthly Rent (₹) *
                   </label>
                   <div className="w-2/3">
@@ -581,7 +581,7 @@ const RentalYield = () => {
                       min="0"
                       step="1000"
                       placeholder="50000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.monthlyRent && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.monthlyRent}</p>
@@ -590,8 +590,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Security Deposit (₹) *
                   </label>
                   <div className="w-2/3">
@@ -604,7 +604,7 @@ const RentalYield = () => {
                       min="0"
                       step="1000"
                       placeholder="300000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.securityDeposit && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.securityDeposit}</p>
@@ -616,8 +616,8 @@ const RentalYield = () => {
             {/* Row 2: Rent Escalation every(yrs) and Rent Escalation(% per year) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-14 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Rent Escalation every(yrs)
                   </label>
                   <div className="w-2/3">
@@ -630,7 +630,7 @@ const RentalYield = () => {
                       min="0"
                       step="1"
                       placeholder="3"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.rentEscalationEvery && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.rentEscalationEvery}</p>
@@ -639,8 +639,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Rent Escalation(% per year)
                   </label>
                   <div className="w-2/3">
@@ -654,7 +654,7 @@ const RentalYield = () => {
                       max="100"
                       step="0.1"
                       placeholder="8"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.rentEscalationPercent && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.rentEscalationPercent}</p>
@@ -666,8 +666,8 @@ const RentalYield = () => {
             {/* Row 3: Lease Start Date and Lease Term */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Lease Start Date *
                   </label>
                   <div className="w-2/3">
@@ -676,14 +676,14 @@ const RentalYield = () => {
                       name="leaseStartDate"
                       value={formData.leaseStartDate}
                       onChange={handleInputChange}
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                   </div>
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Lease Term (Months) *
                   </label>
                   <div className="w-2/3">
@@ -696,7 +696,7 @@ const RentalYield = () => {
                       min="1"
                       step="1"
                       placeholder="10"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.leaseTerm && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.leaseTerm}</p>
@@ -710,31 +710,28 @@ const RentalYield = () => {
           {/* Balance Lease Tenure Alert */}
           <div className="mt-3 md:mt-4 bg-[#FFFCF4] border border-[#EE2529] p-2 md:p-3 rounded">
             <p className="text-xs text-[#767676]">
-              <span className="font-semibold">Balance Lease Tenure:</span>
-              <span className="text-[#EE2529] font-semibold ml-2">
+              <span className="font-semibold text-lg md:text-xl">Balance Lease Tenure:</span>
+              <span className="text-[#EE2529] font-semibold text-xl md:text-2xl ml-2">
                 10 years 9 months 2 days
               </span>
             </p>
-            <p className="text-xs text-[#767676] mt-1">
-              Typically, lenders are open to have 60% of the total lease term in
-              the lease period. In the event when the lease period is less than
-              30 years (or maybe less), you'll have to contact the bank for more
-              information.
+            <p className="text-sm text-[#767676] mt-1">
+            Typically defined as the period from the expiry of the initial lease term to the end of the lease agreement, or the lease period or expiry date, whichever comes first.
             </p>
           </div>
         </div>
 
         {/* Recurring Expenses */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             Recurring Expenses (Annual)
           </h3>
           <div className="space-y-3 md:space-y-4">
             {/* Row 1: Property Tax and Maintenance per sq.ft */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Property Tax (₹) *
                   </label>
                   <div className="w-2/3">
@@ -747,7 +744,7 @@ const RentalYield = () => {
                       min="0"
                       step="100"
                       placeholder="15000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.propertyTax && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.propertyTax}</p>
@@ -756,8 +753,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Maintenance per sq.ft(₹)
                   </label>
                   <div className="w-2/3">
@@ -770,7 +767,7 @@ const RentalYield = () => {
                       min="0"
                       step="10"
                       placeholder="30000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.maintenancePerSqft && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.maintenancePerSqft}</p>
@@ -782,8 +779,8 @@ const RentalYield = () => {
             {/* Row 2: Insurance and Maintenance Lump sum */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Insurance (₹) *
                   </label>
                   <div className="w-2/3">
@@ -796,7 +793,7 @@ const RentalYield = () => {
                       min="0"
                       step="100"
                       placeholder="8000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.insurance && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.insurance}</p>
@@ -805,8 +802,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Maintenance Lump sum(₹)
                   </label>
                   <div className="w-2/3">
@@ -819,7 +816,7 @@ const RentalYield = () => {
                       min="0"
                       step="100"
                       placeholder="15000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.maintenanceLumpSum && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.maintenanceLumpSum}</p>
@@ -833,15 +830,15 @@ const RentalYield = () => {
 
         {/* One-time Costs */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             One-time Costs
           </h3>
           <div className="space-y-3 md:space-y-4">
             {/* Row 1: Stamp Duty and Legal Fees */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Stamp Duty (%) *
                   </label>
                   <div className="w-2/3">
@@ -855,7 +852,7 @@ const RentalYield = () => {
                       max="100"
                       step="0.1"
                       placeholder="12"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.stampDuty && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.stampDuty}</p>
@@ -864,8 +861,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Legal Fees (₹) *
                   </label>
                   <div className="w-2/3">
@@ -878,7 +875,7 @@ const RentalYield = () => {
                       min="0"
                       step="1000"
                       placeholder="30000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.legalFees && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.legalFees}</p>
@@ -890,8 +887,8 @@ const RentalYield = () => {
             {/* Row 2: Brokerage and Other Costs */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Brokerage (₹) *
                   </label>
                   <div className="w-2/3">
@@ -904,7 +901,7 @@ const RentalYield = () => {
                       min="0"
                       step="1000"
                       placeholder="67500"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.brokerage && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.brokerage}</p>
@@ -913,8 +910,8 @@ const RentalYield = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-1/3">
+                <div className="flex items-center  gap-6 md:gap-10 lg:gap-14 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
                     Other One-time Costs (₹) *
                   </label>
                   <div className="w-2/3">
@@ -927,7 +924,7 @@ const RentalYield = () => {
                       min="0"
                       step="1000"
                       placeholder="25000"
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     />
                     {formErrors.otherCosts && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.otherCosts}</p>
@@ -940,11 +937,11 @@ const RentalYield = () => {
         </div>
 
         {/* Calculate and Reset Buttons */}
-        <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-4 mx-auto justify-center">
+        <div className="mt-6 md:mt-8 lg:mt-12 flex flex-col sm:flex-row gap-4 mx-auto justify-center">
           <button 
             onClick={handleCalculate}
             disabled={!isFormValid()}
-            className={`bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 md:px-8 py-2 rounded font-bold text-xs md:text-sm transition-opacity ${
+            className={`bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 md:px-8 py-2 rounded font-semibold text-base md:text-lg transition-opacity ${
               isFormValid() ? 'hover:opacity-90 cursor-pointer' : 'opacity-50 cursor-not-allowed'
             }`}
           >

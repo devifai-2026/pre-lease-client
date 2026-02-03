@@ -14,6 +14,10 @@ const ContactBroker = () => {
     additionalNotes: "",
   });
 
+  const [errors, setErrors] = useState({
+    phone: "",
+  });
+
   const propertyTypes = [
     "Residential Apartment",
     "Commercial Office",
@@ -41,18 +45,115 @@ const ContactBroker = () => {
     "Just Exploring",
   ];
 
+  const validatePhone = (phone) => {
+    // Remove all non-digit characters
+    const cleanedPhone = phone.replace(/\D/g, '');
+    
+    // Check if it's exactly 10 digits
+    if (cleanedPhone.length === 0) {
+      return "Phone number is required";
+    } else if (cleanedPhone.length !== 10) {
+      return "Phone number must be exactly 10 digits";
+    } else if (!/^[6-9]\d{9}$/.test(cleanedPhone)) {
+      return "Please enter a valid Indian mobile number";
+    }
+    return "";
+  };
+
+  const handlePhoneChange = (e) => {
+    let value = e.target.value;
+    
+    // Remove all non-digit characters
+    const cleanedValue = value.replace(/\D/g, '');
+    
+    // Format the phone number with spaces for better readability
+    let formattedValue = cleanedValue;
+    
+    // Add spacing after every 3 digits for better readability (XXX XXX XXXX)
+    if (cleanedValue.length > 3 && cleanedValue.length <= 6) {
+      formattedValue = `${cleanedValue.slice(0, 3)} ${cleanedValue.slice(3)}`;
+    } else if (cleanedValue.length > 6) {
+      formattedValue = `${cleanedValue.slice(0, 3)} ${cleanedValue.slice(3, 6)} ${cleanedValue.slice(6, 10)}`;
+    }
+    
+    // Limit to 10 digits (plus spaces)
+    if (cleanedValue.length <= 10) {
+      setFormData((prev) => ({
+        ...prev,
+        phone: formattedValue,
+      }));
+      
+      // Validate and update error
+      const error = validatePhone(cleanedValue);
+      setErrors((prev) => ({
+        ...prev,
+        phone: error,
+      }));
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    
+    if (name === "phone") {
+      handlePhoneChange(e);
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handlePhoneBlur = () => {
+    // Remove spaces for validation
+    const cleanedPhone = formData.phone.replace(/\D/g, '');
+    const error = validatePhone(cleanedPhone);
+    setErrors((prev) => ({
       ...prev,
-      [name]: value,
+      phone: error,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    
+    // Validate phone before submission
+    const cleanedPhone = formData.phone.replace(/\D/g, '');
+    const phoneError = validatePhone(cleanedPhone);
+    
+    if (phoneError) {
+      setErrors((prev) => ({
+        ...prev,
+        phone: phoneError,
+      }));
+      return; // Prevent form submission
+    }
+    
+    // Clear errors if validation passes
+    setErrors({
+      phone: "",
+    });
+    
+    // Prepare data for submission (remove spaces from phone)
+    const submissionData = {
+      ...formData,
+      phone: cleanedPhone,
+    };
+    
+    console.log("Form submitted:", submissionData);
     // Add form submission logic here
+    
+    // Optional: Reset form after submission
+    setFormData({
+      fullName: "",
+      email: "",
+      phone: "",
+      propertyType: "",
+      budgetRange: "",
+      timeline: "",
+      additionalNotes: "",
+    });
   };
 
   return (
@@ -127,16 +228,24 @@ const ContactBroker = () => {
           {/* Phone Number */}
           <div className="max-w-md">
             <label className="block text-sm font-medium text-[#262626] mb-2">
-              Phone Number
+              Phone Number <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Enter your phone number"
-              className="w-full p-2 bg-[#F9F9F9] rounded-lg border border-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent placeholder:text-[#767676]"
+              onBlur={handlePhoneBlur}
+              placeholder="Enter your 10-digit phone number"
+              className={`w-full p-2 bg-[#F9F9F9] rounded-lg border ${
+                errors.phone ? 'border-red-500' : 'border-[#E0E0E0]'
+              } focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:border-transparent placeholder:text-[#767676]`}
+              maxLength="12" // 10 digits + 2 spaces
             />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
+          
           </div>
         </div>
 
@@ -263,10 +372,16 @@ const ContactBroker = () => {
         <div className="max-w-2xl">
           <button
             type="submit"
-            className="py-3 px-8 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white font-medium mx-auto flex rounded-lg hover:opacity-90 transition-all duration-200"
+            className="py-3 px-8 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white font-medium mx-auto flex rounded-lg hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!!errors.phone}
           >
             Send
           </button>
+          {errors.phone && (
+            <p className="text-red-500 text-sm mt-2 text-center">
+              Please fix the phone number error before submitting
+            </p>
+          )}
         </div>
       </form>
       <CallEmail></CallEmail>

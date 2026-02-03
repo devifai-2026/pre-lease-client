@@ -126,32 +126,32 @@ const CoverageAnalysis = () => {
       </div>
 
       <div className="overflow-x-auto shadow-lg rounded-lg p-5">
-        <table className="w-full text-xs md:text-sm">
+        <table className="w-full text-xs md:text-sm overflow-x-hidden">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Year</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Annual <br /> Rent</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">EMI <br /> Paid</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Coverage <br /> %</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Principal <br /> Paid</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Interest <br /> Paid</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Outstanding <br /> Balance</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Net Cash <br /> Flow</th>
-              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-[#000000]">Cumulative Cash <br /> Flow</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Year</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Annual <br /> Rent</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">EMI <br /> Paid</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Coverage <br /> %</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Principal <br /> Paid</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Interest <br /> Paid</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Outstanding <br /> Balance</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Net Cash <br /> Flow</th>
+              <th className="px-2 py-1 md:px-3 md:py-2 text-center text-lg font-bold  uppercase tracking-wider border-b-2 border-[#000000]">Cumulative Cash <br /> Flow</th>
             </tr>
           </thead>
           <tbody className="bg-white">
             {data.map((row, index) => (
               <tr key={row.year} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm font-semibold text-gray-900 border-b-2 border-gray-300 text-center">{row.year}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.annualRent}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.emiPaid}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm  border-b-2 border-gray-300 text-center text-[#429482]">{row.coverage}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.principalPaid}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.interestPaid}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.outstandingBalance}</td>
-                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm text-gray-900 border-b-2 border-gray-300 text-center">{row.netCashFlow}</td>
-                <td className={`px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-xs md:text-sm font-semibold border-b-2 border-gray-300 ${
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg font-semibold text-gray-900 border-b-2 border-gray-300 text-center">{row.year}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg text-gray-900 border-b-2 border-gray-300 text-center">{row.annualRent}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lgtext-gray-900 border-b-2 border-gray-300 text-center">{row.emiPaid}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg  border-b-2 border-gray-300 text-center text-[#429482]">{row.coverage}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg text-gray-900 border-b-2 border-gray-300 text-center">{row.principalPaid}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg text-gray-900 border-b-2 border-gray-300 text-center">{row.interestPaid}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg text-gray-900 border-b-2 border-gray-300 text-center">{row.outstandingBalance}</td>
+                <td className="px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg text-gray-900 border-b-2 border-gray-300 text-center">{row.netCashFlow}</td>
+                <td className={`px-2 py-1 md:px-3 md:py-2 whitespace-nowrap text-base md:text-lg font-semibold border-b-2 border-gray-300 ${
                   index < 7 ? 'text-[#EE2529]' : 'text-[#429482]'
                 }`}>
                   {row.cumulativeCashFlow}

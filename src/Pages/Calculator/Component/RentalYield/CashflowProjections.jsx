@@ -71,7 +71,7 @@ const CashflowProjections = () => {
   return (
     <div className="font-montserrat bg-white">
       <div className="bg-white shadow-lg rounded-lg p-3 md:p-4 lg:p-6">
-        <h2 className="text-center text-base md:text-lg font-semibold text-[#262626] mb-4 md:mb-6">
+        <h2 className="text-center text-base md:text-xl lg:text-2xl font-semibold text-[#262626] mb-4 md:mb-6">
           Cash Flow Projections
         </h2>
         <ResponsiveContainer width="100%" height={300} className="md:h-[400px]">

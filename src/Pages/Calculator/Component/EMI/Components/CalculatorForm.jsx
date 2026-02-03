@@ -191,79 +191,66 @@ const CalculatorForm = () => {
           </svg>
         </div>
         <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-[#262626] mb-1 lg:mb-2">Property EMI Calculator</h1>
-        <p className="text-[#767676] text-xs md:text-sm">
+        <p className="text-[#767676] text-xs md:text-sm hidden md:block">
+          Estimate your monthly loan repayment instantly based on loan amount, interest rate, and other key factors.{" "}
+          <br /> and other key factors
+        </p>
+        <p className="text-[#767676] text-xs md:text-sm block md:hidden">
           Estimate your monthly loan repayment instantly based on loan amount, interest rate, and other key factors.
         </p>
       </div>
 
-      {/* Info Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 lg:mb-8 max-w-[95%] mx-auto">
-        <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
-          <p className="text-[#767676] text-xs font-semibold">
-            Understand your monthly EMI with ease
-          </p>
-        </div>
-        <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
-          <p className="text-[#767676] text-xs font-semibold">
-            Compare EMIs across different loan structures or interest rates
-          </p>
-        </div>
-        <div className="border-b-2 border-[#EE2529] p-2 md:p-3 text-center shadow-md rounded-md">
-          <p className="text-[#767676] text-xs font-semibold">
-            Adjust variables like loan amount, tenure, and more to see impacts in real time
-          </p>
-        </div>
-      </div>
+    {/* Info Cards */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 lg:mb-8 max-w-[88%] mx-auto hidden lg:grid">
+  <div className="border-b-2 border-[#EE2529] p-2 md:p-2 text-center shadow-md rounded-md flex items-center justify-center">
+    <p className="text-[#767676] text-lg font-semibold">
+      Understand your <br /> monthly EMI with ease
+    </p>
+  </div>
+  <div className="border-b-2 border-[#EE2529] p-2 md:p-2 text-center shadow-md rounded-md flex items-center justify-center">
+    <p className="text-[#767676] text-lg font-semibold">
+      Compare EMIs across different <br /> loan structures or interest rates
+    </p>
+  </div>
+  <div className="border-b-2 border-[#EE2529] p-2 md:p-1 text-center shadow-md rounded-md flex items-center justify-center">
+    <p className="text-[#767676] text-lg font-semibold">
+      Adjust variables like loan <br /> amount, tenure, and more to see <br /> impacts in real time
+    </p>
+  </div>
+</div>
 
       {/* Form Content */}
       <div className="space-y-4 md:space-y-6">
         {/* Property Details */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             Property Details
           </h3>
           <div className="space-y-3 md:space-y-4">
+            {/* Row 1: Property Type and Carpet Area */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Property Type <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Property Type *
                   </label>
-                  <div className="relative w-full sm:w-2/3">
+                  <div className="relative w-2/3">
                     <select 
                       value={propertyType}
                       onChange={(e) => setPropertyType(e.target.value)}
-                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676] appearance-none pr-8"
+                      className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold appearance-none pr-8 cursor-pointer hover:border-[#EE2529] transition-colors"
                     >
                       <option>Residential Space</option>
                       <option>Commercial Space</option>
                     </select>
-                    <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <FaAngleDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#767676] pointer-events-none" />
                   </div>
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Purchase Price (₹) <FaInfoCircle className="text-gray-400" size={12} />
-                  </label>
-                  <input 
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={purchasePrice}
-                    onChange={(e) => handlePositiveNumber(e.target.value, setPurchasePrice)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
-                    placeholder="Enter amount"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
-              <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Carpet Area (sq ft) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Carpet Area (sq ft) *
                   </label>
                   <input 
                     type="number"
@@ -271,8 +258,27 @@ const CalculatorForm = () => {
                     step="1"
                     value={carpetArea}
                     onChange={(e) => handlePositiveNumber(e.target.value, setCarpetArea)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter area"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Row 2: Purchase Price - takes half width */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
+              <div>
+                <div className="flex items-center gap-2 sm:gap-4 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Purchase Price (₹) *
+                  </label>
+                  <input 
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={purchasePrice}
+                    onChange={(e) => handlePositiveNumber(e.target.value, setPurchasePrice)}
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
+                    placeholder="Enter amount"
                   />
                 </div>
               </div>
@@ -284,31 +290,38 @@ const CalculatorForm = () => {
         {/* EMI Options */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 lg:mb-4 gap-2 sm:gap-0">
-            <h3 className="text-[#EE2529] font-bold text-sm md:text-base">
+            <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl">
               EMI Options
             </h3>
-            <label className="flex flex-row items-center gap-2 text-xs font-semibold text-[#262626]">
-              <span>Include Downpayment</span>
-              <div className="relative inline-block w-8 h-4 md:w-10 md:h-5">
-                <input 
-                  type="checkbox"
-                  checked={includeDevelopment}
-                  onChange={(e) => setIncludeDevelopment(e.target.checked)}
-                  className="sr-only peer"
+            <div className="flex items-center gap-3">
+              <span className={`text-xs md:text-sm font-semibold ${includeDevelopment ? 'text-[#262626]' : 'text-[#767676]'}`}>
+                Include Downpayment
+              </span>
+              <button
+                type="button"
+                className={`relative inline-flex h-6 w-10 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#EE2529] focus:ring-offset-2 ${
+                  includeDevelopment ? 'bg-[#EE2529]' : 'bg-gray-300'
+                }`}
+                onClick={() => setIncludeDevelopment(!includeDevelopment)}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    includeDevelopment ? 'translate-x-6' : 'translate-x-1'
+                  }`}
                 />
-                <div className="w-8 h-4 md:w-10 md:h-5 bg-[#EE2529] rounded-full peer peer-focus:ring-2 peer-focus:ring-[#EE2529]/30 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-3 after:w-3 md:after:h-4 md:after:w-4 after:transition-all peer-checked:after:translate-x-4 md:peer-checked:after:translate-x-5"></div>
-              </div>
-            </label>
+              </button>
+            </div>
           </div>
-          <div className="text-[#767676] text-xs font-semibold mb-2 md:mb-3">
+          <div className="text-[#767676] text-xs md:text-sm font-semibold mb-2 md:mb-3">
             Note: EMI amount is current property purchase price.
           </div>
           <div className="space-y-3 md:space-y-4">
+            {/* Row 1: Loan Amount and Down Payment */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Loan Amount (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-16 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Loan Amount (₹) *
                   </label>
                   <input 
                     type="number"
@@ -316,15 +329,18 @@ const CalculatorForm = () => {
                     step="1"
                     value={loanAmount}
                     onChange={(e) => handlePositiveNumber(e.target.value, setLoanAmount)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    disabled={!includeDevelopment}
+                    className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
+                      !includeDevelopment ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
+                    }`}
                     placeholder="Enter loan amount"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Down Payment (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Down Payment (₹) *
                   </label>
                   <input 
                     type="number"
@@ -332,17 +348,21 @@ const CalculatorForm = () => {
                     step="1"
                     value={downPayment}
                     onChange={(e) => handlePositiveNumber(e.target.value, setDownPayment)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    disabled={!includeDevelopment}
+                    className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
+                      !includeDevelopment ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
+                    }`}
                     placeholder="Enter down payment"
                   />
                 </div>
               </div>
             </div>
+            {/* Row 2: Interest Rate and Loan Tenure */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Interest (% per annum) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-14 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Interest (% per annum) *
                   </label>
                   <input 
                     type="number"
@@ -351,15 +371,18 @@ const CalculatorForm = () => {
                     step="0.01"
                     value={interestRate}
                     onChange={(e) => handlePercentage(e.target.value, setInterestRate)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    disabled={!includeDevelopment}
+                    className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
+                      !includeDevelopment ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
+                    }`}
                     placeholder="Enter interest rate"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Loan Tenure (Years) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Loan Tenure (Years) *
                   </label>
                   <input 
                     type="number"
@@ -368,7 +391,10 @@ const CalculatorForm = () => {
                     step="1"
                     value={loanTenure}
                     onChange={(e) => validateLoanTenure(e.target.value, setLoanTenure)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    disabled={!includeDevelopment}
+                    className={`w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg font-bold hover:border-[#EE2529] transition-colors ${
+                      !includeDevelopment ? 'opacity-50 cursor-not-allowed' : 'text-[#262626]'
+                    }`}
                     placeholder="1-30 years"
                   />
                 </div>
@@ -379,15 +405,16 @@ const CalculatorForm = () => {
 
         {/* Rental Details */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             Rental Details
           </h3>
           <div className="space-y-3 md:space-y-4">
+            {/* Row 1: Monthly Rent and Security Deposit */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Monthly Rent (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-24 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Monthly Rent (₹) *
                   </label>
                   <input 
                     type="number"
@@ -395,15 +422,15 @@ const CalculatorForm = () => {
                     step="1"
                     value={monthlyRent}
                     onChange={(e) => handlePositiveNumber(e.target.value, setMonthlyRent)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter monthly rent"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Security Deposit (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Security Deposit (₹) *
                   </label>
                   <input 
                     type="number"
@@ -411,17 +438,18 @@ const CalculatorForm = () => {
                     step="1"
                     value={securityDeposit}
                     onChange={(e) => handlePositiveNumber(e.target.value, setSecurityDeposit)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter security deposit"
                   />
                 </div>
               </div>
             </div>
+            {/* Row 2: Days Calculation and Rent Escalation */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Days Calculation Gregorian <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Days Calculation Gregorian
                   </label>
                   <input 
                     type="number"
@@ -430,15 +458,15 @@ const CalculatorForm = () => {
                     step="1"
                     value={daysCalculation}
                     onChange={(e) => validateDaysCalculation(e.target.value, setDaysCalculation)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="1-31 days"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Rent Escalation (% per year) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Rent Escalation (% per year)
                   </label>
                   <input 
                     type="number"
@@ -447,31 +475,32 @@ const CalculatorForm = () => {
                     step="0.1"
                     value={rentEscalation}
                     onChange={(e) => handlePercentage(e.target.value, setRentEscalation)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter percentage"
                   />
                 </div>
               </div>
             </div>
+            {/* Row 3: Lease Start Date and Lease Term */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Lease Start Date <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-24 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Lease Start Date *
                   </label>
                   <input 
-                    type="text"
+                    type="date"
                     value={leaseStartDate}
-                    onChange={(e) => validateDate(e.target.value, setLeaseStartDate)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    onChange={(e) => setLeaseStartDate(e.target.value)}
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="DD/MM/YYYY"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Lease Term (Yrs) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-24 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Lease Term (Yrs) *
                   </label>
                   <input 
                     type="number"
@@ -479,7 +508,7 @@ const CalculatorForm = () => {
                     step="1"
                     value={leaseTerm}
                     onChange={(e) => validateLeaseTerm(e.target.value, setLeaseTerm)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter years"
                   />
                 </div>
@@ -487,30 +516,32 @@ const CalculatorForm = () => {
             </div>
           </div>
 
+          {/* Balance Lease Tenure Alert */}
           <div className="mt-3 md:mt-4 bg-[#FFFCF4] border border-[#EE2529] p-2 md:p-3 rounded">
             <p className="text-xs text-[#767676]">
-              <span className="font-semibold">Balance Lease Tenure:</span>
-              <span className="text-[#EE2529] font-semibold ml-2">
+              <span className="font-semibold text-lg md:text-xl">Balance Lease Tenure:</span>
+              <span className="text-[#EE2529] font-semibold text-xl md:text-2xl ml-2">
                 10 years 9 months 2 days
               </span>
             </p>
-            <p className="text-xs text-[#767676] mt-1">
-              Typically defined as the period from the expiry of the initial lease term until the end of the lease agreement or the specified end of expiry date, whichever comes first.
+            <p className="text-sm text-[#767676] mt-1">
+            Typically defined as the period from the expiry of the initial lease term to the end of the lease agreement, or the lease period or expiry date, whichever comes first.
             </p>
           </div>
         </div>
 
         {/* Recurring Expenses */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             Recurring Expenses (Annual)
           </h3>
           <div className="space-y-3 md:space-y-4">
+            {/* Row 1: Property Tax and Maintenance per sq ft */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Property Tax (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Property Tax (₹) *
                   </label>
                   <input 
                     type="number"
@@ -518,15 +549,15 @@ const CalculatorForm = () => {
                     step="1"
                     value={propertyTax}
                     onChange={(e) => handlePositiveNumber(e.target.value, setPropertyTax)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter property tax"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Maintenance per sq ft (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Maintenance per sq ft (₹)
                   </label>
                   <input 
                     type="number"
@@ -534,17 +565,18 @@ const CalculatorForm = () => {
                     step="0.01"
                     value={maintenance}
                     onChange={(e) => handlePositiveNumber(e.target.value, setMaintenance)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter maintenance cost"
                   />
                 </div>
               </div>
             </div>
+            {/* Row 2: Insurance and Maintenance Lump sum */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Insurance (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-24 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Insurance (₹) *
                   </label>
                   <input 
                     type="number"
@@ -552,15 +584,15 @@ const CalculatorForm = () => {
                     step="1"
                     value={insurance}
                     onChange={(e) => handlePositiveNumber(e.target.value, setInsurance)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter insurance cost"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Maintenance Lump sum (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Maintenance Lump sum (₹)
                   </label>
                   <input 
                     type="number"
@@ -568,7 +600,7 @@ const CalculatorForm = () => {
                     step="1"
                     value={maintenanceLumpsum}
                     onChange={(e) => handlePositiveNumber(e.target.value, setMaintenanceLumpsum)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter lump sum amount"
                   />
                 </div>
@@ -579,15 +611,16 @@ const CalculatorForm = () => {
 
         {/* One-time Costs */}
         <div className="shadow-md rounded-md p-3 md:p-4 lg:p-5">
-          <h3 className="text-[#EE2529] font-bold text-sm md:text-base mb-3 lg:mb-4">
+          <h3 className="text-[#EE2529] font-semibold text-base md:text-xl lg:text-2xl mb-3 lg:mb-4">
             One-time Costs
           </h3>
           <div className="space-y-3 md:space-y-4">
+            {/* Row 1: Stamp Duty and Legal Fees */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Stamp Duty (% of Price) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Stamp Duty (%) *
                   </label>
                   <input 
                     type="number"
@@ -596,15 +629,15 @@ const CalculatorForm = () => {
                     step="0.1"
                     value={stampDuty}
                     onChange={(e) => handlePercentage(e.target.value, setStampDuty)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter percentage"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Legal Fees (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-28 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Legal Fees (₹) *
                   </label>
                   <input 
                     type="number"
@@ -612,17 +645,18 @@ const CalculatorForm = () => {
                     step="1"
                     value={legalFees}
                     onChange={(e) => handlePositiveNumber(e.target.value, setLegalFees)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter legal fees"
                   />
                 </div>
               </div>
             </div>
+            {/* Row 2: Brokerage and Other Costs */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Brokerage (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-24 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Brokerage (₹) *
                   </label>
                   <input 
                     type="number"
@@ -630,15 +664,15 @@ const CalculatorForm = () => {
                     step="1"
                     value={brokerage}
                     onChange={(e) => handlePositiveNumber(e.target.value, setBrokerage)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter brokerage"
                   />
                 </div>
               </div>
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-1 md:mb-2">
-                  <label className="text-[#767676] text-xs font-semibold w-full sm:w-1/3 flex items-center gap-1">
-                    Other One-time Cash (₹) <FaInfoCircle className="text-gray-400" size={12} />
+                <div className="flex items-center gap-6 md:gap-10 lg:gap-20 mb-1 md:mb-2">
+                  <label className="text-[#767676] text-base lg:text-lg font-normal whitespace-nowrap w-1/3">
+                    Other One-time Costs (₹) *
                   </label>
                   <input 
                     type="number"
@@ -646,7 +680,7 @@ const CalculatorForm = () => {
                     step="1"
                     value={otherCosts}
                     onChange={(e) => handlePositiveNumber(e.target.value, setOtherCosts)}
-                    className="w-full sm:w-2/3 bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-xs text-[#767676]"
+                    className="w-full bg-[#F5F5F5] border border-[#E0E0E0] rounded px-3 py-2 text-base lg:text-lg text-[#262626] font-bold hover:border-[#EE2529] transition-colors"
                     placeholder="Enter other costs"
                   />
                 </div>
@@ -655,9 +689,9 @@ const CalculatorForm = () => {
           </div>
         </div>
 
-        {/* Calculate Button */}
-        <div className="mt-6 md:mt-8 flex gap-4 mx-auto">
-          <button className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 md:px-8 py-2 rounded font-bold text-xs md:text-sm hover:opacity-90 transition-opacity mx-auto">
+        {/* Calculate and Reset Buttons */}
+        <div className="mt-6 md:mt-8 lg:mt-14 flex flex-col sm:flex-row gap-4 mx-auto justify-center">
+          <button className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white px-6 md:px-8 py-2 rounded font-semibold text-base md:text-lg hover:opacity-90 transition-opacity mx-auto">
             Calculate ROI & Rental Yield
           </button>
         </div>

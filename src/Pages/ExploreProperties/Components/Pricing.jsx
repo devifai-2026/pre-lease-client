@@ -10,18 +10,18 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
 
   useEffect(() => {
     if (initialPricing) {
-      setMinPrice(initialPricing.min);
-      setMaxPrice(initialPricing.max);
+      setMinPrice(Math.max(initialPricing.min, 0));
+      setMaxPrice(Math.max(initialPricing.max, 1000000));
       setPriceRange([
-        Math.floor(initialPricing.min / 1000000),
-        Math.floor(initialPricing.max / 1000000)
+        Math.max(Math.floor(initialPricing.min / 1000000), 0),
+        Math.min(Math.max(Math.floor(initialPricing.max / 1000000), 1), 50)
       ]);
     }
   }, [initialPricing]);
 
   // Convert value to percentage
   const valueToPercent = (value) => {
-    return ((value - 0) / (50 - 0)) * 100;
+    return ((Math.min(Math.max(value, 0), 50) - 0) / (50 - 0)) * 100;
   };
 
   // Handle slider click or drag for both thumbs
@@ -48,9 +48,11 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
   };
 
   const updateSliderValue = (value) => {
+    value = Math.min(Math.max(value, 0), 50); // Clamp between 0-50
+    
     if (activeThumb === 'min') {
       if (value <= priceRange[1] - 1) { // Keep at least 1 gap between min and max
-        const newMinPrice = value * 1000000;
+        const newMinPrice = Math.max(value * 1000000, 0);
         setPriceRange([value, priceRange[1]]);
         setMinPrice(newMinPrice);
         onPricingChange?.({ min: newMinPrice, max: maxPrice });
@@ -67,17 +69,99 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
 
   // Handle input field changes
   const handleInputChange = (e, type) => {
-    const value = parseInt(e.target.value) || 0;
+    let value = e.target.value;
+    
+    // Allow empty string for typing - just update the displayed value
+    if (value === '') {
+      if (type === 'min') {
+        setMinPrice('');
+      } else {
+        setMaxPrice('');
+      }
+      return;
+    }
+    
+    // Parse the value
+    const numValue = parseInt(value, 10);
+    
+    // Check if it's a valid number
+    if (isNaN(numValue)) return;
+    
+    // Ensure no negative values
+    if (numValue < 0) return;
+    
     if (type === 'min') {
-      const lakhValue = Math.min(Math.max(Math.floor(value / 1000000), 0), priceRange[1] - 1);
-      setMinPrice(value);
+      // Cap the value to reasonable maximum
+      const cappedValue = Math.min(numValue, 49000000); // Max 49 lakhs to keep 1 lakh gap
+      
+      // Calculate lakh value for slider (max 49 to keep gap)
+      const lakhValue = Math.min(Math.floor(cappedValue / 1000000), 49);
+      
+      setMinPrice(cappedValue);
       setPriceRange([lakhValue, priceRange[1]]);
-      onPricingChange?.({ min: value, max: maxPrice });
+      onPricingChange?.({ min: cappedValue, max: maxPrice });
     } else {
-      const lakhValue = Math.min(Math.max(Math.floor(value / 1000000), priceRange[0] + 1), 50);
-      setMaxPrice(value);
+      // For max input, allow any value while typing
+      // We'll validate on blur
+      setMaxPrice(numValue);
+      // Don't update parent or slider while typing
+    }
+  };
+
+  // Handle input blur - final validation
+  const handleInputBlur = (e, type) => {
+    let value = e.target.value;
+    
+    // If empty, set to default
+    if (value === '') {
+      if (type === 'min') {
+        const defaultMin = 0;
+        setMinPrice(defaultMin);
+        onPricingChange?.({ min: defaultMin, max: maxPrice });
+      } else {
+        const defaultMax = 50000000;
+        setMaxPrice(defaultMax);
+        setPriceRange([priceRange[0], 50]); // Reset slider to max
+        onPricingChange?.({ min: minPrice, max: defaultMax });
+      }
+      return;
+    }
+    
+    const numValue = parseInt(value, 10);
+    
+    // If invalid, reset to default
+    if (isNaN(numValue) || numValue < 0) {
+      if (type === 'min') {
+        setMinPrice(0);
+        onPricingChange?.({ min: 0, max: maxPrice });
+      } else {
+        setMaxPrice(50000000);
+        setPriceRange([priceRange[0], 50]);
+        onPricingChange?.({ min: minPrice, max: 50000000 });
+      }
+      return;
+    }
+    
+    // Final validation for max input
+    if (type === 'max') {
+      // Ensure max is at least 1 lakh and cap at 50 lakhs
+      const cappedValue = Math.max(Math.min(numValue, 50000000), 1000000);
+      
+      // Calculate lakh value for slider (min 1, max 50)
+      const lakhValue = Math.min(Math.max(Math.floor(cappedValue / 1000000), 1), 50);
+      
+      setMaxPrice(cappedValue);
       setPriceRange([priceRange[0], lakhValue]);
-      onPricingChange?.({ min: minPrice, max: value });
+      onPricingChange?.({ min: minPrice, max: cappedValue });
+    } else if (type === 'min') {
+      // Ensure min doesn't exceed max - 1 lakh
+      const maxAllowed = maxPrice - 1000000;
+      const finalValue = Math.min(Math.max(numValue, 0), maxAllowed);
+      
+      const lakhValue = Math.min(Math.floor(finalValue / 1000000), 49);
+      setMinPrice(finalValue);
+      setPriceRange([lakhValue, priceRange[1]]);
+      onPricingChange?.({ min: finalValue, max: maxPrice });
     }
   };
 
@@ -177,10 +261,11 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
             type="number"
             value={minPrice}
             onChange={(e) => handleInputChange(e, 'min')}
+            onBlur={(e) => handleInputBlur(e, 'min')}
             className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base"
             placeholder="0"
             min="0"
-            max={maxPrice - 1000000}
+            max="49000000"
           />
         </div>
         <div>
@@ -191,10 +276,11 @@ const Pricing = ({ onPricingChange, initialPricing }) => {
             type="number"
             value={maxPrice}
             onChange={(e) => handleInputChange(e, 'max')}
+            onBlur={(e) => handleInputBlur(e, 'max')}
             className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base"
             placeholder="50000000"
-            min={minPrice + 1000000}
-            max="500000000"
+            min="1000000"
+            max="50000000"
           />
         </div>
       </div>

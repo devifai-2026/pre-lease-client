@@ -10,13 +10,13 @@ const RentalCards = () => {
                 <div className="p-3 space-y-2 border-2 border-[#C73834] rounded-2xl bg-[#FDEDEE] lg:rounded-md h-full flex flex-col aspect-square lg:aspect-auto lg:flex-none">
                     {/* Mobile layout */}
                     <div className="flex-1 lg:flex-none">
-                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-1 lg:gap-0">
+                        <div className="flex flex-col  items-start  justify-between gap-1 lg:gap-0">
                             <h2 className="text-sm sm:text-base md:text-lg lg:text-lg font-semibold leading-tight lg:leading-normal">Gross Rental Yield</h2>
                             <p className="text-lg sm:text-xl lg:text-xl text-[#C73834] font-bold lg:text-left lg:text-center">13.33%</p>
                         </div>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] mt-1">% Before expenses</p>
                     </div>
-                    <div className="space-y-1 lg:space-y-2 mt-auto pt-1 lg:mt-0 lg:pt-0 mb-3">
+                    <div className="space-y-1 lg:space-y-2 mt-auto pt-1 lg:mt-0 lg:pt-3 mb-3">
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal text-nowrap">Return before expenses.</p>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal">
                             Higher %=stronger rental income.
@@ -27,13 +27,13 @@ const RentalCards = () => {
                 {/* 2 - Mobile square design, Desktop original */}
                 <div className="p-3 space-y-2 border-2 border-[#26BFCC] rounded-2xl bg-[#D7EFF7] lg:rounded-md h-full flex flex-col aspect-square lg:aspect-auto lg:flex-none">
                     <div className="flex-1 lg:flex-none">
-                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between ">
+                        <div className="flex flex-col items-start  justify-between ">
                             <h2 className="text-sm sm:text-base md:text-lg lg:text-lg font-semibold leading-tight lg:leading-normal">Net Rental Yield</h2>
                             <p className="text-lg sm:text-xl lg:text-xl text-[#26BFCC] font-bold lg:text-left lg:text-center">12.11%</p>
                         </div>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] mt-1">% After expenses</p>
                     </div>
-                    <div className="space-y-1 lg:space-y-2 mt-auto pt-2 lg:mt-0 lg:pt-0">
+                    <div className="space-y-1 lg:space-y-2 mt-auto pt-2 lg:mt-0 lg:pt-3">
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal text-nowrap">
                             Return after all expenses.
                         </p>
@@ -51,7 +51,7 @@ const RentalCards = () => {
                         <p className="text-lg sm:text-xl lg:text-xl text-[#429482] font-bold mt-1 lg:mt-0">₹5.35 Lakhs</p>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] mt-1">$ Net annual income</p>
                     </div>
-                    <div className="space-y-1 lg:space-y-2 mt-auto pt-2 lg:mt-0 lg:pt-0">
+                    <div className="space-y-1 lg:space-y-2 mt-auto pt-2 lg:mt-0 lg:pt-3">
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal">Net yearly income.</p>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal">
                             Money you can use or reinvest.
@@ -69,7 +69,7 @@ const RentalCards = () => {
                         <p className="text-lg sm:text-xl lg:text-xl text-[#F7C952] font-bold mt-1 lg:mt-0">9.1 years</p>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] mt-1">Time to break even</p>
                     </div>
-                    <div className="space-y-1 lg:space-y-2 mt-auto pt-2 lg:mt-0 lg:pt-0">
+                    <div className="space-y-1 lg:space-y-2 mt-auto pt-2 lg:mt-0 lg:pt-3">
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal">Years to recover cost.</p>
                         <p className="text-xs sm:text-sm lg:text-sm text-[#6B7280] leading-tight lg:leading-normal">
                             Shorter = quicker returns.

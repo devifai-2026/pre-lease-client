@@ -116,10 +116,10 @@ const Calculator = () => {
         }`}
       />
       <p
-        className={`text-base ${
+        className={`text-lg md:text-xl lg:text-2xl ${
           activeSection === "roi"
             ? "text-[#EE2529] font-bold"
-            : "text-[#767676] font-normal"
+            : "text-[#767676] font-normal "
         }`}
       >
         ROI & Rental Yield Calculator
@@ -127,8 +127,8 @@ const Calculator = () => {
     </div>
     {/* Bottom border for active section */}
     {activeSection === "roi" && (
-      <div className="absolute -bottom-2 left-0 right-0 h-[4px] bg-[#EE2529]"></div>
-    )}
+  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[410px] h-[4px] bg-[#EE2529]"></div>
+)}
   </div>
 
   {/* Separator - Always show */}
@@ -150,19 +150,19 @@ const Calculator = () => {
         }`}
       />
       <p
-        className={`text-base ${
+        className={`text-lg md:text-xl lg:text-2xl ${
           activeSection === "emi"
-            ? "text-[#EE2529] font-bold"
-            : "text-[#767676] font-normal"
+            ? "text-[#EE2529] font-bold "
+            : "text-[#767676] font-normal "
         }`}
       >
         EMI Calculator
       </p>
     </div>
     {/* Bottom border for active section */}
-    {activeSection === "emi" && (
-      <div className="absolute -bottom-2 left-0 right-0 h-[4px] bg-[#EE2529]"></div>
-    )}
+   {activeSection === "emi" && (
+  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[250px] h-[4px] bg-[#EE2529]"></div>
+)}
   </div>
 </div>
       {/* Conditional Content Display */}

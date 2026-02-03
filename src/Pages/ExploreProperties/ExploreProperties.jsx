@@ -16,44 +16,18 @@ import squarebg from "../../assets/propertyDetails/squaresbg.png";
 
 const ExploreProperties = () => {
   const [filters, setFilters] = useState({
-    // proximity: [], // Commented out proximity
     pricing: { min: 0, max: 50000000 },
     rent: { min: 0, max: 5000000 },
     roi: 100,
     tenure: 20,
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [activeTab, setActiveTab] = useState("pricing"); // Changed default to "pricing"
+  const [showDesktopFilters, setShowDesktopFilters] = useState(true); // New state for desktop filters
+  const [activeTab, setActiveTab] = useState("pricing");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // Commented out proximity options
-  /*
-  const proximityOptions = [
-    { id: "metro", label: "Metro Station" },
-    { id: "business", label: "Business District" },
-    { id: "shopping", label: "Shopping Center" },
-    { id: "highway", label: "Major Highway" },
-    { id: "industrial", label: "Industrial Zone" },
-    { id: "university", label: "University" },
-    { id: "airport", label: "Airport" },
-    { id: "port", label: "Port/Harbor" },
-  ];
-  */
-
-  // Commented out proximity handler
-  /*
-  const handleProximityChange = (id) => {
-    setFilters((prev) => ({
-      ...prev,
-      proximity: prev.proximity.includes(id)
-        ? prev.proximity.filter((item) => item !== id)
-        : [...prev.proximity, id],
-    }));
-  };
-  */
 
   const handlePricingChange = (pricingData) => {
     setFilters((prev) => ({
@@ -85,7 +59,6 @@ const ExploreProperties = () => {
 
   const handleResetFilters = () => {
     setFilters({
-      // proximity: [], // Commented out proximity
       pricing: { min: 0, max: 50000000 },
       rent: { min: 0, max: 5000000 },
       roi: 100,
@@ -102,57 +75,12 @@ const ExploreProperties = () => {
     setShowFilters(!showFilters);
   };
 
+  const toggleDesktopFilters = () => {
+    setShowDesktopFilters(!showDesktopFilters);
+  };
+
   const renderActiveTabContent = () => {
     switch (activeTab) {
-      // Commented out location tab
-      /*
-      case "location":
-        return (
-          <>
-            <div>
-              <h3 className="text-sm font-bold text-[#262626] mb-4">
-                Proximity to
-              </h3>
-              <div className="hidden lg:grid lg:grid-cols-3 gap-2">
-                {proximityOptions.map((option) => (
-                  <label
-                    key={option.id}
-                    className="flex items-center gap-3 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={filters.proximity.includes(option.id)}
-                      onChange={() => handleProximityChange(option.id)}
-                      className="w-4 h-4 border border-gray-300 rounded cursor-pointer accent-red-600"
-                    />
-                    <span className="text-sm text-[#262626]">
-                      {option.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <div className="lg:hidden flex flex-col gap-3">
-                {proximityOptions.map((option) => (
-                  <label
-                    key={option.id}
-                    className="flex items-center gap-3 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={filters.proximity.includes(option.id)}
-                      onChange={() => handleProximityChange(option.id)}
-                      className="w-4 h-4 border border-gray-300 rounded cursor-pointer accent-red-600"
-                    />
-                    <span className="text-sm text-[#262626]">
-                      {option.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </>
-        );
-      */
       case "pricing":
         return (
           <Pricing
@@ -183,9 +111,7 @@ const ExploreProperties = () => {
     }
   };
 
-  // Updated tabOptions - removed "location" tab
   const tabOptions = [
-    // { id: "location", label: "Location\nProximity" }, // Commented out location tab
     { id: "pricing", label: "Pricing" },
     { id: "unit", label: "Type of Unit" },
     { id: "rent", label: "Annual Rent\nAchieved" },
@@ -210,10 +136,10 @@ const ExploreProperties = () => {
           >
             <div className="absolute inset-0 bg-white/30 rounded-lg"></div>
 
-            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0 p-4 sm:p-6">
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-0 p-4 lg:p-6 space-y-2">
               <div
                 className={`${
-                  showFilters ? "hidden sm:block" : "block"
+                  showFilters || !showDesktopFilters ? "hidden sm:block" : "block"
                 } w-full sm:w-auto`}
               >
                 <p className="font-bold text-sm sm:text-base text-[#767676]">
@@ -224,10 +150,18 @@ const ExploreProperties = () => {
 
               <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end">
                 <button
-                  onClick={toggleFilters}
+                  onClick={() => {
+                    // On mobile, toggle mobile drawer
+                    // On desktop, toggle desktop filters panel
+                    if (window.innerWidth >= 1024) {
+                      toggleDesktopFilters();
+                    } else {
+                      toggleFilters();
+                    }
+                  }}
                   className="flex items-center gap-2 border-2 border-[#767676] py-1 px-2 md:py-2 md:px-3 rounded-md bg-white hover:bg-gray-50 transition-colors"
                 >
-                  {showFilters ? (
+                  {showFilters || !showDesktopFilters ? (
                     <>
                       <IoMdClose size={18} className="sm:hidden" />
                       <span className="hidden sm:inline">Close Filters</span>
@@ -257,62 +191,64 @@ const ExploreProperties = () => {
             </div>
           </div>
 
-          {/* Desktop Filter Container - Visible only on lg and above */}
-          <div className="hidden lg:block shadow-lg rounded-lg px-6 py-8 mb-6 bg-white">
-            <div className="mb-4">
-              <div className="flex items-center gap-2">
-                <CiFilter className="text-[#EE2529] text-xl" />
-                <h1 className="text-xl font-bold text-[#EE2529]">
-                  Advanced Filters
-                </h1>
+          {/* Desktop Filter Container -  toggleable */}
+          {showDesktopFilters && (
+            <div className="hidden lg:block shadow-lg rounded-lg px-6 py-8 mb-6 bg-white">
+              <div className="mb-4">
+                <div className="flex items-center gap-2">
+                  <CiFilter className="text-[#EE2529] text-xl" />
+                  <h1 className="text-xl font-bold text-[#EE2529]">
+                    Advanced Filters
+                  </h1>
+                </div>
               </div>
-            </div>
 
-            <div className="flex justify-between gap-8 mb-4 overflow-x-auto pb-4">
-              {tabOptions.map((tab) => (
+              <div className="flex justify-between gap-8 mb-4 overflow-x-auto pb-4">
+                {tabOptions.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`pb-4 font-bold whitespace-nowrap text-base whitespace-pre-line text-center px-4 ${
+                      activeTab === tab.id
+                        ? "text-[#EE2529] border-b-2 border-[#EE2529]"
+                        : "text-[#262626] hover:text-gray-900"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="bg-[#FDEDEE] p-2 mb-4 flex items-start gap-3 rounded-2xl">
+                <div className="text-lg">
+                  <IoIosInformationCircleOutline />
+                </div>
+                <p className="text-gray-700 text-sm">
+                  This information is certified from the person listing the
+                  property
+                </p>
+              </div>
+
+              {renderActiveTabContent()}
+
+              <div className="border-t border-gray-200 mb-8 mt-8"></div>
+
+              <div className="flex justify-end gap-4">
                 <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`pb-4 font-bold whitespace-nowrap text-base whitespace-pre-line text-center px-4 ${
-                    activeTab === tab.id
-                      ? "text-[#EE2529] border-b-2 border-[#EE2529]"
-                      : "text-[#262626] hover:text-gray-900"
-                  }`}
+                  onClick={handleResetFilters}
+                  className="px-6 py-2 border-2 border-gray-400 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition text-base"
                 >
-                  {tab.label}
+                  Reset Filters
                 </button>
-              ))}
-            </div>
-
-            <div className="bg-[#FDEDEE] p-2 mb-4 flex items-start gap-3 rounded-2xl">
-              <div className="text-lg">
-                <IoIosInformationCircleOutline />
+                <button
+                  onClick={handleApplyFilters}
+                  className="px-6 py-2 text-white font-semibold rounded-lg transition bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90 text-base"
+                >
+                  Apply Filters
+                </button>
               </div>
-              <p className="text-gray-700 text-sm">
-                This information is certified from the person listing the
-                property
-              </p>
             </div>
-
-            {renderActiveTabContent()}
-
-            <div className="border-t border-gray-200 mb-8 mt-8"></div>
-
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={handleResetFilters}
-                className="px-6 py-2 border-2 border-gray-400 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition text-base"
-              >
-                Reset Filters
-              </button>
-              <button
-                onClick={handleApplyFilters}
-                className="px-6 py-2 text-white font-semibold rounded-lg transition bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90 text-base"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
+          )}
 
           {/* Mobile/Tablet Drawer Filter */}
           {showFilters && (
@@ -324,7 +260,7 @@ const ExploreProperties = () => {
               ></div>
 
               {/* Drawer Panel */}
-              <div className="absolute right-0 top-0 bottom-0 w-100 bg-white shadow-2xl flex flex-col overflow-hidden">
+              <div className="absolute right-0 top-0 bottom-0 w-full bg-white shadow-2xl flex flex-col overflow-hidden">
                 {/* Header */}
                 <div className="border-b border-gray-200 p-4 flex items-center gap-2">
                   <CiFilter className="text-[#EE2529] text-xl" />
@@ -345,7 +281,7 @@ const ExploreProperties = () => {
                             <button
                               key={tab.id}
                               onClick={() => setActiveTab(tab.id)}
-                              className={`text-left text-xs font-semibold py-2 px-1 pr-3 rounded transition-colors whitespace-pre-line ${
+                              className={`text-left text-xs font-semibold py-2 px-1 pr-3 rounded transition-colors  whitespace-pre-line ${
                                 activeTab === tab.id
                                   ? "text-[#EE2529] bg-[#FDEDEE]"
                                   : "text-[#262626] hover:bg-gray-100"
@@ -358,7 +294,7 @@ const ExploreProperties = () => {
                       </div>
 
                       {/* Right Side - Content */}
-                      <div className="w-3/5 pl-4">
+                      <div className="w-3/5 pl-4 pr-3">
                         <div className="bg-[#FDEDEE] p-3 mb-4 flex items-start gap-2 rounded-lg">
                           <IoIosInformationCircleOutline className="text-sm flex-shrink-0 mt-0.5" />
                           <p className="text-gray-700 text-xs">

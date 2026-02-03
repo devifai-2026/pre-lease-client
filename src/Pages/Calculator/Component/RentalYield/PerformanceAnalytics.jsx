@@ -21,7 +21,7 @@ const PerformanceAnalytics = () => {
   return (
     <div className="font-montserrat bg-white mt-6 p-4">
       {/* Heading */}
-      <h2 className="text-[#EE2529] text-base md:text-lg font-bold mb-4 md:mb-6">
+      <h2 className="text-[#EE2529] text-lg md:text-xl lg:text-2xl font-semibold mb-4 md:mb-6">
         Performance Analytics
       </h2>
 
@@ -29,7 +29,7 @@ const PerformanceAnalytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
 {/* Left - Pie Chart - Fixed for mobile */}
 <div className="bg-white rounded-lg p-4 md:p-6 shadow-md">
-  <h3 className="text-center text-sm md:text-base font-semibold text-[#262626] mb-4 md:mb-6">
+  <h3 className="text-center text-base md:text-xl lg:text-2xl font-semibold text-[#262626] mb-4 md:mb-6">
     Annual Expense Breakdown
   </h3>
   <div className="w-full h-[300px]">
@@ -142,7 +142,7 @@ const PerformanceAnalytics = () => {
 </div>
        {/* Right - Bar Chart - UPDATED to match reference */}
 <div className="bg-white shadow-lg rounded-lg py-3 md:p-6 w-full">
-  <h3 className="text-center text-base md:text-lg font-semibold mb-4 text-[#333]">
+  <h3 className="text-center text-base md:text-xl lg:text-2xl  font-semibold mb-4 text-[#333]">
     Rental Yield Comparison
   </h3>
   <div className="w-full h-[300px]">
