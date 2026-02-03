@@ -3,6 +3,7 @@ import one from "../../assets/ExploreCategories/one.png"; //commercial
 import two from "../../assets/ExploreCategories/two.png"; //residential
 import three from "../../assets/ExploreCategories/three.png"; //industrial
 import four from "../../assets/ExploreCategories/four.png"; //others
+import { Link } from "react-router-dom";
 
 const ExploreCategories = () => {
   useEffect(() => {
@@ -41,9 +42,11 @@ const ExploreCategories = () => {
            <p className="bg-[#FFF3CA] py-1 px-1 sm:px-3 rounded-3xl text-xs md:text-xs text-[#262626] text-nowrap">
   26 Property <span className="hidden lg:inline-block">Listed</span>
 </p>
-            <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
+             <Link to='explore-properties'>
+              <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
               Explore
             </button>
+            </Link>
           </div>
         </div>
 
@@ -69,9 +72,11 @@ const ExploreCategories = () => {
            <p className="bg-[#FFF3CA] py-1 px-1 sm:px-3 rounded-3xl text-xs md:text-xs text-[#262626] text-nowrap">
   26 Property <span className="hidden lg:inline-block">Listed</span>
 </p>
-            <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
+            <Link to='explore-properties'>
+              <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
               Explore
             </button>
+            </Link>
           </div>
         </div>
 
@@ -97,9 +102,11 @@ const ExploreCategories = () => {
            <p className="bg-[#FFF3CA] py-1 px-1 sm:px-3 rounded-3xl text-xs md:text-xs text-[#262626] text-nowrap">
   26 Property <span className="hidden lg:inline-block">Listed</span>
 </p>
-            <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
+          <Link to='explore-properties'>
+              <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
               Explore
             </button>
+          </Link>
           </div>
         </div>
 
@@ -125,9 +132,11 @@ const ExploreCategories = () => {
           <p className="bg-[#FFF3CA] py-1 px-1 sm:px-3 rounded-3xl text-xs md:text-xs text-[#262626] text-nowrap">
   26 Property <span className="hidden lg:inline-block">Listed</span>
 </p>
-            <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
+         <Link to='explore-properties'>
+              <button className="border rounded-md text-white px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#EE2529] to-[#C73834] text-xs md:text-sm hover:opacity-90 transition-opacity hover:scale-105 hover:shadow-lg">
               Explore
             </button>
+          </Link>
           </div>
         </div>
       </div>

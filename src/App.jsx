@@ -10,7 +10,7 @@ import ContactBroker from "../src/Pages/ExploreBrokers/Pages/ContactBroker/Conta
 import ListProperty from "./Pages/ListProperty/ListProperty";
 import Enquiry from "./Pages/Enquiry";
 import NotFound from "./Pages/ErrorPages/NotFound";
-import ServerError from "./Pages/ErrorPages/ServerError"; // Import ServerError
+import ServerError from "./Pages/ErrorPages/ServerError";
 import { useState, useEffect } from "react"; 
 import Offline from "./Pages/ErrorPages/Offline";
 import Calculator from "./Pages/Calculator/Calculator";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyPortfolio from "./MyPortfolio";
 import MyProperties from "./MyProperties";
 import EnquiredProperties from "./EnquiredProperties";
@@ -17,6 +17,13 @@ const Broker = () => {
     { label: "Conversion Rate", value: "34%", color: "#EE2529" },
     { label: "Active Listings", value: "4", color: "#EE2529" },
   ];
+
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
   return (
     <div

@@ -1,5 +1,5 @@
 // ListProperty.js
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlinePercentage } from "react-icons/ai";
 import { BsBuilding } from "react-icons/bs";
@@ -20,6 +20,13 @@ const ListProperty = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const navigate = useNavigate();
+
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
   
   // Store form refs for each step
   const formRefs = useRef({});

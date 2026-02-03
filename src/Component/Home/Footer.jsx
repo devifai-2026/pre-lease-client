@@ -5,9 +5,17 @@ import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import fb from "../../assets/Footer/facebook.svg"
 import li from "../../assets/Footer/linkedin.svg"
 import yt from "../../assets/Footer/yt.svg"
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Footer = () => {
     const [isErrorPagesOpen, setIsErrorPagesOpen] = useState(false);
+    const navigate = useNavigate(); // Initialize useNavigate
+
+    // Function to handle navigation
+    const handleNavigate = (path) => {
+        navigate(path);
+        window.scrollTo(0, 0); // Scroll to top on navigation
+    };
 
     return (
         <div className="footer bg-black text-white mt-16">
@@ -20,7 +28,8 @@ const Footer = () => {
                         <img 
                             src={logo} 
                             alt="Prelease grid logo" 
-                            className="h-12 md:h-16 lg:h-24 w-auto mb-4"
+                            className="h-12 md:h-16 lg:h-24 w-auto mb-4 cursor-pointer"
+                            onClick={() => handleNavigate("/")} // Navigate to home on logo click
                         />
                     </div>
                     
@@ -28,9 +37,30 @@ const Footer = () => {
                     <div className="links-column md:mt-0 lg:mt-0 font-montserrat">
                         <h3 className="text-white font-semibold text-lg mb-4">Quick Links</h3>
                         <ul className="space-y-2">
-                            <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Explore Properties</a></li>
-                            <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Calculators</a></li>
-                            <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Explore Brokers</a></li>
+                            <li>
+                                <button 
+                                    onClick={() => handleNavigate("/explore-properties")}
+                                    className="text-gray-400 hover:text-white transition-colors text-left w-full"
+                                >
+                                    Explore Properties
+                                </button>
+                            </li>
+                            <li>
+                                <button 
+                                    onClick={() => handleNavigate("/calculators")}
+                                    className="text-gray-400 hover:text-white transition-colors text-left w-full"
+                                >
+                                    Calculators
+                                </button>
+                            </li>
+                            <li>
+                                <button 
+                                    onClick={() => handleNavigate("/explore-brokers")}
+                                    className="text-gray-400 hover:text-white transition-colors text-left w-full"
+                                >
+                                    Explore Brokers
+                                </button>
+                            </li>
                         </ul>
                     </div>
                     
@@ -40,7 +70,14 @@ const Footer = () => {
                         <ul className="space-y-2">
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blogs</a></li>
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">How it Works</a></li>
-                            <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                            <li>
+                                <button 
+                                    onClick={() => handleNavigate("/contact-us")}
+                                    className="text-gray-400 hover:text-white transition-colors text-left w-full"
+                                >
+                                    Contact Us
+                                </button>
+                            </li>
                         </ul>
                     </div>
                     
@@ -75,37 +112,23 @@ const Footer = () => {
                                         <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-10 overflow-hidden ">
                                             <ul className="py-1">
                                                 <li>
-                                                    <a 
-                                                        href="#" 
-                                                        className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                                    <button 
+                                                        onClick={() => handleNavigate("/404")}
+                                                        className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors w-full text-left"
                                                     >
                                                         404 Page
-                                                    </a>
+                                                    </button>
                                                 </li>
                                                 <li>
-                                                    <a 
-                                                        href="#" 
-                                                        className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors"
+                                                    <button 
+                                                        onClick={() => handleNavigate("/server-error")}
+                                                        className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors w-full text-left"
                                                     >
                                                         500 Page
-                                                    </a>
+                                                    </button>
                                                 </li>
-                                                <li>
-                                                    <a 
-                                                        href="#" 
-                                                        className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors"
-                                                    >
-                                                        Maintenance Page
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a 
-                                                        href="#" 
-                                                        className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors"
-                                                    >
-                                                        Coming Soon
-                                                    </a>
-                                                </li>
+                                                <li><a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors">Maintenance Page</a></li>
+                                                <li><a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 transition-colors">Coming Soon</a></li>
                                             </ul>
                                         </div>
                                     )}
@@ -125,9 +148,8 @@ const Footer = () => {
                     
                     {/* Social Icons Column - Mobile only */}
                     <div className="social-column md:hidden my-auto">
-                       
-                        <div className="social-links flex  space-x-4">
-                           <FaFacebook  className="w-6 h-6 hover:text-white text-white cursor-pointer hover:scale-110 transition-all duration-300" src={fb} alt="Facebook" />
+                        <div className="social-links flex space-x-4">
+                           <FaFacebook className="w-6 h-6 hover:text-white text-white cursor-pointer hover:scale-110 transition-all duration-300" />
                            <img className="w-6 h-6 hover:text-white text-gray-500 cursor-pointer hover:scale-110 transition-all duration-300" src={li} alt="LinkedIn" />
                            <img className="w-6 h-6 hover:text-white text-gray-500 cursor-pointer hover:scale-110 transition-all duration-300" src={yt} alt="YouTube" />
                         </div>

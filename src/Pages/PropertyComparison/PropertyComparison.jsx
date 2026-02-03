@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { FaDownload, FaShareAlt } from "react-icons/fa";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -14,6 +14,12 @@ import share from "../../assets/propertyDetails/share.svg";
 import cardImg from "../../assets/FeaturedProperties/cardImg.png";
 
 const PropertyComparison = () => {
+    useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
   const reportRef = useRef(null);
 
 const handleDownload = async () => {

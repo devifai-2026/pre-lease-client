@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineMail } from "react-icons/md";
 import { FaMobileAlt } from "react-icons/fa";
 import arrow from "../../../../../../assets/Dashboard/arrow.png";
@@ -19,6 +19,13 @@ const Owner = () => {
     { label: "Properties Owned", value: "4", color: "#EE2529" },
     { label: "Average Occupancy", value: "90%", color: "#EE2529" },
   ];
+
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
   return (
     <div
