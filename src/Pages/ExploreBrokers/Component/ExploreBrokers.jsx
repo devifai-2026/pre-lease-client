@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import img from "../../../assets/ExploreBrokers/cardImg.png";
 import { CiLocationOn } from "react-icons/ci";
@@ -13,6 +13,13 @@ const ExploreBrokers = () => {
   const handleContactBroker = (brokerId) => {
     navigate(`/contact-brokers/${brokerId}`);
   };
+
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
   return (
     <div className="max-w-[95%] mx-auto mt-3 font-montserrat ">

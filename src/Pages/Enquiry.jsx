@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // Added useNavigate
 import logo from "../assets/Navbar/Preleasegrid logo 1.png";
 
@@ -15,6 +15,12 @@ const Enquiry = () => {
         privacyAccepted: false
     });
     const [otpSent, setOtpSent] = useState(false);
+    useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
     // Sample property data - replace with actual data from your state/API
     const propertyData = {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Banner from './Banner';
 
 import FeaturedProperties from './FeaturedProperties';
@@ -16,6 +16,12 @@ const Home = () => {
     const handleShowProperties = () => {
         setShowOpportunities(false);
     };
+    useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
     return (
         <div>

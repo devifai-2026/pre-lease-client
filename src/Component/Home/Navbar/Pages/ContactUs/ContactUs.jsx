@@ -2,8 +2,15 @@ import img from "../../../../../assets/ContactUs/img.png";
 import ContactCards from "./ContactCards";
 import ContactForm from "./ContactForm";
 import squarebg from "../../../../../assets/propertyDetails/squaresbg.png"
+import { useEffect } from "react";
 
 const ContactUs = () => {
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
   return (
     <div className="max-w-[90%] lg:max-w-[85%] mx-auto font-montserrat">
       {/* Header Section with squarebg background */}

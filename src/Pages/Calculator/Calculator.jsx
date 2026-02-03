@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import bannerImg from "../../assets/Calculator/bannerImg.png";
 import { FaArrowTrendUp, FaCalculator } from "react-icons/fa6";
 import { ImCalculator } from "react-icons/im";
@@ -8,6 +8,12 @@ import squarebg from "../../assets/propertyDetails/squaresbg.png"
 
 const Calculator = () => {
   const [activeSection, setActiveSection] = useState("roi");
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
   return (
     <div className="font-montserrat">

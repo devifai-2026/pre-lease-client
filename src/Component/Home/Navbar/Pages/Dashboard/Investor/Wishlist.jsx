@@ -163,6 +163,7 @@ const Wishlist = () => {
     }));
   };
 
+  // Handle compare button click - UPDATED: Max 3 properties
   const handleCompareClick = (propertyId, propertyTitle) => {
     setSelectedProperties(prev => {
       const isAlreadySelected = prev.some(p => p.id === propertyId);
@@ -170,7 +171,7 @@ const Wishlist = () => {
       if (isAlreadySelected) {
         return prev.filter(p => p.id !== propertyId);
       } else {
-        if (prev.length < 4) {
+        if (prev.length < 3) { // CHANGED FROM 4
           const property = wishlistData.find(p => p.id === propertyId);
           return [...prev, { 
             id: propertyId, 
@@ -178,7 +179,7 @@ const Wishlist = () => {
             location: property?.location || "Mumbai, Mundhva"
           }];
         } else {
-          alert("You can compare up to 4 properties at a time.");
+          alert("You can compare up to 3 properties at a time."); // UPDATED MESSAGE
           return prev;
         }
       }
@@ -210,7 +211,7 @@ const Wishlist = () => {
 
   return (
     <div className="font-montserrat">
-      {/* Sticky Compare Banner - Same as FeaturedProperties and MyPortfolio */}
+      {/* Sticky Compare Banner - Updated for max 3 properties */}
       {selectedProperties.length > 0 && (
         <div className="sticky top-20 z-40 bg-white shadow-lg border-b border-gray-200 mb-6">
           <div className="mx-auto font-montserrat max-w-[90%]">
@@ -221,8 +222,9 @@ const Wishlist = () => {
                   Compare Properties
                 </h2>
                 <span className="text-gray-700 font-bold text-base">|</span>
+                {/* UPDATED: Changed from 4 to 3 */}
                 <span className="text-sm text-[#262626]"> 
-                  {selectedProperties.length} of 4 properties added
+                  {selectedProperties.length} of 3 properties added
                 </span>
                 {/* Show warning message only when exactly 1 property is selected */}
                 {selectedProperties.length === 1 && (
@@ -240,48 +242,59 @@ const Wishlist = () => {
               </button>
             </div>
 
-            {/* Selected Properties Grid - Cards and Compare Button in same row */}
+            {/* Selected Properties Grid - Updated for max 3 properties */}
             <div className="py-3">
-              <div className="flex items-center gap-4">
-                {/* Selected Property Cards */}
-                {selectedProperties.map((property) => (
-                  <div 
-                    key={property.id}
-                    className="flex items-center justify-between p-2 bg-white rounded-xl px-3 shadow-md flex-1 min-h-[70px] relative"
-                  >
-                    <div className="grid grid-cols-2 gap-3 w-full">
-                      <div className="w-20 h-12 overflow-hidden flex-shrink-0">
-                        <img src={modalImg} alt={property.title} className="w-full h-full object-cover" />
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+                {/* Selected Property Cards Container - Now shows 3 max */}
+                <div className="flex-1 w-full">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {selectedProperties.map((property) => (
+                      <div 
+                        key={property.id}
+                        className="flex items-center justify-between p-2 bg-white rounded-xl px-3 shadow-md min-h-[70px] relative"
+                      >
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-20 h-12 overflow-hidden flex-shrink-0">
+                            <img src={modalImg} alt={property.title} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0 space-y-1 flex-1">
+                            <p className="font-normal text-lg text-[#262626] truncate">{property.title}</p>
+                            <p className="text-sm text-[#262626] truncate flex items-center">
+                              <CiLocationOn className="text-[#EE2529]"/>
+                              {property.location}
+                            </p>
+                          </div>
+                        </div>
+                        {/* Cross button for individual card */}
+                        <button 
+                          onClick={() => removePropertyFromCompare(property.id)}
+                          className="absolute top-1 right-2 bg-slate-600 rounded-full p-1 hover:shadow-lg"
+                        >
+                          <FaTimes className="text-gray-400 hover:text-[#EE2529] w-2 h-2" />
+                        </button>
                       </div>
-                      <div className="min-w-0 space-y-1 flex-1">
-                        <p className="font-normal text-lg text-[#262626] truncate">{property.title}</p>
-                        <p className="text-sm text-[#262626] truncate flex items-center">
-                          <CiLocationOn className="text-[#EE2529]"/>
-                          {property.location}
-                        </p>
+                    ))}
+                    
+                    {/* Empty Boxes with dashed border - Only show up to 3 total */}
+                    {Array.from({ length: 3 - selectedProperties.length }).map((_, index) => (
+                      <div 
+                        key={`empty-${index}`} 
+                        className="border-2 border-dashed border-gray-300 rounded-lg min-h-[70px] flex items-center justify-center"
+                      >
+                        <span className="text-gray-400 text-sm">
+                          Add Property {selectedProperties.length + index + 1}
+                        </span>
                       </div>
-                    </div>
-                    {/* Cross button for individual card */}
-                    <button 
-                      onClick={() => removePropertyFromCompare(property.id)}
-                      className="absolute top-1 right-2 bg-slate-600 rounded-full p-1 hover:shadow-lg"
-                    >
-                      <FaTimes className="text-gray-400 hover:text-[#EE2529] w-2 h-2" />
-                    </button>
+                    ))}
                   </div>
-                ))}
+                </div>
                 
-                {/* Empty Boxes with dashed border */}
-                {Array.from({ length: 3 - selectedProperties.length }).map((_, index) => (
-                  <div key={`empty-${index}`} className="flex-1 border-2 border-dashed border-gray-300 rounded-lg min-h-[70px]"></div>
-                ))}
-                
-                {/* Compare Button - Positioned in the same row */}
-                <div className="flex-shrink-0">
+                {/* Compare Button */}
+                <div className="lg:flex-shrink-0 w-full lg:w-auto">
                   <button 
                     onClick={navigateToComparison}
                     disabled={selectedProperties.length < 2}
-                    className={`px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
+                    className={`w-full lg:w-auto px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
                       selectedProperties.length >= 2 
                         ? 'bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90 font-semibold' 
                         : 'bg-gray-400 cursor-not-allowed font-semibold'

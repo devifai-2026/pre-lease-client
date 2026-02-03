@@ -199,7 +199,7 @@ const MyPortfolio = () => {
     // Add your logic here
   };
 
-  // Handle compare button click
+  // Handle compare button click - UPDATED: Max 3 properties
   const handleCompareClick = (propertyId, propertyTitle) => {
     setSelectedProperties(prev => {
       // Check if property is already selected
@@ -209,8 +209,8 @@ const MyPortfolio = () => {
         // Remove from selection
         return prev.filter(p => p.id !== propertyId);
       } else {
-        // Add to selection (limit to 4 properties for comparison)
-        if (prev.length < 4) {
+        // Add to selection (limit to 3 properties for comparison)
+        if (prev.length < 3) { // Changed from 4 to 3
           const property = propertyCards.find(p => p.id === propertyId);
           return [...prev, { 
             id: propertyId, 
@@ -218,7 +218,8 @@ const MyPortfolio = () => {
             location: property?.location || "Pune, Mundhva"
           }];
         } else {
-          alert("You can compare up to 4 properties at a time.");
+          // Updated message
+          alert("You can compare up to 3 properties at a time.");
           return prev;
         }
       }
@@ -244,7 +245,7 @@ const MyPortfolio = () => {
 
   return (
     <div className="font-montserrat">
-      {/* Sticky Compare Banner - Same as other components */}
+      {/* Sticky Compare Banner - UPDATED for max 3 properties */}
       {selectedProperties.length > 0 && (
         <div className="sticky top-20 z-40 bg-white shadow-lg border-b border-gray-200 mb-6">
           <div className="mx-auto font-montserrat max-w-[90%]">
@@ -256,7 +257,7 @@ const MyPortfolio = () => {
                 </h2>
                 <span className="text-gray-700 font-bold text-base">|</span>
                 <span className="text-sm text-[#262626]"> 
-                  {selectedProperties.length} of 4 properties added
+                  {selectedProperties.length} of 3 properties added {/* Changed from 4 to 3 */}
                 </span>
                 {/* Show warning message only when exactly 1 property is selected */}
                 {selectedProperties.length === 1 && (
@@ -274,48 +275,59 @@ const MyPortfolio = () => {
               </button>
             </div>
 
-            {/* Selected Properties Grid - Cards and Compare Button in same row */}
+            {/* Selected Properties Grid - Updated layout for max 3 properties */}
             <div className="py-3">
-              <div className="flex items-center gap-4">
-                {/* Selected Property Cards */}
-                {selectedProperties.map((property) => (
-                  <div 
-                    key={property.id}
-                    className="grid grid-cols-2 justify-between p-2 bg-white rounded-xl px-3 shadow-md flex-1 min-h-[70px] relative"
-                  >
-                    <div className="flex items-center gap-3 w-full">
-                      <div className="w-20 h-12 overflow-hidden flex-shrink-0">
-                        <img src={modalImg} alt={property.title} className="w-full h-full object-cover" />
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+                {/* Selected Property Cards Container */}
+                <div className="flex-1 w-full">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {selectedProperties.map((property) => (
+                      <div 
+                        key={property.id}
+                        className="flex items-center justify-between p-2 bg-white rounded-xl px-3 shadow-md min-h-[70px] relative"
+                      >
+                        <div className="flex items-center gap-3 w-full">
+                          <div className="w-20 h-12 overflow-hidden flex-shrink-0">
+                            <img src={modalImg} alt={property.title} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0 space-y-1 flex-1">
+                            <p className="font-normal text-lg text-[#262626] truncate">{property.title}</p>
+                            <p className="text-sm text-[#262626] truncate flex items-center">
+                              <CiLocationOn className="text-[#EE2529]"/>
+                              {property.location}
+                            </p>
+                          </div>
+                        </div>
+                        {/* Cross button for individual card */}
+                        <button 
+                          onClick={() => removePropertyFromCompare(property.id)}
+                          className="absolute top-1 right-2 bg-slate-600 rounded-full p-1 hover:shadow-lg"
+                        >
+                          <FaTimes className="text-gray-400 hover:text-[#EE2529] w-2 h-2" />
+                        </button>
                       </div>
-                      <div className="min-w-0 space-y-1 flex-1">
-                        <p className="font-normal text-lg text-[#262626] truncate">{property.title}</p>
-                        <p className="text-sm text-[#262626] truncate flex items-center">
-                          <CiLocationOn className="text-[#EE2529]"/>
-                          {property.location}
-                        </p>
+                    ))}
+                    
+                    {/* Empty Boxes with dashed border - Only show up to 3 total */}
+                    {Array.from({ length: 3 - selectedProperties.length }).map((_, index) => (
+                      <div 
+                        key={`empty-${index}`} 
+                        className="border-2 border-dashed border-gray-300 rounded-lg min-h-[70px] flex items-center justify-center"
+                      >
+                        <span className="text-gray-400 text-sm">
+                          Add Property {selectedProperties.length + index + 1}
+                        </span>
                       </div>
-                    </div>
-                    {/* Cross button for individual card */}
-                    <button 
-                      onClick={() => removePropertyFromCompare(property.id)}
-                      className="absolute top-1 right-2 bg-slate-600 rounded-full p-1 hover:shadow-lg"
-                    >
-                      <FaTimes className="text-gray-400 hover:text-[#EE2529] w-2 h-2" />
-                    </button>
+                    ))}
                   </div>
-                ))}
+                </div>
                 
-                {/* Empty Boxes with dashed border */}
-                {Array.from({ length: 3 - selectedProperties.length }).map((_, index) => (
-                  <div key={`empty-${index}`} className="flex-1 border-2 border-dashed border-gray-300 rounded-lg min-h-[70px]"></div>
-                ))}
-                
-                {/* Compare Button - Positioned in the same row */}
-                <div className="flex-shrink-0">
+                {/* Compare Button - Fixed positioning */}
+                <div className="lg:flex-shrink-0 w-full lg:w-auto">
                   <button 
                     onClick={navigateToComparison}
                     disabled={selectedProperties.length < 2}
-                    className={`px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
+                    className={`w-full lg:w-auto px-6 py-3 rounded text-white text-sm font-semibold whitespace-nowrap ${
                       selectedProperties.length >= 2 
                         ? 'bg-gradient-to-r from-[#EE2529] to-[#C73834] hover:opacity-90 font-semibold' 
                         : 'bg-gray-400 cursor-not-allowed font-semibold'
@@ -365,47 +377,47 @@ const MyPortfolio = () => {
       </div>
 
       {/* Active Deals Pipeline */}
-      <div className=" p-3 mb-6 shadow-lg rounded-lg">
+      <div className="p-3 mb-6 shadow-lg rounded-lg">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-base sm:text-lg font-semibold text-[#262626]">Active Deals Pipeline</h3>
           <span className="text-sm text-[#F7C952] font-semibold bg-[#FFF3CA] rounded-3xl py-1 px-2 ">1 Pending</span>
         </div>
-       <div className="overflow-x-auto ">
-  <table className="w-full text-xs sm:text-sm">
-    <thead>
-      <tr className="border-b border-[#E0E0E0]">
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Property</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Location</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Cost</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Status</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {activeDealsPipeline.map((deal) => (
-        <tr key={deal.property} className="border-b border-[#E0E0E0]">
-          <td className="py-3 px-2 text-[#262626] text-center">{deal.property}</td>
-          <td className="py-3 px-2 text-[#767676] text-center">{deal.location}</td>
-          <td className="py-3 px-2 text-[#262626] text-center">{deal.cost}</td>
-          <td className="py-3 px-2 text-center">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-              deal.status === 'Completed' 
-                ? 'bg-[#00BCD4] bg-opacity-20 text-[#00BCD4]' 
-                : 'bg-[#FFF3CA] text-[#F7C952]'
-            }`}>
-              {deal.status}
-            </span>
-          </td>
-          <td className="py-3 px-2 text-center">
-            <button className="text-[#767676] border border-[#767676] px-5 py-2 rounded text-xs hover:bg-gray-50">
-              Details
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+        <div className="overflow-x-auto ">
+          <table className="w-full text-xs sm:text-sm">
+            <thead>
+              <tr className="border-b border-[#E0E0E0]">
+                <th className="text-center py-3 px-2 font-semibold text-[#262626]">Property</th>
+                <th className="text-center py-3 px-2 font-semibold text-[#262626]">Location</th>
+                <th className="text-center py-3 px-2 font-semibold text-[#262626]">Cost</th>
+                <th className="text-center py-3 px-2 font-semibold text-[#262626]">Status</th>
+                <th className="text-center py-3 px-2 font-semibold text-[#262626]">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeDealsPipeline.map((deal) => (
+                <tr key={deal.property} className="border-b border-[#E0E0E0]">
+                  <td className="py-3 px-2 text-[#262626] text-center">{deal.property}</td>
+                  <td className="py-3 px-2 text-[#767676] text-center">{deal.location}</td>
+                  <td className="py-3 px-2 text-[#262626] text-center">{deal.cost}</td>
+                  <td className="py-3 px-2 text-center">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      deal.status === 'Completed' 
+                        ? 'bg-[#00BCD4] bg-opacity-20 text-[#00BCD4]' 
+                        : 'bg-[#FFF3CA] text-[#F7C952]'
+                    }`}>
+                      {deal.status}
+                    </span>
+                  </td>
+                  <td className="py-3 px-2 text-center">
+                    <button className="text-[#767676] border border-[#767676] px-5 py-2 rounded text-xs hover:bg-gray-50">
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Properties Owned Section */}
@@ -519,10 +531,11 @@ const MyPortfolio = () => {
                     </div>
                   </div>
 
-                  {/* Property Image Section with swipe functionality */}
+                  {/* Property Image Section with swipe functionality - Fixed height */}
                   <div className="relative">
                     <div 
                       className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+                      style={{ height: '280px' }} // Fixed height for all cards
                       onMouseDown={(e) => handleMouseDown(property.id, e)}
                       onMouseMove={(e) => handleMouseMove(property.id, e)}
                       onMouseUp={() => handleMouseUp(property.id)}
@@ -537,7 +550,7 @@ const MyPortfolio = () => {
                       onTouchEnd={() => handleTouchEnd(property.id)}
                     >
                       <img 
-                        className="w-full h-72 md:h-60 lg:h-72 object-cover transition-transform duration-300"
+                        className="w-full h-full object-cover transition-transform duration-300"
                         src={property.images[currentImageIndex[property.id] || 0]} 
                         alt={property.title}
                       />
@@ -547,7 +560,7 @@ const MyPortfolio = () => {
                       
                       {/* Slider Dots with auto-slide indicator */}
                       <div 
-                        className="absolute bottom-[72px] md:bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
+                        className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5"
                       >
                         {property.images.map((_, dotIndex) => (
                           <button
@@ -662,56 +675,56 @@ const MyPortfolio = () => {
 
         {/* List View */}
         {selectedView === 'list' && (
-         <div className="overflow-x-auto mb-8">
-  <table className="w-full text-xs sm:text-sm">
-    <thead>
-      <tr className="border-b border-[#E0E0E0]">
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Property</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Location</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Client Type</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Cost</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Annual Rent</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">ROI</th>
-        <th className="text-center py-3 px-2 font-semibold text-[#262626]">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {propertyCards.map((property) => {
-        const isSelected = selectedProperties.some(p => p.id === property.id);
-        return (
-          <tr key={property.id} className="border-b border-[#E0E0E0] text-center">
-            <td className="py-3 px-2 text-[#262626] text-center">{property.title}</td>
-            <td className="py-3 px-2 text-[#767676] text-center">{property.location}</td>
-            <td className="py-3 px-2 text-[#767676] text-center">{property.clientType}</td>
-            <td className="py-3 px-2 text-[#262626] text-center">{property.cost}</td>
-            <td className="py-3 px-2 text-[#262626] text-center">{property.annualRent}</td>
-            <td className="py-3 px-2 text-[#EE2529] font-bold text-center">{property.roi}</td>
-            <td className="py-3 px-2 text-center">
-              <div className="flex gap-2 justify-center">
-                <button
-                  onClick={() => handleViewClick(property.id)}
-                  className="border border-[#767676] text-[#767676] rounded px-3 py-1 text-xs hover:bg-gray-50 font-semibold"
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => handleCompareClick(property.id, property.title)}
-                  className={`border rounded px-3 py-1 text-xs font-semibold ${
-                    isSelected
-                      ? "bg-[#EE2529] text-white border-[#EE2529]"
-                      : "bg-white text-[#EE2529] border-[#EE2529] hover:bg-gray-50"
-                  }`}
-                >
-                  {isSelected ? "Remove" : "Compare"}
-                </button>
-              </div>
-            </td>
-          </tr>
-        );
-      })}
-    </tbody>
-  </table>
-</div>
+          <div className="overflow-x-auto mb-8">
+            <table className="w-full text-xs sm:text-sm">
+              <thead>
+                <tr className="border-b border-[#E0E0E0]">
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">Property</th>
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">Location</th>
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">Client Type</th>
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">Cost</th>
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">Annual Rent</th>
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">ROI</th>
+                  <th className="text-center py-3 px-2 font-semibold text-[#262626]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {propertyCards.map((property) => {
+                  const isSelected = selectedProperties.some(p => p.id === property.id);
+                  return (
+                    <tr key={property.id} className="border-b border-[#E0E0E0] text-center">
+                      <td className="py-3 px-2 text-[#262626] text-center">{property.title}</td>
+                      <td className="py-3 px-2 text-[#767676] text-center">{property.location}</td>
+                      <td className="py-3 px-2 text-[#767676] text-center">{property.clientType}</td>
+                      <td className="py-3 px-2 text-[#262626] text-center">{property.cost}</td>
+                      <td className="py-3 px-2 text-[#262626] text-center">{property.annualRent}</td>
+                      <td className="py-3 px-2 text-[#EE2529] font-bold text-center">{property.roi}</td>
+                      <td className="py-3 px-2 text-center">
+                        <div className="flex gap-2 justify-center">
+                          <button
+                            onClick={() => handleViewClick(property.id)}
+                            className="border border-[#767676] text-[#767676] rounded px-3 py-1 text-xs hover:bg-gray-50 font-semibold"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleCompareClick(property.id, property.title)}
+                            className={`border rounded px-3 py-1 text-xs font-semibold ${
+                              isSelected
+                                ? "bg-[#EE2529] text-white border-[#EE2529]"
+                                : "bg-white text-[#EE2529] border-[#EE2529] hover:bg-gray-50"
+                            }`}
+                          >
+                            {isSelected ? "Remove" : "Compare"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

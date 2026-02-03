@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import arrow from "../../../../../../assets/Dashboard/arrow.png";
 import img from "../../../../../../assets/Dashboard/img.jpg";
 import { MdOutlineMail } from "react-icons/md";
@@ -17,6 +17,13 @@ const Investor = () => {
     { label: 'Total Net Cash Flow', inr: '(INR)', value: '₹2,90,000', color: '#EE2529' },
     { label: 'INVESTED PROPERTIES', inr: '', value: '4', color: '#767676' }
   ];
+
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
 
   return (
     <div 
@@ -156,65 +163,66 @@ const Investor = () => {
         
         {/* right side */}
         <div className="lg:col-span-8 mt-6 lg:mt-0">
-          {/* Tabs Section - Updated with full width active tab */}
-          <div className="shadow-md rounded-lg p-3 flex items-center justify-between sm:justify-around space-x-1 sm:space-x-0 relative">
-            {/* Background for active tab - Full width */}
-            <div 
-              className={`absolute top-0 bottom-0 transition-all duration-300 ease-in-out bg-white shadow-md rounded-lg ${
-                activeTab === "portfolio" 
-                  ? "left-0 w-1/3" 
-                  : activeTab === "enquiries" 
-                    ? "left-1/3 w-1/3" 
-                    : "left-2/3 w-1/3"
-              }`}
-            ></div>
-            
+          {/* Tabs Section - Updated to match Owner component (just bottom border) */}
+          <div className="shadow-md rounded-lg p-3 flex items-center justify-between sm:justify-around space-x-1 sm:space-x-0">
             {/* My Portfolio Tab */}
             <div
-              className="cursor-pointer relative flex-1 sm:flex-none text-center z-10 py-2"
+              className="cursor-pointer relative flex-1 sm:flex-none text-center"
               onClick={() => setActiveTab("portfolio")}
             >
               <p
-                className={`text-sm sm:text-base md:text-lg font-medium ${
+                className={`text-sm sm:text-base md:text-lg ${
                   activeTab === "portfolio"
-                    ? "text-[#EE2529]"
-                    : "text-[#767676]"
+                    ? "text-[#EE2529] font-bold"
+                    : "text-[#767676] font-normal"
                 }`}
               >
                 My Portfolio
               </p>
+              {/* Bottom border for active tab */}
+              {activeTab === "portfolio" && (
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
+              )}
             </div>
 
             {/* Enquiries Tab */}
             <div
-              className="cursor-pointer relative flex-1 sm:flex-none text-center z-10 py-2"
+              className="cursor-pointer relative flex-1 sm:flex-none text-center"
               onClick={() => setActiveTab("enquiries")}
             >
               <p
-                className={`text-sm sm:text-base md:text-lg font-medium ${
+                className={`text-sm sm:text-base md:text-lg ${
                   activeTab === "enquiries"
-                    ? "text-[#EE2529]"
-                    : "text-[#767676]"
+                    ? "text-[#EE2529] font-bold"
+                    : "text-[#767676] font-normal"
                 }`}
               >
                 Enquiries
               </p>
+              {/* Bottom border for active tab */}
+              {activeTab === "enquiries" && (
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
+              )}
             </div>
 
             {/* Wishlist Tab */}
             <div
-              className="cursor-pointer relative flex-1 sm:flex-none text-center z-10 py-2"
+              className="cursor-pointer relative flex-1 sm:flex-none text-center"
               onClick={() => setActiveTab("wishlist")}
             >
               <p
-                className={`text-sm sm:text-base md:text-lg font-medium ${
+                className={`text-sm sm:text-base md:text-lg ${
                   activeTab === "wishlist"
-                    ? "text-[#EE2529]"
-                    : "text-[#767676]"
+                    ? "text-[#EE2529] font-bold"
+                    : "text-[#767676] font-normal"
                 }`}
               >
                 Wishlist
               </p>
+              {/* Bottom border for active tab */}
+              {activeTab === "wishlist" && (
+                <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 md:w-48 lg:w-56 h-[3px] bg-[#EE2529]"></div>
+              )}
             </div>
           </div>
           

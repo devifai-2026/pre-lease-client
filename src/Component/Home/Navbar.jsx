@@ -380,7 +380,7 @@ const Navbar = () => {
       {/* Sticky Navbar Container */}
       <div className={`sticky top-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/90 backdrop-blur-lg shadow-lg' 
+          ? ' backdrop-blur-lg ' 
           : 'bg-gradient-to-r from-white via-white/70 to-transparent backdrop-blur-sm'
       }`}>
         <div className={`flex justify-between items-center rounded-full px-6 py-3 max-w-[95%] mx-auto mt-4 font-montserrat transition-all duration-300 ${

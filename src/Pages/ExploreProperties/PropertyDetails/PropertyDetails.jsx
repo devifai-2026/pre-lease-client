@@ -34,6 +34,13 @@ const PropertyDetails = () => {
     "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500&h=400&fit=crop"
   ];
 
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Use "auto" for instant scroll
+  });
+}, []);
+
   const handleGoBack = () => {
     navigate(-1);
   };
