@@ -10,10 +10,17 @@ import "aos/dist/aos.css";
 
 const Opportunities = () => {
   const navigate = useNavigate();
-  const [selectedCards, setSelectedCards] = useState([0]); // Cities selected by default
-  const [selectedCity, setSelectedCity] = useState(0);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [completionPercentage, setCompletionPercentage] = useState(18);
+  const [activeStep, setActiveStep] = useState(0);
+  
+  // State for selections in each step (storing indices)
+  const [selections, setSelections] = useState({
+    cities: 0, // Default to first index (Pune)
+    annualReturns: null,
+    propertyType: null,
+    budget: null,
+    tenantType: null,
+    tenureLeft: null
+  });
 
   useEffect(() => {
     AOS.init({
@@ -23,101 +30,88 @@ const Opportunities = () => {
     AOS.refresh();
   }, []);
 
-  // Update step and percentage when cards are selected
-  useEffect(() => {
-    // Step is the number of selected cards (max 6)
-    const step = Math.min(selectedCards.length, 6);
-    setCurrentStep(step);
-    
-    // Calculate percentage (18% for each step, max 100%)
-    const percentage = Math.min(step * 18, 100);
-    setCompletionPercentage(percentage);
-  }, [selectedCards]);
-
   const cards = [
     {
       id: 0,
       icon: <FaRegBuilding className="text-3xl" />,
       label: "Cities",
-      step: 1,
+      key: "cities",
+      question: "What's your City Preference?",
+      subtitle: "Select your City Preference.",
+      options: ["Pune", "Mumbai", "New Delhi", "Gurgaon", "Mumbai", "New Delhi"]
     },
     {
       id: 1,
       icon: <AiOutlinePercentage className="text-3xl" />,
       label: "Annual Returns",
-      step: 2,
+      key: "annualReturns",
+      question: "What ROI are you expecting?",
+      subtitle: "Select your annual returns.",
+      options: ["3-5%", "5-7%", "7-9%", "9%+"]
     },
     {
       id: 2,
       icon: <GoHome className="text-3xl" />,
       label: "Property Type",
-      step: 3,
+      key: "propertyType",
+      question: "What kind of asset class are you looking at?",
+      subtitle: "Select your property type.",
+      options: ["Residential", "Commercial", "Industrial", "Co-working", "Retail", "Others"]
     },
     {
       id: 3,
       icon: <PiCurrencyDollar className="text-3xl" />,
       label: "Budget",
-      step: 4,
+      key: "budget",
+      question: "What is your investment range?",
+      subtitle: "Select your range (in INR). Higher range unlocks premium options.",
+      options: ["0-25L", "25-50L", "51-100L", "100L - 250L", "251-500L", "500L+"]
     },
     {
       id: 4,
       icon: <LuUsersRound className="text-3xl" />,
       label: "Tenant Type",
-      step: 5,
+      key: "tenantType",
+      question: "What is the type of tenant you are looking at?",
+      subtitle: "Select your right tenant type.",
+      options: ["Institutional", "Startup", "MNC", "Nationalized Company", "MSME", "Others"]
     },
     {
       id: 5,
       icon: <LuClock3 className="text-3xl" />,
       label: "Tenure Left",
-      step: 6,
+      key: "tenureLeft",
+      question: "What is the ideal case of the lease end tenure?",
+      subtitle: "Select your right tenure range.",
+      options: ["0-3 months", "3-6 months", "6-12 months", "12 -24 months", "24-60 months", "60+ months"]
     },
   ];
 
-  const cities = [
-    "Pune",
-    "Mumbai",
-    "New Delhi",
-    "Gurgaon",
-    "Mumbai",
-    "New Delhi",
-  ];
-
-  // Handle card selection - allow multiple selections
-  const handleCardClick = (cardId) => {
-    setSelectedCards(prev => {
-      if (prev.includes(cardId)) {
-        // Don't allow deselecting Cities (id: 0)
-        if (cardId === 0) {
-          return prev;
-        }
-        return prev.filter(id => id !== cardId);
-      } else {
-        // Add the new card to selection
-        return [...prev, cardId];
-      }
-    });
+  const handleOptionSelect = (index) => {
+    const currentCard = cards[activeStep];
+    setSelections(prev => ({
+      ...prev,
+      [currentCard.key]: index
+    }));
   };
 
-  // Skip button handler - navigates to explore properties
+  const handleStepClick = (index) => {
+    setActiveStep(index);
+  };
+
   const handleSkipClick = () => {
-    navigate('/explore-properties');
+    if (activeStep < cards.length - 1) {
+      setActiveStep(activeStep + 1);
+    } else {
+      navigate('/explore-properties');
+    }
   };
 
-  // Show Properties button handler - also navigates to explore properties
   const handleShowPropertiesClick = () => {
     navigate('/explore-properties');
   };
 
-  // Get step label based on selected cards
-  const getStepLabel = () => {
-    const selectedCardLabels = selectedCards
-      .map(id => cards.find(card => card.id === id)?.label)
-      .filter(Boolean);
-    
-    if (selectedCardLabels.length === 0) return "Cities";
-    
-    return selectedCardLabels[selectedCardLabels.length - 1];
-  };
+  const completionPercentage = Math.round(((activeStep + 1) / cards.length) * 100);
 
   return (
     <div
@@ -132,24 +126,25 @@ const Opportunities = () => {
         Discover Opportunities Built for You
       </h2>
 
-      {/* Cards Grid - Responsive */}
+      {/* Cards Grid - Restored original design */}
       <div
         className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 md:mt-8 lg:mt-12 hidden lg:grid"
         data-aos="fade-up"
         data-aos-delay="200"
       >
         {cards.map((card, index) => {
-          const isSelected = selectedCards.includes(card.id);
+          const isActive = activeStep === index;
+          // Step is "selected" if it's the active one OR has a user selection (except Cities which counts as selected by default)
+          const isSelected = isActive || (selections[card.key] !== null && card.key !== "cities") || (card.key === "cities" && selections.cities !== null);
+          
           const textColor = isSelected ? "text-[#EE2529]" : "text-gray-600";
-          const borderColor = isSelected
-            ? "border-[#EE2529]"
-            : "border-[#767676]";
+          const borderColor = isSelected ? "border-[#EE2529]" : "border-[#767676]";
 
           return (
             <div
               key={card.id}
               className="flex flex-col cursor-pointer group"
-              onClick={() => handleCardClick(card.id)}
+              onClick={() => handleStepClick(index)}
               data-aos="zoom-in"
               data-aos-delay={300 + index * 50}
             >
@@ -160,153 +155,116 @@ const Opportunities = () => {
                   h-[90px] sm:h-[105px] md:h-[125px] lg:h-[150px] w-full
                   transition-all duration-300
                   ${borderColor}
-                  ${isSelected ? "bg-white" : "bg-white"}
+                  bg-white
                   hover:border-[#EE2529] hover:shadow-xl
                 `}
               >
-                <div
-                  className={`${textColor} transition-colors duration-300 group-hover:text-[#EE2529]`}
-                >
+                <div className={`${textColor} transition-colors duration-300 group-hover:text-[#EE2529]`}>
                   {card.icon}
                 </div>
-                <p
-                  className={`
+                <p className={`
                   text-center mt-1 sm:mt-1.5 md:mt-2 lg:mt-2 
                   ${isSelected ? "font-semibold" : "font-medium"}
                   ${textColor}
                   transition-colors duration-300
                   group-hover:text-[#EE2529] text-sm md:text-base lg:text-lg font-semibold font-montserrat
-                `}
-                >
+                `}>
                   {card.label}
                 </p>
               </div>
 
-              <hr
-                className={`
+              <hr className={`
                 mt-3 md:mt-3 lg:mt-3 border-t-4 
                 ${borderColor}
                 transition-colors duration-300
                 group-hover:border-[#EE2529]
-              `}
-              />
+              `} />
             </div>
           );
         })}
       </div>
 
-      {/* Dynamic Step Section */}
-      <div className="mt-6 md:mt-8" data-aos="fade-up" data-aos-delay="400">
-        <div
-          className="max-w-full md:max-w-[90%] lg:max-w-[90%] mx-auto shadow-xl rounded-xl p-4 sm:p-5 md:p-6 lg:p-8"
-          data-aos="zoom-in"
-          data-aos-delay="500"
-        >
-          <div
-            className="flex items-center justify-between font-montserrat"
-            data-aos="fade-up"
-            data-aos-delay="550"
-          >
-            <p className="bg-[#FFF3CA] px-2 sm:px-2.5 md:px-3 lg:px-3 py-1 sm:py-1.5 md:py-2 lg:py-2 rounded-3xl text-xs">
-              Step {currentStep} of 6
-            </p>
-            <p className="bg-[#FFF3CA] px-2 sm:px-2.5 md:px-3 lg:px-3 py-1 sm:py-1.5 md:py-2 lg:py-2 rounded-3xl text-xs">
+      {/* Mobile Tiles Display */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-6 lg:hidden">
+         {cards.map((card, index) => {
+           const isActive = activeStep === index;
+           const isSelected = isActive || selections[card.key] !== null;
+           const borderColor = isSelected ? "border-[#EE2529]" : "border-gray-200";
+           return (
+             <div 
+              key={card.id} 
+              onClick={() => handleStepClick(index)}
+              className={`p-2 border-b-2 ${borderColor} flex flex-col items-center justify-center text-xs font-semibold ${isSelected ? 'text-[#EE2529]' : 'text-gray-500'}`}
+             >
+               {card.label}
+             </div>
+           )
+         })}
+      </div>
+
+      {/* Dynamic Step Content */}
+      <div className="mt-8 md:mt-10 max-w-[85%] mx-auto" data-aos="fade-up" data-aos-delay="400">
+        <div className="bg-white shadow-2xl rounded-2xl p-6 md:p-10 lg:p-12 relative overflow-hidden ring-1 ring-gray-100">
+          {/* Progress Indicators */}
+          <div className="flex items-center justify-between mb-8">
+            <span className="bg-[#FFF3CA] text-[#000] px-4 py-1.5 rounded-full text-sm font-medium">
+              Step {activeStep + 1} of {cards.length}
+            </span>
+            <span className="bg-[#FFF3CA] text-[#000] px-4 py-1.5 rounded-full text-sm font-medium">
               {completionPercentage}%
+            </span>
+          </div>
+
+          {/* Heading Section */}
+          <div className="text-center mb-10">
+            <h3 className="text-lg md:text-xl lg:text-2xl  text-gray-800 mb-3 text-wrap">
+              {cards[activeStep].question}
+            </h3>
+            <p className="text-gray-500 text-lg">
+              {cards[activeStep].subtitle}
             </p>
           </div>
 
-          <div
-            className="mt-3 sm:mt-3.5 md:mt-4 lg:mt-4 text-center"
-            data-aos="fade-up"
-            data-aos-delay="600"
-          >
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-semibold">
-              {getStepLabel() === "Cities" 
-                ? "What's your City Preference?" 
-                : `Select your ${getStepLabel()}`}
-            </h2>
-            <p className="text-gray-600 mt-1 text-sm sm:text-sm md:text-base lg:text-base">
-              {getStepLabel() === "Cities" 
-                ? "Select your City Preference." 
-                : `Choose your preferred ${getStepLabel()}.`}
-            </p>
+          {/* Options Grid */}
+          <div className={`grid gap-3 md:gap-4 mx-auto ${
+            cards[activeStep].options.length <= 4 ? 'grid-cols-2 max-w-[200px] md:max-w-[280px]' : 'grid-cols-2 lg:grid-cols-3 max-w-[300px] md:max-w-[380px]'
+          }`}>
+            {cards[activeStep].options.map((option, idx) => {
+              const isSelected = selections[cards[activeStep].key] === idx;
+              return (
+                <div
+                  key={idx}
+                  onClick={() => handleOptionSelect(idx)}
+                  className={`
+                    flex items-center justify-center text-center p-2 rounded-xl cursor-pointer transition-all duration-300
+                    aspect-square w-full
+                    bg-gradient-to-b from-[#76767633] to-white border border-gray-200
+                    ${isSelected 
+                      ? "shadow-[0_10px_20px_-8px_rgba(238,37,41,0.2)]" 
+                      : "shadow-[0_4px_12px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_16px_-4px_rgba(0,0,0,0.12)]"
+                    }
+                  `}
+                >
+                  <span className={`text-sm md:text-base   font-bold leading-tight ${isSelected ? "text-[#EE2529]" : "text-[#767676]"} px-1`}>
+                    {option}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-
-          {/* Only show city selection for Cities step */}
-          {getStepLabel() === "Cities" && (
-            <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-3 md:gap-4 lg:gap-4 mt-4 sm:mt-4 md:mt-6 lg:mt-6 max-w-full sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] mx-auto font-montserrat">
-              {cities.map((city, index) => {
-                const isCitySelected = selectedCity === index;
-
-                return (
-                  <div
-                    key={index}
-                    onClick={() => setSelectedCity(index)}
-                    className={`
-                      p-2 sm:p-2.5 md:p-3 lg:p-4 rounded-lg cursor-pointer transition-all duration-300
-                      flex items-center justify-center h-24 md:h-24 lg:h-32 w-full
-                      ${
-                        isCitySelected
-                          ? `
-                          bg-gradient-to-b from-[#FFFFFF] to-[#FFFFFF] 
-                          text-[#EE2529]
-                          border border-gray-200
-                          shadow-[0_12px_8px_-8px_rgba(238,37,41,0.4)]
-                        `
-                          : `
-                          bg-gradient-to-b from-[#F2F2F2] to-[#FFFFFF] 
-                          text-gray-700
-                          border border-gray-200
-                          hover:shadow-[0_8px_6px_-6px_rgba(0,0,0,0.2)]
-                        `
-                      }
-                    `}
-                  >
-                    <span
-                      className={`font-bold ${
-                        isCitySelected ? "text-[#EE2529]" : "text-gray-800"
-                      } text-center text-base text-wrap md:text-base lg:text-lg whitespace-nowrap`}
-                    >
-                      {city}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* For other steps, show a simple message */}
-          {getStepLabel() !== "Cities" && (
-            <div className="mt-8 text-center">
-              <p className="text-gray-600">
-                You've selected: {getStepLabel()}
-              </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Continue selecting other preferences or click "Show Properties" to see results.
-              </p>
-            </div>
-          )}
         </div>
 
-        {/* Buttons */}
-        <div
-          className="flex justify-center gap-2 sm:gap-2 md:gap-2 lg:gap-2 mt-4 sm:mt-4 md:mt-5 lg:mt-5 font-montserrat mb-8 md:mb-12 lg:mb-16"
-          data-aos="fade-up"
-          data-aos-delay="800"
-        >
+        {/* Action Buttons */}
+        <div className="flex justify-center gap-4 mt-8 mb-12 lg:mb-20">
           <button
             onClick={handleSkipClick}
-            className="text-[#767676] border border-[#767676] rounded-md px-3 sm:px-3 md:px-4 lg:px-4 py-1.5 sm:py-1.5 md:py-2 lg:py-2 text-sm sm:text-sm md:text-base lg:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            data-aos="zoom-in-left"
-            data-aos-delay="850"
+            className="min-w-[120px] md:min-w-[140px] border-2 border-gray-300 text-gray-600 rounded-md px-6 py-3 font-semibold transition-all duration-300 hover:bg-gray-50 hover:border-gray-400"
           >
             Skip
           </button>
           <button
             onClick={handleShowPropertiesClick}
-            className="bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white rounded-md px-3 sm:px-3 md:px-4 lg:px-4 py-1.5 sm:py-1.5 md:py-2 lg:py-2 text-sm sm:text-sm md:text-base lg:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            data-aos="zoom-in-right"
-            data-aos-delay="850"
+            className="min-w-[160px] md:min-w-[200px] bg-[#EE2529] text-white rounded-md px-8 py-3 font-semibold shadow-lg shadow-red-200 transition-all duration-300 hover:bg-[#d61e22] hover:scale-[1.02]"
           >
             Show Properties
           </button>

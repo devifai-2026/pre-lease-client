@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { MdOutlineMail } from "react-icons/md";
 import { FaMobileAlt } from "react-icons/fa";
 import arrow from "../../../../../../assets/Dashboard/arrow.png";
@@ -11,6 +12,7 @@ import ph from "../../../../../../assets/Dashboard/mobile.svg";
 import mail from "../../../../../../assets/Dashboard/mail.svg";
 
 const Owner = () => {
+  const { user } = useSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState("portfolio");
 
   // Summary Cards Data for Owner
@@ -54,11 +56,11 @@ const Owner = () => {
               </div>
               <div className="space-y-1">
                 <h2 className="text-[#EE2529] font-bold text-base sm:text-lg">
-                  Rohit Sharma
+                  {user?.name || (user?.firstName ? `${user.firstName} ${user.lastName || ''}` : 'Rohit Sharma')}
                 </h2>
                 <p className="bg-[#FFF3CA] rounded-3xl py-1 px-2 text-[#EE2529] flex items-center justify-center gap-2 text-xs sm:text-sm">
                   <img src={arrow} alt="arrow" className="h-3 w-3" />
-                  Owner
+                  {user?.role || user?.roleName || 'Owner'}
                 </p>
               </div>
             </div>
@@ -95,8 +97,8 @@ const Owner = () => {
                   />
                   <span className="text-[#767676] ">EMAIL</span>
                 </p>
-                <p className="text-sm sm:text-base md:text-lg">
-                  rohit.sharma@example.com
+                <p className="text-sm sm:text-base md:text-lg truncate">
+                  {user?.email || 'rohit.sharma@example.com'}
                 </p>
               </div>
               <div className="space-y-1 sm:space-y-2">
@@ -109,7 +111,7 @@ const Owner = () => {
                   <span className="text-[#767676]">MOBILE NO.</span>
                 </p>
                 <p className="text-sm sm:text-base md:text-lg">
-                  +91.987654-43210
+                  {user?.mobileNumber || '+91.987654-43210'}
                 </p>
               </div>
               <div className="pt-2">

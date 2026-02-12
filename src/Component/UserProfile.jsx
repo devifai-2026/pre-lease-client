@@ -1,10 +1,15 @@
-// components/UserProfile.js
 import React, { useState, useRef, useEffect } from 'react';
 import { FaRegUserCircle, FaSignOutAlt } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout as reduxLogout } from '../redux/slices/authSlice';
 
 const UserProfile = () => {
-  const { user, logout } = useAuth();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  
+  const logout = () => {
+    dispatch(reduxLogout());
+  };
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -43,10 +48,10 @@ const UserProfile = () => {
       >
         <FaRegUserCircle className="text-[#EE2529] w-5 h-5" />
         <span className="hidden sm:inline text-sm font-medium truncate max-w-[100px]">
-          {user.name.split(' ')[0]}
+          {user.name?.split(' ')[0] || user.userId?.slice(-4)}
         </span>
-        <span className={`text-xs px-2 py-0.5 rounded-full ${roleColors[user.role]}`}>
-          {roleLabels[user.role]}
+        <span className={`text-xs px-2 py-0.5 rounded-full ${roleColors[user.role?.toLowerCase()]}`}>
+          {roleLabels[user.role?.toLowerCase()]}
         </span>
       </button>
 
@@ -60,8 +65,8 @@ const UserProfile = () => {
                 {user.name.charAt(0)}
               </div>
               <div>
-                <p className="font-semibold text-gray-800">{user.name}</p>
-                <p className="text-sm text-gray-600">{user.mobile}</p>
+                <p className="font-semibold text-gray-800">{user.name || 'User'}</p>
+                <p className="text-sm text-gray-600">{user.mobile || user.userId?.slice(-8)}</p>
                 <p className="text-xs text-gray-500 capitalize">{user.role}</p>
               </div>
             </div>
@@ -70,7 +75,7 @@ const UserProfile = () => {
           {/* Dashboard Link */}
           <div className="px-2 py-1">
             <a
-              href={`/${user.role}-dashboard`}
+              href={`/${user.role?.toLowerCase()}-dashboard`}
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors"
               onClick={() => setIsProfileOpen(false)}
             >

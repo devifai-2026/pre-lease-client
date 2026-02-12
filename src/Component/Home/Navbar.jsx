@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import logo from "../../assets/Navbar/Preleasegrid logo 1.png";
 import plus from "../../assets/Navbar/plus.png";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -13,25 +14,26 @@ import {
   MdOutlineSpaceDashboard,
 } from "react-icons/md";
 import SignUp from "./auth/SignUp";
-import VerifyContactNumber from "./auth/VerifyNumber";
+import VerifyNumber from "./auth/VerifyNumber";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import whatsapp from "../../assets/Navbar/whatsapp.svg";
 import switchAccounts from "../../assets/Navbar/switchAccounts.svg";
 import notifications from "../../assets/Navbar/notifications.svg";
 import lout from "../../assets/Navbar/logout.svg";
 import wishlist from "../../assets/Navbar/wishlist.svg";
+import { logout as reduxLogout, login as reduxLogin, reset } from "../../redux/slices/authSlice";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currentPath = location.pathname;
   const dropdownRef = useRef(null);
 
-  // State for user authentication
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  // Redux state
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   // State for UI
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,32 +47,9 @@ const Navbar = () => {
   const [mobileToVerify, setMobileToVerify] = useState("");
   const [signInMobileNumber, setSignInMobileNumber] = useState("");
   const [signInError, setSignInError] = useState("");
+  const [signupData, setSignupData] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Dummy users for login
-  const DUMMY_USERS = {
-    investor: {
-      id: 1,
-      mobile: "9999999991",
-      name: "John Investor",
-      role: "investor",
-      email: "investor@example.com",
-    },
-    broker: {
-      id: 2,
-      mobile: "9999999992",
-      name: "Jane Broker",
-      role: "broker",
-      email: "broker@example.com",
-    },
-    owner: {
-      id: 3,
-      mobile: "9999999993",
-      name: "Mike Owner",
-      role: "owner",
-      email: "owner@example.com",
-    },
-  };
 
   // Handle scroll effect
   useEffect(() => {
@@ -101,10 +80,7 @@ const Navbar = () => {
 
   // Check if user is logged in on component mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    // Redux handles initial state from localStorage in authSlice
   }, []);
 
   const isActive = (path) => currentPath === path;
@@ -124,34 +100,9 @@ const Navbar = () => {
   };
 
   // Authentication functions
-  const login = (credentials) => {
-    const mobileNumber = credentials.mobile.trim();
-    let loggedInUser = null;
-
-    if (mobileNumber === DUMMY_USERS.investor.mobile) {
-      loggedInUser = DUMMY_USERS.investor;
-    } else if (mobileNumber === DUMMY_USERS.broker.mobile) {
-      loggedInUser = DUMMY_USERS.broker;
-    } else if (mobileNumber === DUMMY_USERS.owner.mobile) {
-      loggedInUser = DUMMY_USERS.owner;
-    } else {
-      loggedInUser = {
-        id: Date.now(),
-        mobile: mobileNumber,
-        name: `User ${mobileNumber.slice(-4)}`,
-        role: credentials.role || "investor",
-        email: "",
-      };
-    }
-
-    localStorage.setItem("user", JSON.stringify(loggedInUser));
-    setUser(loggedInUser);
-    return { success: true, user: loggedInUser };
-  };
-
   const logout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
+    dispatch(reduxLogout());
+    dispatch(reset());
     setIsDropdownOpen(false);
     setIsMenuOpen(false);
     navigate("/");
@@ -162,12 +113,14 @@ const Navbar = () => {
     setIsSignInModalOpen(true);
     setSignInMobileNumber("");
     setSignInError("");
+    setSignupData(null);
   };
 
   const closeSignInModal = () => {
     setIsSignInModalOpen(false);
     setSignInMobileNumber("");
     setSignInError("");
+    dispatch(reset());
   };
 
   const openSignUpModal = () => {
@@ -193,29 +146,31 @@ const Navbar = () => {
   };
 
   const openCreateAccountModal = () => {
-    if (selectedRole) {
-      setIsSignUpModalOpen(false);
-      setIsCreateAccountModalOpen(true);
-    }
+    setIsSignUpModalOpen(false);
+    setIsCreateAccountModalOpen(true);
+    dispatch(reset());
   };
 
   const closeCreateAccountModal = () => {
     setIsCreateAccountModalOpen(false);
+    dispatch(reset());
     setSelectedRole(null);
   };
 
   const goBackToRoleSelection = () => {
     setIsCreateAccountModalOpen(false);
     setIsSignUpModalOpen(true);
+    dispatch(reset());
   };
 
-  const handleVerifyRequest = (mobileNumber) => {
-    setMobileToVerify(mobileNumber);
+  const handleVerifyRequest = (data) => {
+    setSignupData(data);
+    setMobileToVerify(data.mobileNumber);
     setIsCreateAccountModalOpen(false);
     setIsVerifyModalOpen(true);
   };
 
-  const handleSignInContinue = () => {
+  const handleSignInContinue = async () => {
     if (signInMobileNumber.trim() === "") {
       setSignInError("Please enter your mobile number first");
       return;
@@ -226,17 +181,12 @@ const Navbar = () => {
       return;
     }
 
-    const loginResult = login({
-      mobile: signInMobileNumber,
-      role: selectedRole,
-    });
-
-    if (loginResult.success) {
-      setSignInError("");
-      setMobileToVerify(signInMobileNumber);
-      setIsSignInModalOpen(false);
-      navigateToDashboard(loginResult.user.role);
-    }
+    // Instead of immediate login, we now show the verify modal
+    // The verify modal will handle the actual Redux dispatch for login
+    setMobileToVerify(signInMobileNumber);
+    setIsSignInModalOpen(false);
+    setSignupData(null);
+    setIsVerifyModalOpen(true);
   };
 
   const navigateToDashboard = (role) => {
@@ -258,16 +208,20 @@ const Navbar = () => {
   const closeVerifyModal = () => {
     setIsVerifyModalOpen(false);
     setMobileToVerify("");
+    setSignupData(null);
+    dispatch(reset());
   };
 
   const goBackToSignUpFromVerify = () => {
     setIsVerifyModalOpen(false);
     setIsCreateAccountModalOpen(true);
+    dispatch(reset());
   };
 
   const goBackToSignInFromVerify = () => {
     setIsVerifyModalOpen(false);
     setIsSignInModalOpen(true);
+    dispatch(reset());
   };
 
   const handleSignInMobileChange = (e) => {
@@ -298,17 +252,23 @@ const Navbar = () => {
     if (!user) return null;
 
     const getUserInitial = () => {
-      if (!user.name) {
-        return user.mobile ? user.mobile.charAt(0) : "U";
+      if (user.name) {
+        return user.name.charAt(0).toUpperCase();
       }
-      return user.name.charAt(0);
+      if (user.firstName) {
+        return user.firstName.charAt(0).toUpperCase();
+      }
+      return user.mobileNumber ? user.mobileNumber.charAt(0) : "U";
     };
 
     const getDisplayName = () => {
-      if (!user.name) {
-        return user.mobile ? `User ${user.mobile.slice(-4)}` : "User";
+      if (user.name) {
+        return user.name;
       }
-      return user.name;
+      if (user.firstName) {
+        return `${user.firstName} ${user.lastName || ''}`.trim();
+      }
+      return user.mobileNumber ? `User ${user.mobileNumber.slice(-4)}` : "User";
     };
 
     return (
@@ -333,7 +293,7 @@ const Navbar = () => {
                     {getDisplayName()}
                   </p>
                   <p className="text-sm text-gray-600">
-                    {user.mobile || "No phone"}
+                    {user.mobileNumber || "No phone"}
                   </p>
                   <p className="text-xs text-gray-500 capitalize">
                     {user.role || "user"}
@@ -634,23 +594,25 @@ const Navbar = () => {
             <div className="p-4 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#EE2529] to-[#C73834] flex items-center justify-center text-white font-bold text-lg">
-                  {user.name
-                    ? user.name.charAt(0)
-                    : user.mobile
-                    ? user.mobile.charAt(0)
+                  {user.firstName
+                    ? user.firstName.charAt(0)
+                    : user.mobileNumber
+                    ? user.mobileNumber.charAt(0)
                     : "U"}
                 </div>
                 <div>
                   <p className="font-bold text-[#EE2529] text-xl">
                     Hi,{" "}
                     {user.name
-                      ? user.name.split(" ")[0]
-                      : `User ${user.mobile ? user.mobile.slice(-4) : ""}`}
+                      ? user.name.split(' ')[0]
+                      : user.firstName
+                      ? user.firstName
+                      : `User ${user.mobileNumber ? user.mobileNumber.slice(-4) : ""}`}
                   </p>
                   <div className="flex items-center gap-1">
                     <img src={whatsapp} alt="" />
                     <p className="text-sm text-gray-600">
-                      {user.mobile || "No phone"}
+                      {user.mobileNumber || "No phone"}
                     </p>
                   </div>
                 </div>
@@ -1121,7 +1083,7 @@ const Navbar = () => {
       )}
 
       {isVerifyModalOpen && (
-        <VerifyContactNumber
+        <VerifyNumber
           onClose={closeVerifyModal}
           onBack={
             mobileToVerify === signInMobileNumber
@@ -1129,7 +1091,8 @@ const Navbar = () => {
               : goBackToSignUpFromVerify
           }
           mobileNumber={mobileToVerify}
-          userRole={user?.role}
+          signupData={signupData}
+          selectedRole={selectedRole}
         />
       )}
     </>

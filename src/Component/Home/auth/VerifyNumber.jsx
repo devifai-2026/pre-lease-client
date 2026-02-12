@@ -2,30 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { IoClose } from "react-icons/io5";
 import logo from "../../../assets/Navbar/Preleasegrid logo 1.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login, signup, reset } from "../../../redux/slices/authSlice";
 
-const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
+const VerifyNumber = ({ onClose, onBack, mobileNumber, signupData, selectedRole }) => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [errors, setErrors] = useState({});
-    const [isVerifying, setIsVerifying] = useState(false);
     const [isResending, setIsResending] = useState(false);
     const [timer, setTimer] = useState(60); // 1 minute timer
     const [showErrorAfterTimeout, setShowErrorAfterTimeout] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    // Get user data from localStorage to determine role
-    const getUserRole = () => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            return user.role;
+    const { user, isLoading, isError, isSuccess, message } = useSelector(
+        (state) => state.auth
+    );
+
+    // Handle success or error from Redux
+    useEffect(() => {
+        if (isError) {
+            setErrors({ verify: message });
         }
-        return null;
-    };
 
-    // Format mobile number for display
-    const formattedNumber = mobileNumber 
-        ? `+91 ${mobileNumber.slice(0, 5)} ${mobileNumber.slice(5)}`
-        : '+91 ......';
+        if (isSuccess && user) {
+            // Role from backend might be capitalized
+            const userRole = user?.role?.toLowerCase() || 'investor';
+            navigateToDashboard(userRole);
+            onClose();
+            dispatch(reset());
+        }
+    }, [user, isError, isSuccess, message, navigate, onClose, dispatch]);
 
     // Timer countdown
     useEffect(() => {
@@ -150,7 +156,6 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
 
     // Contact support
     const handleContactSupport = () => {
-        // Here you would typically redirect to support or open a support modal
         console.log('Contacting support...');
         alert('Please contact our support team at support@preleasegrid.com or call +91-XXXX-XXXXXX');
     };
@@ -169,17 +174,15 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
     };
 
     // Navigate to specific dashboard based on user role
-    const navigateToDashboard = () => {
-        const userRole = getUserRole();
-        
-        if (!userRole) {
-            // If no user role found, navigate to home
+    const navigateToDashboard = (role) => {
+        if (!role) {
             navigate('/');
             return;
         }
         
+        const roleLower = role.toLowerCase();
         // Navigate to specific dashboard based on role
-        switch(userRole) {
+        switch(roleLower) {
             case 'investor':
                 navigate('/investor-dashboard');
                 break;
@@ -205,46 +208,31 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
             return;
         }
         
-        setIsVerifying(true);
+        const enteredOtp = otp.join('');
         
-        try {
-            const enteredOtp = otp.join('');
-            
-            // Here you would typically make an API call to verify OTP
-            console.log('Verifying OTP:', enteredOtp, 'for mobile:', mobileNumber);
-            
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // For demo, accept "1234" as valid OTP
-            if (enteredOtp !== '1234') {
-                throw new Error('Invalid OTP. Please use 1234 for testing.');
-            }
-            
-            console.log('OTP verified successfully!');
-            
-            // Navigate to specific dashboard based on user role
-            navigateToDashboard();
-            
-            // Close modal after navigation (optional)
-            // onClose();
-            
-        } catch (error) {
-            console.error('Error verifying OTP:', error);
-            setErrors({ verify: error.message || 'Failed to verify OTP. Please try again.' });
-            
-            // Auto-focus first OTP input on error
-            setTimeout(() => {
-                const firstInput = document.getElementById('otp-input-0');
-                if (firstInput) {
-                    firstInput.focus();
-                }
-            }, 100);
-            
-        } finally {
-            setIsVerifying(false);
+        if (signupData) {
+            // If we have signup data, call signup thunk
+            const signupPayload = {
+                ...signupData,
+                roleName: selectedRole ? selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1) : 'Broker',
+                otp: enteredOtp,
+                deviceId: 'web-client'
+            };
+            dispatch(signup(signupPayload));
+        } else {
+            // Otherwise it's a login
+            dispatch(login({
+                mobileNumber: mobileNumber,
+                otp: enteredOtp,
+                deviceId: 'web-client'
+            }));
         }
     };
+
+    // Format mobile number for display
+    const formattedNumber = mobileNumber 
+        ? `+91 ${mobileNumber.slice(0, 5)} ${mobileNumber.slice(5)}`
+        : '+91 ......';
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -257,7 +245,7 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 text-2xl md:text-3xl"
-                        disabled={isVerifying}
+                        disabled={isLoading}
                     >
                         <IoClose className="text-[#EE2529]" />
                     </button>
@@ -280,7 +268,7 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                         {/* Demo Note */}
                         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                             <p className="text-sm text-yellow-800 font-montserrat">
-                                <span className="font-semibold">Demo Note:</span> Use <span className="font-mono font-bold text-red-600">1234</span> as the OTP for testing
+                                <span className="font-semibold">Demo Note:</span> Use <span className="font-mono font-bold text-red-600">1111</span> as the OTP for testing
                             </p>
                         </div>
                     </div>
@@ -310,7 +298,7 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                                                 : 'border-[#767676]'
                                         }`}
                                         autoFocus={index === 0}
-                                        disabled={isVerifying}
+                                        disabled={isLoading}
                                     />
                                 ))}
                             </div>
@@ -330,7 +318,7 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                                     <button
                                         type="button"
                                         onClick={handleResendOtp}
-                                        disabled={isResending || isVerifying}
+                                        disabled={isResending || isLoading}
                                         className="text-[#C73834] font-medium underline hover:text-[#EE2529] transition-colors font-montserrat disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
                                     >
                                         {isResending ? 'Resending...' : 'Click to resend OTP'}
@@ -354,7 +342,7 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                                         <button
                                             type="button"
                                             onClick={handleResendOtp}
-                                            disabled={isResending || isVerifying}
+                                            disabled={isResending || isLoading}
                                             className=" font-medium underline hover:text-[#EE2529] transition-colors font-montserrat disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline whitespace-nowrap"
                                         >
                                             {isResending ? 'Resending...' : 'Resend OTP'}
@@ -375,7 +363,7 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                                     <button
                                         type="button"
                                         onClick={handleResendOtp}
-                                        disabled={isResending || isVerifying}
+                                        disabled={isResending || isLoading}
                                         className="text-[#C73834] font-medium underline hover:text-[#EE2529] transition-colors font-montserrat disabled:opacity-50 disabled:cursor-not-allowed disabled:no-underline"
                                     >
                                         {isResending ? 'Resending...' : 'Click to resend OTP'}
@@ -405,20 +393,20 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
                                 type="button"
                                 onClick={onBack}
                                 className="w-full border-2 border-[#767676] text-[#767676] py-3 rounded-lg font-medium text-base transition-colors hover:bg-gray-50 font-montserrat disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={isVerifying}
+                                disabled={isLoading}
                             >
                                 Back
                             </button>
                             <button
                                 type="submit"
-                                disabled={isVerifying}
+                                disabled={isLoading}
                                 className={`w-full bg-gradient-to-r from-[#EE2529] to-[#C73834] text-white py-3 rounded-lg font-medium text-base transition-opacity font-montserrat ${
-                                    isVerifying 
+                                    isLoading 
                                         ? 'opacity-70 cursor-not-allowed' 
                                         : 'hover:opacity-90'
                                 }`}
                             >
-                                {isVerifying ? (
+                                {isLoading ? (
                                     <span className="flex items-center justify-center">
                                         <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -436,4 +424,4 @@ const VerifyContactNumber = ({ onClose, onBack, mobileNumber }) => {
     );
 };
 
-export default VerifyContactNumber;
+export default VerifyNumber;

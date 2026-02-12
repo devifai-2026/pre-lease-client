@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { IoClose } from "react-icons/io5";
 import logo from "../../../assets/Navbar/Preleasegrid logo 1.png";
 
-const SignUp = ({ onClose, onBack, onVerifyRequest }) => {
+const SignUp = ({ onClose, onBack, onVerifyRequest, selectedRole }) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         mobileNumber: '',
-        email: ''
+        email: '',
+        reraNumber: ''
     });
     const [errors, setErrors] = useState({});
     const [agreeTerms, setAgreeTerms] = useState(false);
@@ -34,6 +35,10 @@ const SignUp = ({ onClose, onBack, onVerifyRequest }) => {
             case 'email':
                 // Allow email characters
                 filteredValue = value;
+                break;
+            case 'reraNumber':
+                // Allow alphanumeric characters
+                filteredValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '');
                 break;
             default:
                 filteredValue = value;
@@ -109,6 +114,11 @@ const SignUp = ({ onClose, onBack, onVerifyRequest }) => {
                     error = 'Maximum 100 characters allowed';
                 }
                 break;
+            case 'reraNumber':
+                if ((selectedRole === 'broker' || selectedRole === 'owner') && !value.trim()) {
+                    error = 'RERA number is required for ' + selectedRole;
+                }
+                break;
             default:
                 break;
         }
@@ -152,6 +162,11 @@ const SignUp = ({ onClose, onBack, onVerifyRequest }) => {
             newErrors.email = 'Please enter a valid email address';
         }
         
+        // RERA validation if applicable
+        if ((selectedRole === 'broker' || selectedRole === 'owner') && !formData.reraNumber.trim()) {
+            newErrors.reraNumber = 'RERA number is required';
+        }
+        
         // Checkboxes validation
         if (!agreeTerms) newErrors.terms = 'You must agree to terms & conditions';
         if (!agreePrivacy) newErrors.privacy = 'You must agree to privacy policy';
@@ -182,9 +197,9 @@ const SignUp = ({ onClose, onBack, onVerifyRequest }) => {
                 // Simulate API delay
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
-                // If form is valid, call the onVerifyRequest callback with mobile number
+                // If form is valid, call the onVerifyRequest callback with all form data
                 if (onVerifyRequest) {
-                    onVerifyRequest(formData.mobileNumber);
+                    onVerifyRequest(formData);
                 }
             } catch (error) {
                 console.error('Error submitting form:', error);
@@ -337,6 +352,32 @@ const SignUp = ({ onClose, onBack, onVerifyRequest }) => {
                                 <p className="mt-1 text-sm text-green-600 font-montserrat">✓ Valid email format</p>
                             )}
                         </div>
+
+                        {/* RERA Number (Conditional) */}
+                        {(selectedRole === 'broker' || selectedRole === 'owner') && (
+                            <div>
+                                <label className="block text-base font-medium text-gray-700 mb-2 font-montserrat">
+                                    RERA Registration Number *
+                                </label>
+                                <input
+                                    type="text"
+                                    name="reraNumber"
+                                    value={formData.reraNumber}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    placeholder="Enter RERA number"
+                                    className={`w-full px-4 py-2 border-2 border-[#767676] rounded-lg focus:outline-none focus:ring-2 focus:border-transparent text-base font-montserrat ${
+                                        errors.reraNumber && touched.reraNumber 
+                                            ? 'border-red-500 focus:ring-red-500' 
+                                            : 'border-gray-300 focus:ring-red-500'
+                                    }`}
+                                    disabled={isSubmitting}
+                                />
+                                {errors.reraNumber && touched.reraNumber && (
+                                    <p className="mt-1 text-sm text-red-600 font-montserrat">{errors.reraNumber}</p>
+                                )}
+                            </div>
+                        )}
 
                         {/* Checkboxes with validation */}
                         <div className="space-y-3">
