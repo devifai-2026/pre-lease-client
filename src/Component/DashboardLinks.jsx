@@ -1,10 +1,9 @@
-// components/DashboardLinks.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useSelector } from 'react-redux';
 
 const DashboardLinks = () => {
-  const { user } = useAuth();
+  const { user } = useSelector((state) => state.auth);
 
   if (!user) {
     return null; // Don't show dashboard link if not logged in
@@ -29,7 +28,7 @@ const DashboardLinks = () => {
     }
   };
 
-  const dashboard = dashboardLinks[user.role] || dashboardLinks.investor;
+  const dashboard = dashboardLinks[user.role?.toLowerCase()] || dashboardLinks.investor;
 
   return (
     <Link to={dashboard.path}>
